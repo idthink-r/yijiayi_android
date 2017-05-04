@@ -1,0 +1,175 @@
+<ion-view view-title="" hide-nav-bar="true"  >
+    <style>
+        .header-record{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-record .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .tab{
+            width: 100%;
+            height:auto;
+            margin-top:0.88rem;
+            overflow: scroll;
+        }
+        .tab .tab-title{
+            width: 100%;
+            height:0.8rem;
+            line-height: 0.8rem;
+           /* overflow-x:auto;
+            white-space:nowrap;*/
+        }
+        .tab .tab-title span{
+            display: block;
+            float: left;
+            width: 20%;
+            height: 100%;
+            font-size: 0.24rem;
+            font-size: 0.22rem;
+            color: #666;
+            text-align: center;
+            box-sizing:border-box;
+        }
+        .tab .tab-title .czrz{
+            width: 15%;
+        }
+        .tab .tab-title .flgmtx{
+            width: 25%;
+        }
+        .tab .tab-title .active{
+            color: #ffa03b;
+            border-bottom: 1px solid #ffa03b;
+        }
+        .tab-body{
+            width: 6rem;
+            margin: 0 auto;
+            margin-top: 0.2rem;
+        }
+        .t-body table{
+            width: 100%;
+        }
+        .t-body table th{
+            width: 33.3333%;
+            background: #ffa03b;
+            border: 1px solid #fff;
+            line-height: 0.7rem;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #fff;
+        }
+        .t-body2 table th{
+            width: 25%;
+        }
+        .t-body3 table th{
+            width: 20%;
+        }
+        .t-body3 table th:nth-child(1){
+            width: 40%;
+        }
+        .t-body3 table td:nth-child(3){
+            color: #ffa03b;
+        }
+        .t-body4 table th{
+            width:22%;
+        }
+        .t-body4 table th:nth-child(3), .t-body4 table th:nth-child(4){
+            width: 17%;
+        }
+        .t-body table td{
+            border: 1px solid #fff;
+            line-height: 0.5rem;
+            text-align: center;
+            font-size: 0.2rem;
+            color: #999;
+        }
+        .t-body table tr:nth-child(2n+1){
+            background: #f8f8f8;
+        }
+        .page{
+            width: 3.6rem;
+            height: 0.5rem;
+            margin: 0 auto;
+            margin-top: 0.4rem;
+        }
+        .page li{
+            width: 0.5rem;
+            height: 0.5rem;
+            margin: 0 0.05rem;
+            float: left;
+            border-radius: 0.1rem;
+            border: 1px solid #bdbdbd;
+            background: #f7f7f7;
+            font-size: 0.2rem;
+            color: #bdbdbd;
+            text-align: center;
+            line-height: 0.5rem;
+        }
+        .page .active{
+            border:1px solid #ffa03b;
+            color: #ffa03b;
+        }
+        .rechange{
+            width: 5rem;
+            height: 0.6rem;
+            margin: 0 auto;
+            background: #ffa03b;
+            text-align: center;
+            line-height: 0.6rem;
+            font-size: 0.24rem;
+            color: #fff;
+            margin-top: 0.4rem;
+        }
+        .log{
+            width: 6rem;
+            height: 0.8rem;
+            margin: 0 auto;
+        }
+        .log div{
+            width: 50%;
+            height: 100%;
+            float: left;
+            font-size: 0.26rem;
+            color: #333;
+            background: #f8f8f8;
+            text-align: center;
+            line-height: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+        .log .active{
+            background: #ffa03b;
+            color: #fff;
+        }
+    </style>
+    <header class="header-record">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>日志</span>
+    </header>
+    <ion-content class="">
+        <!--写内容-->
+            <div class="tab-title">
+                <span class="czrz" ng-click="czrz()" ng-style="czrzs">ddddddddddd 充值日志</span>
+                <span class="txrz" ng-click="txrz()" ng-style="txrzs">提现日志</span>
+                <span class="zhrz" ng-click="zhrz()" ng-style="zhrzs">账户日志</span>
+                <span class="vgmrz" ng-click="vgmrz()" ng-style="vgmrzs">VIP购买日志</span>
+                <span class="flgmtx" ng-click="flgmtx()" ng-style="flgmtxs">福利提现日志</span>
+            </div>
+           
+    </ion-content>
+</ion-view>

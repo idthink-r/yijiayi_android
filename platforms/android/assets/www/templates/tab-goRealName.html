@@ -1,0 +1,173 @@
+<ion-view view-title="实名认证" hide-nav-bar="true" hide-tabs="true">
+    <style>
+        .showNotice{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: rgba(0,0,0,0.4); 
+        }
+        .showNotice .noticeListRN{
+            width: 5rem;
+            height: 3.5rem;
+            background: #fff;
+            position: absolute;
+            left: 0;right: 0;top: 0;bottom: 0;
+            margin: auto;
+            padding: 0.2rem;
+            border-radius: 0.2rem;
+            color: red;
+        }
+        .noticeListRN .close{
+            width: 0.6rem;
+            height: 0.6rem;
+            text-align: center;
+            line-height: 0.6rem;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .noticeListRN h3{
+            text-align: center;
+            line-height: 0.7rem;
+            font-size: 0.3rem;
+            color: red;
+        }
+        .noticeListRN p{
+            color: red;
+            font-size: 0.22rem;
+            line-height: 0.4rem;
+        }
+        
+        .header-realName{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #fff;
+            position: relative;
+            background: #ffa03b;
+            z-index: 999;
+        }
+        .header-realName .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }    
+        .showcase-form{
+            margin-top: 1.2rem;
+        }
+
+        .realName{
+            position: relative;
+        }
+        .realName input{
+            display: block;
+            width: 5.9rem;
+            height:0.7rem;
+            margin:0.2rem auto;
+            border:1px solid #ccc;
+            border-radius: 0.05rem;
+            font-size: 0.24rem;
+            padding-left:0.2rem;
+            border-radius: 0.1rem;
+        }
+        .showcase-form p{
+            line-height: 0.6rem;
+            text-align: center;
+            font-size: 0.22rem;
+            color: #333;
+        }
+        .true-login-button{
+        	display:block;
+            width:5rem;
+            height: 0.6rem;
+            margin:0 auto;
+            background: #ffa03b;
+            font-size: 0.24rem;
+            color: #fff;
+            text-align: center;
+            line-height:0.6rem;
+            margin-top:0.1rem;
+            border:none;
+            border-radius: 0.2rem;
+        }        
+        .login-footer{
+            width: 100%;
+            margin-top: 4.3rem;
+            text-align: center;
+            line-height: 1rem;
+            font-size: 0.22rem;
+            color: #ff4800;
+        }
+        .showcase-form textarea .ng-dirty.ng-invalid,
+		.showcase-form select .ng-dirty.ng-invalid,
+		.showcase-form input.ng-dirty.ng-invalid {
+		    border-color: #e9322d;
+		    -webkit-box-shadow: 0 0 6px #f8b9b7;
+		    -moz-box-shadow: 0 0 6px #f8b9b7;
+		    box-shadow: 0 0 6px #f8b9b7;
+		}
+        .notice{
+            text-align: center;
+            line-height: 1rem;
+            color: red;
+            margin-top: 0.2rem;
+            font-size: 0.24rem;
+        }
+		#showerr{
+			color: red !important;
+		    font-size: 0.22rem !important;
+		    line-height: 3.0rem !important;
+		    margin-top: 0 !important;
+		    text-align: center !important;
+		}
+    </style>
+    <header class="header-realName">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>实名认证</span>
+    </header>
+    <ion-content ng-controller="goRealNameCtrl">
+        
+        <script id="templates/showNotice.html" type="text/ng-template">
+    <div class="showNotice">
+        <div class="noticeListRN">
+            <span class="close icon ion-close" ng-click="showNotice.hide()"></span>
+            <h3>注意事项</h3>
+            <p>a.实名信息请填写真实有效信息，否则会导致注册申请失败;</p>
+            <p>b.实名信息填写和第三方资金托管账户绑定的操作不要中断，如遇意外情况导致操作中断，请至会员中心完成相关操作;</p>
+        </div>
+    </div>
+</script>
+<script id="templates/show_err.html" type="text/ng-template">
+    <div class="showNotice">
+        <div class="noticeListRN">
+            <span class="close icon ion-close" ng-click="show_err.hide();backTabRealName()"></span>
+            <p id="showerr">{{showerr}}</p>
+        </div>
+    </div>
+</script>
+        <form name="basic_form" class="showcase-form">
+            <div class="realName">
+                <input type="text" placeholder="输入真实姓名" ng-model="real_name">
+            </div>
+            <div class="realName">
+                <input type="text" placeholder="输入身份证号码" ng-model="idno">
+            </div>
+            <p>(请输入正确信息以免影响资金托管账户申请等功能..)</p>
+            
+           <p style="line-height: 1.1rem ;color: rebeccapurple;">温馨提示：因接口升级中，暂时无法绑定托管账户，敬请期待！</p>
+            <button ng-click="idnoAreal_name();show_err.show()" class="login-button"> 确定</button>
+        </form>
+
+        <p class="notice" ng-click="showNotice.show()">注意事项</p>
+
+    </ion-content>
+</ion-view>

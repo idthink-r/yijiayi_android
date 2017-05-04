@@ -1,0 +1,410 @@
+<ion-view view-title="投资" hide-nav-bar="true" ng-click="hideAdd();$event.stopPropagation();">
+    <style>
+        #header{
+            width: 100%;
+            height: 4rem;
+            margin-top:0.88rem;
+        }
+        .header-top{
+            width: 100%;height: 0.88rem;
+            background: url("img/bg-top.png") no-repeat;
+            background-size: 100% 100%;
+            text-align: center;
+            line-height: 0.88rem;
+            position: fixed;
+            top:0;
+            z-index: 999;
+        }
+        .header-top span{
+            font-size: 0.34rem;
+            color: #fff;
+        }
+        .header-top .right{
+            width: 0.88rem;
+            height: 0.88rem;
+            display: block;
+            position: absolute;
+            right: 0;
+            top:0;
+        }
+        .header-center{
+            width: 100%;height: 4rem;
+            background: url("img/bg-index.png") no-repeat;
+            background-size: 100% 100%;
+        }
+        .benefit{
+            width: 100%;height: 1.97rem;
+            padding-top:0.3rem;
+        }
+        .benefit .circle{
+            width: 1.67rem;height: 1.67rem;
+            padding: 0.4rem 0 0.5rem;
+            border-radius: 100%;
+            background: url("img/circle.png") 0 0 no-repeat;
+            background-size: 100% 100%;
+            margin: 0 auto;
+            font-size: 0.2rem;
+            color: #fe983a;
+            text-align: center;
+            line-height: 0.4rem;
+        }
+        .benefit .circle .number{
+            font-size: 0.36rem;
+        }
+        .benefit .circle .sign{
+            font-size: 0.24rem;
+        }
+        .company{
+            text-align: center;
+            font-size: 0.24rem;
+            color: #fff;
+            line-height: 0.84rem;
+        }
+        .header-bottom{
+            width: 5.9rem;height: 1.15rem;
+            padding: 0.2rem 0;
+            margin: auto;
+            border-top:1px solid #FFC387;
+            text-align: center;
+            color: #fff;
+            font-size: 0.14rem;
+            line-height: 0.4rem;
+        }
+        .header-bottom .left,.header-bottom .right {
+            width: 50%;
+            float: left;
+        }
+        .header-bottom .b1,.header-bottom .b2{
+            font-size:0.22rem;
+        }
+        .header-bottom .b1 span{
+            font-size: 0.28rem;
+        }
+        .count{
+            width: 5.9rem;
+            height: 2.1rem;
+            margin: 0 auto;
+            margin-bottom: 0.2rem;
+        }
+        .count .count-icon{
+            width: 33.3333%;
+            float: left;
+            text-align: center;
+            padding: 0.5rem 0 0;
+        }
+        .count .count-icon a{
+            width: 100%;height: 100%;
+            text-align: center;
+        }
+        .count .icon{
+            width: 0.78rem;height: 0.78rem;
+            margin: auto;
+            margin-bottom: 0.2rem;
+        }
+        .count .icon img{
+            width: 100%;height: 100%;
+        }
+        .count .count-icon span{
+            font-size: 0.22rem;
+            color: #000;
+        }
+
+        .invest{
+            width: 100%;
+            height: 0.4rem;
+            font-size: 0.2rem;
+            color: #333;
+            text-align: center;
+            line-height: 0.4rem;
+        }
+        .details{
+            width: 5rem;height: 0.9rem;
+            background: #ff8e27;
+            border-radius: 0.05rem;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 0.9rem;
+            font-size: 0.24rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        
+        
+        .Profit{
+        	    width: 5rem;
+			    height: 0.5rem;
+			    margin: 0 auto;
+			    text-align: center;
+			    line-height: 0.5rem;
+			    font-size: 0.20rem;
+        }
+        .second-menusss{
+            width:2.3rem;
+            height:4.2rem;
+            background: #fff;
+            position: absolute;
+            top:0.9rem;
+            right: 0.13rem;
+            z-index: 999;
+            border-radius: 0.1rem;
+            box-shadow: 0 0 0.1rem #ccc;
+        }
+        .second-menusss .sanjiao{
+            width:0;
+            height:0;
+            border-width: 0 0.14rem 0.28rem;
+            border-style:solid;
+            border-color:transparent transparent #fff;
+            position: absolute;
+            top:-0.13rem;
+            right:0.15rem;
+        }
+        .second-menusss .lists{
+            width:100%;
+            height:0.7rem;
+            position: relative;
+            line-height:0.7rem;
+            text-align: left;
+        }
+        .second-menusss .lists .sign{
+            width:0.32rem;
+            height:0.32rem;
+            background: url("img/add1.png") no-repeat center;
+            background-size: 0.2rem 0.24rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left:0.2rem ;
+        }
+        .second-menusss .lists2 .sign{
+            background: url("img/add2.png") no-repeat center;
+            background-size: 0.26rem 0.26rem;
+        }
+        .second-menusss .lists3 .sign{
+            background: url("img/add3.png") no-repeat center;
+            background-size: 0.22rem 0.22rem;
+        }
+        .second-menusss .lists4 .sign{
+            background: url("img/add4.png") no-repeat center;
+            background-size: 0.24rem 0.24rem;
+        }
+        .second-menusss .lists5 .sign{
+            background: url("img/add5.png") no-repeat center;
+            background-size: 0.28rem 0.3rem;
+        }
+        .second-menusss .lists6 .sign{
+            background: url("img/add6.png") no-repeat center;
+            background-size: 0.3rem 0.32rem;
+        }
+        .second-menusss .lists7 .sign{
+            background: url("img/add7.png") no-repeat center;
+            background-size: 0.28rem 0.28rem;
+        }
+        .second-menusss .lists .lists-name{
+            font-size:0.26rem;
+            color: #666;
+            text-align: center;
+            margin-left:0.7rem;
+            font-weight: normal;
+        }
+        
+       /* #outshow .slider{
+        	visibility: visible !important;
+        	position:inherit !important;
+        }
+         #outshow .slider-pager{
+        	 bottom: -9.86rem;;
+        }
+       #outshow .slider-pager{
+       		bottom:-1rem;
+       }*/
+    </style>
+    <script id="templates/modal.html" type="text/ng-template">
+    	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content">{{android_upgrade}}</p>
+                <div class="close">
+                    <div class="left" ng-click="modal.hide()" style="background:#B9B9B9；margin: 0 7.5%;float: left;">取消</div>
+                    <div class="right" ng-click="modal.hide()" style="margin: 0 7.5%;float: left;">确定</div>
+                </div>
+            </div>          
+        </div>
+    </script>
+    
+    <div style="width: 100%;line-height: 2.2rem;text-align: center;" ng-show="errorShow">亲，您的数据连接已断开</div>
+    <div class="header-top">
+        <span>医加医</span>
+        <span class="right" ng-click="showOhide();$event.stopPropagation();" >+</span>
+        <div class="second-menusss" ng-show="showC">
+            <div class="sanjiao"></div>
+            <div class="lists" ng-click="goSilkBag();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">锦囊</span>
+            </div>
+            <div class="lists lists2" ng-click="goSigninMine();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">签到有礼</span>
+            </div>
+            <div class="lists lists3" ng-click="goIndustry();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">行业观点</span>
+            </div>
+            <!--<div class="lists lists4" ng-click="goIntegral();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">积分商城</span>
+            </div>-->
+            <div class="lists lists5" ng-click="goSchool();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">医加学堂</span>
+            </div>
+            <div class="lists lists6" ng-click="goOnService();$event.stopPropagation();">
+                <span class="sign"></span>
+                <a href="tel:4000351924"><span class="lists-name">联系客服</span></a>
+            </div>
+            <div class="lists lists7" ng-click="goSetting();$event.stopPropagation();">
+                <span class="sign"></span>
+                <span class="lists-name">应用设置</span>
+            </div>
+
+        </div>
+    </div>
+    <ion-content ng-show="inshow" overflow-scroll="true" style="overflow: hidden">
+    	<div>
+        <ion-slide-box style="z-index: 999;" auto-play="false" ng-if='inshowlist' delegate-handle="inshowlist">
+                <ion-slide  ng-repeat="x in inshowlist" >
+                    <header id="header">
+                        <div class="header-center">
+                            <div class="benefit">
+                                <div class="circle" ng-click="goLogin();$event.stopPropagation();">
+                                    年化收益率<br>
+                                    <span class="number">{{x.rate_foramt_w}}</span>
+                                </div>
+                            </div>
+                            <div class="company">{{x.name}}</div>
+                            <div class="header-bottom">
+                                <div class="left" ng-click="goLogin();$event.stopPropagation();">
+                                    <div class="b1">
+                                        <span>{{x.min_loan_money}}<small  class="b2">元起投</small ></span>
+                                    </div>
+                                    <div class="b2">
+                                        投资限额
+                                    </div>
+                                </div>
+                                <div class="right" ng-click="goLogin();$event.stopPropagation();">
+                                    <div class="b1"  ng-switch="x.repay_time_type" >
+                                        <span ng-switch-when="0">{{x.repay_time}}<small  class="b2">天</small ></span>
+                                        <span ng-switch-when="1">{{x.repay_time}}<small  class="b2">个月</small ></span>
+                                    </div>
+                                    <div class="b2">
+                                        投资期限
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                	<div style="position: relative;z-index: -999;">
+	           		<ul class="count">
+	                <li class="one count-icon" ng-click="goSafety();$event.stopPropagation();">
+	                    <div class="icon">
+	                        <img src="./img/invest1.png" alt="">
+	                    </div>
+	                    <span>{{x.borrow_amount_format}}</span>
+	                </li>
+	                <li class="two count-icon"  ng-click="goSafety();$event.stopPropagation();">
+	                    <div class="icon">
+	                        <img src="./img/invest2.png" alt="">
+	                    </div>
+	                    <span>￥{{x.need_money}}万元</span>
+	                </li>
+	                <li class="three count-icon"  ng-click="goSafety();$event.stopPropagation();" >
+	                    <div class="icon">
+	                        <img src="./img/invest3.png" alt="">
+	                    </div>
+	                    <span ng-if="(x.deal_status==0)">等待材料</span>
+	                    <span ng-if="(x.deal_status==1&&x.remain_time>0)">投资进行</span>
+	                    <span ng-if="(x.deal_status==1&&x.remain_time<0)">已过期</span>
+	                    <span ng-if="(x.deal_status==2)">满标</span>
+	                    <span ng-if="(x.deal_status==3)">流标</span>
+	                    <span ng-if="(x.deal_status==4)">还款中</span>
+	                    <span ng-if="(x.deal_status==5)">已还清</span>
+	                    
+	                </li>
+	            	</ul>
+	            	<div class="Profit">
+	            	投资一万元收益{{(x.rate*100/365).toFixed(2)}}元
+	            	</div>
+	            	<div class="details" ng-click="goDetails(data.email,logindata.user_pwd,{{x.id}});$event.stopPropagation();">
+              		  查看投资详情
+              		 
+	            	</div>
+                </div>
+                </ion-slide>
+        </ion-slide-box>
+        </div>
+    </ion-content>
+	<ion-content ng-show="outshow">
+        <div id="outshow">
+            <ion-slide-box style="z-index: 999;">
+                <ion-slide  ng-repeat="x in outshowlist">
+                    <header id="header">
+                        <div class="header-center">
+                            <div class="benefit">
+                                <div class="circle" ng-click="goLogin();$event.stopPropagation();">
+                                    年化收益率<br>
+                                    <span class="number">{{x.profit}}</span>
+                                </div>
+                            </div>
+                            <div class="company">{{x.title}}</div>
+                            <div class="header-bottom">
+                                <div class="left" ng-click="goLogin();$event.stopPropagation();">
+                                    <div class="b1">
+                                        <span>{{x.quota}}</span>
+                                    </div>
+                                    <div class="b2">
+                                        投资限额
+                                    </div>
+                                </div>
+                                <div class="right" ng-click="goLogin();$event.stopPropagation();">
+                                    <div class="b1">
+                                        <span>{{x.term}}</span>
+                                    </div>
+                                    <div class="b2">
+                                        投资期限
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <div style="position: relative;z-index: -999;">
+            <ul class="count">
+                <li class="one count-icon" ng-click="goSafety();$event.stopPropagation();">
+                    <div class="icon">
+                        <img src="./img/invest1.png" alt="">
+                    </div>
+                    <span>{{advantage.one}}</span>
+                </li>
+                <li class="two count-icon"  ng-click="goSafety();$event.stopPropagation();">
+                    <div class="icon">
+                        <img src="./img/invest2.png" alt="">
+                    </div>
+                    <span>{{advantage.two}}</span>
+                </li>
+                <li class="three count-icon"  ng-click="goSafety();$event.stopPropagation();">
+                    <div class="icon">
+                        <img src="./img/invest3.png" alt="">
+                    </div>
+                    <span>{{advantage.tree}}</span>
+                </li>
+            </ul>
+            <div class="details" ng-click="goLogin();$event.stopPropagation();">
+                查看投资详情
+            </div>
+        </div>
+
+                </ion-slide>
+            </ion-slide-box>
+        </div>
+    </ion-content>
+</ion-view>

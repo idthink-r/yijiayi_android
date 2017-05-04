@@ -1,0 +1,213 @@
+<ion-view view-title="账户详情页" hide-nav-bar="true"  hide-tabs="true">
+<script id="templates/show_err.html" type="text/ng-template">
+    <div class="showNotice">
+        <div class="noticeList">
+            <span class="close icon ion-close" ng-click="show_err.hide()"></span>
+            <p class="showerr">
+            	温馨提示：因接口升级中，暂时无法绑定托管账户，敬请期待！
+            </p>
+        </div>
+    </div>
+</script>    
+<style>
+  .showNotice{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: rgba(0,0,0,0.4); 
+        }
+        .showNotice .noticeList{
+            width: 5rem;
+            height: 3.5rem;
+            background: #fff;
+            position: absolute;
+            left: 0;right: 0;top: 0;bottom: 0;
+            margin: auto;
+            padding: 0.2rem;
+            border-radius: 0.2rem;
+            color: red;
+        }
+        .noticeList .close{
+            width: 0.6rem;
+            height: 0.6rem;
+            text-align: center;
+            line-height: 0.6rem;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .noticeList p{
+            color: red !important;
+		    font-size: 0.22rem !important;
+		    margin-top: 1.2rem;
+		    text-align: center !important;
+        }
+
+        .header-settiing{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-settiing .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .account:nth-of-type(1){
+            margin-top:0.88rem;
+        }
+        .account{
+            width:100%;
+            height:0.7rem;
+            font-size: 0.24rem;
+            color: #666;
+            line-height: 0.7rem;
+            background: #f8f8f8;
+            padding-left:0.25rem;
+        }
+        .setting-detail{
+            width:5.9rem;
+            height:0.7rem;
+            margin:0 auto;
+            position: relative;
+            line-height: 0.7rem;
+            font-size:0.22rem;
+            color: #666;
+        }
+        .setting-detail .sign{
+            display: block;
+            width:0.26rem;
+            height:0.29rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin: auto;
+            left:0;
+        }
+        .setting-detail1 .sign{
+            background: url("img/account-detail1.png") no-repeat center;
+            background-size: 0.26rem 0.18rem;
+        }
+        .setting-detail2 .sign{
+            background: url("img/account-detail2.png") no-repeat center;
+            background-size: 0.24rem 0.23rem;
+        }
+        .setting-detail3 .sign{
+            background: url("img/account-detail3.png") no-repeat center;
+            background-size: 0.17rem 0.2rem;
+        }
+        .setting-detail4 .sign{
+            background: url("img/account-detail4.png") no-repeat center;
+            background-size: 0.18rem 0.2rem;
+        }
+        .setting-detail5 .sign{
+            background: url("img/account-detail5.png") no-repeat center;
+            background-size: 0.23rem 0.23rem;
+        }
+        .setting-detail6 .sign{
+            background: url("img/account-detail6.png") no-repeat center;
+            background-size: 0.18rem 0.29rem;
+        }
+        .setting-detail7 .sign{
+            background: url("img/account-detail7.png") no-repeat center;
+            background-size: 0.24rem 0.2rem;
+        }
+        .setting-detail .lists{
+            margin-left:0.32rem;
+        }
+        .setting-detail .right{
+            float: right;
+            font-size:0.22rem;
+        }
+        .setting-detail .right-click{
+            display: block;
+            width:1rem;
+            height:0.4rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            right:0.25rem;
+            background: #a0a0a0;
+            border-radius: 0.05rem;
+            font-size:0.20rem;
+            color: #fff;
+            text-align: center;
+            line-height: 0.4rem;
+        }
+    </style>
+    <header class="header-settiing">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>账户详情</span>
+    </header>
+    <ion-content class="">
+        <!--写内容-->
+        <div class="account">账户安全</div>
+        <div class="setting-detail setting-detail1"ng-if="idcardpassed!=1" ng-click="goRealName()">
+            <span class="sign"></span>
+            <span class="lists">实名认证</span>
+            <span class="right ion-chevron-right"></span>
+            <span class="right-click" >未认证</span>
+        </div>
+        <div class="setting-detail setting-detail1" ng-if="idcardpassed==1" >
+            <span class="sign"></span>
+            <span class="lists">实名认证</span>
+            <span class="right ion-chevron-right"></span>
+            <span class="right-click"style="background: #ffa03b;">已认证</span>
+        </div>
+        <div class="setting-detail setting-detail2" ng-if="ips_acct_no!=null" >
+            <span class="sign"></span>
+            <span class="lists">托管账户</span>
+            <span class="right ion-chevron-right"></span>
+            <span class="right-click" style="background: #ffa03b;">已绑定</span>
+        </div>
+        <div class="setting-detail setting-detail2" ng-if="ips_acct_no==null" ng-click="show_err.show()">
+            <span class="sign"></span>
+            <span class="lists">托管账户</span>
+            <span class="right ion-chevron-right"></span>
+            <span class="right-click" >未绑定</span>
+        </div>
+        
+        
+        <div class="setting-detail setting-detail3" ng-click="goMyInvita()">
+            <span class="sign"></span>
+            <span class="lists">我的邀请</span>
+            <span class="right ion-chevron-right"></span>
+        </div>
+        <div class="setting-detail setting-detail4"  ng-click="goSetPass()">
+            <span class="sign"></span>
+            <span class="lists">修改登录密码</span>
+            <span class="right ion-chevron-right"></span>
+        </div>
+        <div class="setting-detail setting-detail5" ng-click="goSetPayPass()">
+            <span class="sign"></span>
+            <span class="lists" >设置支付密码</span>
+            <span class="right ion-chevron-right"></span>
+        </div>
+        <!--<div class="account">积分兑换</div>
+        <div class="setting-detail setting-detail6" ng-click="goSetAddress()">
+            <span class="sign"></span>
+            <span class="lists">设置地址</span>
+            <span class="right ion-chevron-right"></span>
+        </div>
+        <div class="setting-detail setting-detail7">
+            <span class="sign"></span>
+            <span class="lists">商品兑换</span>
+            <span class="right ion-chevron-right"></span>
+        </div>-->
+
+    </ion-content>
+</ion-view>

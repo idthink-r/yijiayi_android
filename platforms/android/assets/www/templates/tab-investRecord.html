@@ -1,0 +1,474 @@
+<ion-view view-title="投资记录" hide-nav-bar="true"  hide-tabs="true">
+    <style>
+        .header-record{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-record .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .tab-title{
+            width: 100%;
+            height:0.8rem;
+            line-height: 0.8rem;
+            position: relative;
+    		z-index: 999;
+    		background: #fff;
+        }
+       .tab-title span{
+            display: block;
+            float: left;
+            width: 25%;
+            height: 100%;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #666;
+            text-align: center;
+            box-sizing:border-box;
+        }
+        .tab-body{
+            width: 6rem;
+            margin: 0 auto;
+            margin-top: 0.2rem;
+        }
+        .t-body table{
+            width: 100%;
+        }
+        .t-body table tr{
+            position: relative;
+        }
+        .t-body table th{
+            width:67%;
+            background: #ffa03b;
+            border:1px solid #fff;
+            line-height: 0.7rem;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #fff;
+            position: relative;
+        }
+        .slideDown{
+            display: block;
+		    width: 0;
+		    height: 0;
+		    border-left: 0.1rem solid transparent;
+		    border-right: 0.1rem solid transparent;
+		    border-top: 0.15rem solid #fff;
+		    position: absolute !important;
+		    top: 0.28rem;
+		    right: 0.4rem;
+        }
+        .slideFrame1,.slideFrame2{
+            width: 1.5rem;
+            height: 3rem;
+            width: 0;
+            height: 0;
+            background: #E3E3E3;
+            z-index: 10;
+            position: absolute !important;
+            right: 0.2rem;
+            top: 2.59rem;
+        }
+        .slideFrame1 li,.slideFrame2 li{
+            font-size: 0.24rem;
+            line-height: 0.5rem;
+            color: #666;
+            padding-left: 0.3rem;
+        }
+
+        .t-body3 table th{
+            width: 50%;
+        }
+        .t-body table td{
+            border: 1px solid #fff;
+            line-height: 0.5rem;
+            text-align: center;
+            font-size: 0.2rem;
+            color: #999;
+            width: 69%;
+		    text-align: left;
+		    padding-left: 0.1rem;
+        }
+        .t-body table tr:nth-child(2n+1){
+            background: #f8f8f8;
+        }
+        .t-body4 table tr:nth-child(2n){
+            background: #f8f8f8;
+        }
+        .t-body4 table tr:nth-child(2n+1){
+            background: #fff;
+        }
+        .page{
+            width: 3.6rem;
+            height: 0.5rem;
+            margin: 0 auto;
+            margin-top: 0.4rem;
+        }
+        .page li{
+            width: 0.5rem;
+            height: 0.5rem;
+            margin: 0 0.05rem;
+            float: left;
+            border-radius: 0.1rem;
+            border:1px solid #bdbdbd;
+            background: #f7f7f7;
+            font-size: 0.2rem;
+            color: #bdbdbd;
+            text-align: center;
+            line-height: 0.5rem;
+        }
+        .page .active{
+            border: 1px solid #ffa03b;
+            color: #ffa03b;
+        }
+        .statistical{
+            width: 6rem;
+            margin: 0 auto;
+            font-size: 0.24rem;
+            color: #fff;
+            text-align: center;
+            line-height: 0.6rem;
+            background: #ffa03b;
+        }
+        .rental{
+            width: 5.5rem;
+            height: 1.2rem;
+            margin: 0 auto;
+            border: 1px solid #ffa03b;
+            border-radius: 0.1rem;
+            margin-bottom:.5rem;
+        }
+        .rental div{
+            width: 50%;
+            height: 100%;
+            float: left;
+            text-align: center;
+            font-size: 0.3rem;
+            color: #000;
+            line-height: 0.6rem;
+        }
+        .rental .czmoney{
+            font-size: 0.26rem;
+            color: #ffa03b;
+        }
+        .thklb,.tyhqjk{
+        	float: left;
+        	width: 50%;
+        	height: 0.7rem;
+        	background: #cfcfcf;
+		    line-height: 0.7rem;
+		    text-align: center;
+		    font-size: 0.24rem;
+		    color: #fff;
+        }
+        .thklb{
+        	 border-right: 1px solid #fff;
+        	 margin-bottom: 0.3rem;
+        }
+        .hksunone{
+        	border-bottom: 1px dashed #CBCBCB;
+        	border-right: 1px dashed #CBCBCB;
+        }
+        .hksuntwo{
+        	border-bottom: 1px dashed #CBCBCB;
+        }
+        .hksuntre{
+        	border-right: 1px dashed #CBCBCB;
+        }
+        .hksunone,.hksuntwo,.hksuntre,.hksunfour{
+        	    width: 50%;
+			    float: left;
+			    height: 1.15rem;
+        }
+        .htopBar{
+        	    background: #ffa03b;
+			    color: #fff;
+			    height: 0.6rem;
+			    line-height: 0.6rem;
+			    padding-left: 0.4rem;
+        }
+        .cstopBar{
+        	background: #cfcfcf;
+			    color: #fff;
+			    height: 0.6rem;
+			    line-height: 0.6rem;
+			    padding-left: 0.4rem;
+        }
+        .thksun,.tcssun{
+        	font-size: 0.24rem ;
+    	    clear: both;
+		    margin: 0 auto;
+		    width: 98%;
+		    border: 1px #ffa03b solid;
+		    border-radius: 3px;
+		    position: relative;
+		    height: 2.9rem;
+		    margin-bottom: 0.8rem;
+        }
+        .tcssun{
+        	border: 1px #cfcfcf solid;
+        }
+        .thksun span,.tcssun span{
+        	text-align: center;
+        	line-height: 0.57rem;
+        	display: block;
+        }
+        .huBtn{
+        	position: absolute;
+		    top: 2.5rem;
+		    left: 50%;
+		    margin-left: -0.85rem;
+		    width: 1.7rem;
+		    background: #ffa03b;
+		    height: 0.8rem;
+		    line-height: 0.8rem;
+		    text-align: center;
+		    color: #fff;
+        }
+        .tzjlactive{
+        	background: #ffa03b;;
+        }
+        /**/
+       .myinvestTab,.myLoadTab{
+       	padding-left: 0.2rem;
+       	overflow: hidden;
+       }
+       .myinvestTab span,.myLoadTab span{
+       		display: inline-block;
+		    background: #ffa03b;
+		    line-height: 0.7rem;
+		    text-align: center;
+		    font-size: 0.24rem;
+		    color: #fff;
+		    position: relative;
+	        float: left;
+        	z-index: 999;
+       }
+       .myinvestTab .XMMC,.myLoadTab .XMMC{
+       	border-right: 1px solid #fff;
+       	width: 67%;
+       }
+       .myinvestTab .slideBox1,.myLoadTab .slideBox2{
+       	width: 30%;
+       }
+    </style>
+    <header class="header-record">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>投资记录</span>
+    </header>
+    <div class="tab-title">
+        <span ng-click="wdtz()" ng-style="wdtzt">我的投资</span>
+        <span ng-click="tzjk()" ng-style="tzjkt">我的借款</span>
+        <span ng-click="chjk()" ng-style="chjkt">偿还借款</span>
+        <span ng-click="tztj()" ng-style="tztjt">投资统计</span>
+    </div>
+    <div class="myinvestTab" ng-show="myinvestTab">
+    	<div style="width: 100%;height: 0.2rem;position: relative;z-index: 999;background: #fff;"></div>
+        <span class="XMMC">项目名称</span>  
+        <span class="slideBox1"  ng-click="slideBox1()">状态<span class="slideDown"></span></span>
+        <ul class="slideFrame1" style="overflow: hidden;">
+            <li ng-click="shaixuanloadAll()">全部</li>
+            <li ng-click="shaixuan(1)">进行中</li>
+            <li ng-click="shaixuan(2)">还款中</li>
+            <li ng-click="shaixuan(3)">已还清</li>
+            <li ng-click="shaixuan(4)">满标</li>
+            <li ng-click="shaixuan(5)">流标</li>
+        </ul>
+    </div>    
+    <div class="myLoadTab" ng-show="myLoadTab">
+    	<div style="width: 100%;height: 0.2rem;position: relative;z-index: 999;background: #fff;"></div>
+	    <span class="XMMC">项目名称</span>
+	    <span class="slideBox2" ng-click="slideBox2()">状态 2<span class="slideDown"></span></span>
+	    <ul class="slideFrame2" style="overflow: hidden;">
+	        <li ng-click="shaixuanloadLoan()">全部</li>
+	        <li ng-click="shaixuan2(1)">进行中</li>
+	        <li ng-click="shaixuan2(2)">还款中</li>
+	        <li ng-click="shaixuan2(3)">已还清</li>
+	        <li ng-click="shaixuan2(4)">满标</li>
+	        <li ng-click="shaixuan2(5)">流标</li>
+	    </ul>
+    </div>    	
+        <!--写内容-->
+        <ion-content  on-scroll="loadLoanMore()" id="investtop">
+        
+        
+        <div class="tab">
+        	<!--<ion-scroll on-scroll="loadLoanMore()">-->
+            <div class="tab-body">
+                <div class="t-body" ng-show="twdtz" style="margin-top: 2.7rem;">
+                    <table>
+                    	<tr ng-repeat=" x in allData">
+                            <td>{{x.name}}</td>
+		                    <td ng-if="(x.deal_status==1&&x.remain_time>0)">进行中</td>
+		                    <td ng-if="(x.deal_status==1&&x.remain_time<0)">已过期</td>
+		                    <td ng-if="(x.deal_status==2)">满标</td>
+		                    <td ng-if="(x.deal_status==3)">流标</td>
+		                    <td ng-if="(x.deal_status==4)">还款中</td>
+		                    <td ng-if="(x.deal_status==5)">已还清</td>
+                        </tr>
+                    </table>
+                </div>
+              
+               
+                <div class="t-body" ng-show="ttzjk" style="margin-top: 2.7rem;">
+                    <table>
+                        <tr ng-repeat=" x in loanData">
+                            <td>{{x.name}}</td>
+                            <td ng-if="(x.deal_status==1&&x.remain_time>0)">进行中</td>
+		                    <td ng-if="(x.deal_status==1&&x.remain_time<0)">已过期</td>
+		                    <td ng-if="(x.deal_status==2)">满标</td>
+		                    <td ng-if="(x.deal_status==3)">流标</td>
+		                    <td ng-if="(x.deal_status==4)">还款中</td>
+		                    <td ng-if="(x.deal_status==5)">已还清</td>
+                        </tr>
+                    </table>
+                       
+                </div>
+                
+                
+				<div class="t-body t-body3" ng-show="tchjk" style="margin-top: 1.9rem;">
+                    <div class="thklb" ng-click="thklb()" ng-class="{tzjlactive:thksun}">还款列表</div>
+                    <div class="tyhqjk" ng-click="tyhqjk()"ng-class="{tzjlactive:tcssun}">已还清借款</div>	
+					<div class="thksun" ng-show="thksun" ng-repeat=" x in thklbitem">
+						<div>
+						<div class="htopBar">{{x.name}}</div>
+							<div class="hksunone">
+								<span>{{x.borrow_amount_format}}</span>
+								<span>借款金额</span>
+							</div>
+							<div class="hksuntwo">
+								<span>{{x.next_repay_time_format}}</span>
+								<span>下次还款日</span>
+							</div>
+							<div class="hksuntre">
+								<span>{{x.need_money}}</span>
+								<span>罚息</span>
+							</div>
+							<div class="hksunfour">
+								<span>{{x.repay_time}}个月</span>
+								<span>期限</span>
+							</div>
+							<div class="huBtn" ng-show="thksun" ng-click="goRepayment(data.email,logindata.user_pwd,x.id)">
+							还款
+						    </div>
+						</div>
+						
+					</div> 
+                    <div class="tcssun" ng-show="tcssun" ng-repeat="x in tyhqjkitem">
+						<div class="cstopBar">{{x.name}}</div>
+							<div class="hksunone">
+								<span>{{x.borrow_amount_format}}</span>
+								<span>借款金额</span>
+							</div>
+							<div class="hksuntwo">
+								<span>{{x.rate_foramt}}%</span>
+								<span>年利率</span>
+							</div>
+							<div class="hksuntre">
+								<span>{{x.publish_time_format}}</span>
+								<span>还款时间</span>
+							</div>
+							<div class="hksunfour">
+								<span>{{x.repay_time}}个月</span>
+								<span>期限</span>
+							</div>
+						</div>
+				</div> 
+				 
+				<div class="t-body t-body4" ng-show="ttztj" style="margin-top: 1.9rem;">                    
+                    <table>
+                        <div class="statistical">借款统计</div>
+                        <tr>
+                            <td>借款总额</td>
+                            <td>￥{{borrow_amount}}</td>
+                        </tr>  
+                        <tr>
+                            <td>借款笔数</td>
+                            <td>{{success_deal_count}}笔</td>
+                        </tr> 
+                        <tr>
+                            <td>已还本息</td>
+                            <td>￥{{repay_amount}}</td>
+                        </tr>  
+                        <tr>
+                            <td>待还本息</td>
+                            <td>￥{{need_repay_amount}}</td>
+                        </tr> 
+                        <tr>
+                            <td>已付管理费用</td>
+                            <td>￥{{repay_manage_amount}}</td>
+                        </tr> 
+                        <tr>
+                            <td>待付管理费用</td>
+                            <td>￥{{need_manage_amount}}</td>
+                        </tr>      
+                        <tr>
+                            <td>逾期费用</td>
+                            <td ng-if="yuqi_impose==0">￥0</td>
+                            <td ng-if="yuqi_impose!=0">{{yuqi_impose}}</td>
+                            
+                        </tr>                 
+                    </table>
+                    <div class="statistical">投资统计</div>
+                    <table>
+                        <tr>
+                            <td>投资总额</td>
+                            <td>￥{{load_money}}</td>
+                        </tr> 
+                        <tr>
+                            <td>投资笔数</td>
+                            <td>{{load_count}}</td>
+                        </tr>  
+                        <tr>
+                            <td>已挣利息</td>
+                            <td>￥{{load_earnings}}</td>
+                        </tr>  
+                        <tr>
+                            <td>待收利息</td>
+                            <td>￥{{load_wait_earnings}}</td>
+                        </tr>  
+                        <tr>
+                            <td>已回收本息</td>
+                            <td>￥{{load_repay_money}}</td>
+                        </tr>  
+                        <tr>
+                            <td>待回收本息</td>
+                            <td>￥{{load_wait_repay_money}}</td>
+                        </tr>  
+                        <tr>
+                            <td>已付管理费</td>
+                            <td>￥{{load_manage_money}}</td>
+                        </tr>                         
+                    </table>
+                    <div class="rental">
+                        <div>
+                            <span class="czmoney">{{incharge_count}}</span><br>
+                            <span>充值总额</span>
+                        </div>
+                        <div>
+                            <span class="czmoney">{{carry_money}}</span><br>
+                            <span>提现总额</span>
+                        </div>
+                    </div>           
+                </div>
+            </div>
+        	<!--</ion-scroll>-->
+        </div>
+        </ion-content>
+</ion-view>

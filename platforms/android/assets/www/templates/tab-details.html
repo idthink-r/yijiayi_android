@@ -1,0 +1,257 @@
+<ion-view view-title="投资详情" hide-nav-bar="true"  hide-tabs="true">
+    <style>
+        .header-details{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-details .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .tab{
+            width: 100%;
+            height:auto;
+            margin-top:0.88rem;
+        }
+        .tab .tab-title{
+            width: 100%;
+            height:0.8rem;
+            line-height: 0.8rem;
+        }
+        .tab .tab-title span{
+            display: block;
+            float: left;
+            width: 25%;
+            height: 100%;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #666;
+            text-align: center;
+            box-sizing:border-box;
+        }
+        .tab-body{
+            width: 100%;
+            height:auto;
+        }
+        .t-body .follow{
+            width:100%;
+            height:0.9rem;
+            padding:0.2rem 0 0.25rem 0;
+            position: relative;
+        }
+        .t-body .follow .insert{
+            width:0.6rem;
+            height:100%;
+            position: absolute;
+            right: 0.25rem;
+            text-align: center;
+        }
+        .t-body .follow #heart{
+            width: 0.35rem;
+            height:0.35rem;
+            background: url("img/heart.png") no-repeat center;
+            background-size:100% 100%;
+            margin:auto;
+        }
+        .t-body .follow span{
+            display: block;
+            font-size: 0.18rem;
+            color: #999;
+            margin-top: 0.05rem;
+            width: 1rem;
+    		margin-left: -0.2rem;
+        }
+        .t-benefit{
+            width: 100%;height: 3rem;
+            text-align: center;
+        }
+        .t-benefit .circle{
+            width: 2.3rem;height: 2.3rem;
+            padding: 0.6rem 0 0.7rem;
+            border-radius: 100%;
+            background: url("img/details-circle.png") 0 0 no-repeat;
+            background-size: 100% 100%;
+            margin: 0 auto;
+            font-size: 0.2rem;
+            color: #fff;
+            text-align: center;
+            line-height: 0.5rem;
+        }
+        .t-benefit .circle .number{
+            font-size: 0.44rem;
+        }
+        .t-benefit .circle .sign{
+            font-size: 0.28rem;
+        }
+        .t-benefit .earn-money{
+            width: 100%;
+            height: 0.9rem;
+            display: block;
+            text-align: center;
+            line-height: 0.9rem;
+            font-size:0.2rem;
+            color: #ffa200;
+        }
+        .t-description{
+            width: 100%;
+            height:0.9rem;
+            line-height: 0.9rem;
+            padding-left:0.65rem;
+            position: relative;
+        }
+        .t-description .left{
+            display: block;
+            width:0.3rem;
+            height:0.3rem;
+            background: url("img/details1.png") no-repeat center;
+            background-size:100% 100%;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0.25rem;
+        }
+        .t-description2 .left{
+            background: url("img/details2.png") no-repeat center;
+            background-size:100% 100%;
+        }
+        .t-description3 .left{
+            background: url("img/details3.png") no-repeat center;
+            background-size:100% 100%;
+        }
+        .t-description4 .left{
+            background: url("img/details4.png") no-repeat center;
+            background-size:100% 100%;
+        }
+
+        .t-description .message{
+            font-size: 0.22rem;
+            color: #666;
+        }
+        .t-description .right{
+            display: block;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            right:0.25rem;
+            text-align: right;
+            font-size: 0.24rem;
+            color:#000;
+        }
+        .Fundtrusteeship{
+        	margin-top: 0.48rem;
+		    width: 100%;
+		    background: #f8f8f8;
+		    text-align: center;
+		    line-height: 0.5rem;
+        }
+        .LJinvestwrap{
+        	padding-top: 0.2rem;
+		    width: 100%;
+		    height: 1.2rem;
+		    background: #eee;
+        }
+        .LJinvest{
+        	width: 92%;
+		    line-height: 0.8rem;
+		    text-align: center;
+		    background: #aaa;
+		    margin:auto;
+		    color: #fff;
+        }
+        #desPageNull{
+        	color: rgb(255, 160, 59);
+		    line-height: 7rem;
+		    text-align: center;
+		    margin: 0 auto;
+		    width: 100%;
+		    display: block;
+		}
+		
+    </style>
+    <header class="header-details">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>投资详情</span>
+    </header>
+    <ion-content class="">
+        <!--写内容-->
+        <div class="tab" style="    padding-bottom: 1.5rem;">
+            <div class="tab-title">
+                <span ng-click="cpxx()" ng-style="cpxxt">产品信息</span>
+                <span ng-click="xmms()" ng-style="xmmst">项目描述</span>
+                <span ng-click="qyxx()" ng-style="qyxxt">企业信息</span>
+                <span ng-click="fkbz()" ng-style="fkbzt">风控保障</span>
+            </div>
+            <div class="tab-body">
+                <div class="t-body" ng-show="tcpxx">
+                    <div class="follow">
+                        <div class="insert" ng-click="followme(data.email,logindata.user_pwd)">
+                            <div id="heart"></div>
+                            <span>{{concern}}</span>
+                        </div>
+                    </div>
+                    <div class="t-benefit">
+                        <div class="circle">
+                            年化收益率<br>
+                            <span class="number">{{derate_foramt}}%</span>
+                        </div>
+                        <span class="earn-money" ng-click="toTrial()">算算1万元30天赚多少</span>
+                    </div>
+                    <div class="t-description">
+                        <span class="left"></span>
+                        <span class="message">项目编号</span>
+                        <span class="right">{{dedeal_sn}}</span>
+                    </div>
+                    <div class="t-description t-description2">
+                        <span class="left"></span>
+                        <span class="message">项目名称</span>
+                        <span class="right">{{dename}}</span>
+                    </div>
+                    <div class="t-description t-description3">
+                        <span class="left"></span>
+                        <span class="message">投资期限</span>
+                        <span class="right">{{derepay_time}}<small  class="b2">{{Dayrepay_time}}</small ></span>
+                    </div>
+                    <div class="t-description t-description4">
+                        <span class="left"></span>
+                        <span class="message">投资起限</span>
+                        <span class="right">单笔{{demin_loan_money_format}}元起投</span>
+                    </div>
+                    <div class="Fundtrusteeship">新浪支付资金托管</div>
+                    
+                    <div class="LJinvestwrap">
+	                    <div class="LJinvest" style="background: rgb(255, 160, 59);" ng-if="(dedeal_status==1&&deremain_time>0)" ng-click="nowInvest()">立即投资</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==1&&deremain_time<0)">已过期</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==2)">满标</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==3)">流标</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==4)">还款中</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==5)">已还清</div>
+	                    <div class="LJinvest" ng-if="(dedeal_status==0)">等待材料</div>
+                    </div>
+                </div>
+                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="txmms" id="DEdescription" ng-bind-html='dedescription'>
+                	
+                </div>
+                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="tqyxx" id="DErisk_certifications" ng-bind-html='derisk_certifications'></div>
+                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="tfkbz" id="DErisk_security" ng-bind-html='derisk_security'></div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+

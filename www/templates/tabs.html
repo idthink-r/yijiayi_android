@@ -1,0 +1,61 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive {{$root.hideTabs}}" style="position: fixed; bottom: 0;" >
+<style type="text/css">
+  .bar-invest {
+    background:url("img/f-one.png") no-repeat center;
+    background-size:100% 100%;
+  }
+  .bar-dynamic {    
+    background:url("img/f-two.png") no-repeat center;
+    background-size:100% 100%;
+  }
+  .bar-account {
+    background:url("img/f-tre.png") no-repeat center;
+    background-size:100% 100%;
+  }
+  .tabsFixed{
+		width: 33.333%;
+  	height: 1rem;
+  	float: left;
+		z-index: 99999;
+		position:fixed;
+  	bottom: 0;
+  	display: none;
+	}
+  #tabsFixed0{
+  	left: 0;
+  }
+  #tabsFixed1{
+  	left: 33.3333333333%;
+  }
+    #tabsFixed2{
+  	right:0 ;
+  }
+</style>
+		<div class='tabsFixed' id="tabsFixed0"></div>
+		<div class='tabsFixed' id="tabsFixed1"></div>
+		<div class='tabsFixed' id="tabsFixed2"></div>
+
+  <!-- 投资 Tab  ng-controller='tabInvest'--> 
+  <ion-tab title="投资" icon="iconfont icon-sigekuang" href="#/tab/invest" >
+    <ion-nav-view name="tab-invest"></ion-nav-view>
+  </ion-tab>
+  
+  <!-- 动态 Tab -->
+  <ion-tab title="动态" icon="iconfont icon-xunhuanxian"  href="#/tab/dynamic">
+    <ion-nav-view name="tab-dynamic"></ion-nav-view>
+  </ion-tab>
+
+  <!-- 账户 Tab -->
+  <ion-tab title="账户" icon="iconfont icon-zhanghu1"  href="#/tab/accountlogin" >
+    <ion-nav-view name="tab-account"></ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>
+
+
+

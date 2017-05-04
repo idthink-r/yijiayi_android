@@ -1,0 +1,149 @@
+<ion-view view-title="应用设置" hide-nav-bar="true"  hide-tabs="true">
+    <style>
+        .header-settiing{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-settiing .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .setting-list{
+            width:5.9rem;
+            height:0.7rem;
+            margin:0 auto;
+            position: relative;
+            line-height: 0.7rem;
+            font-size:0.24rem;
+            color: #666;
+        }
+        .setting-list1{
+            margin-top:0.88rem;
+        }
+        .setting-list .sign{
+            display: block;
+            width:0.25rem;
+            height:0.23rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin: auto;
+            left:0;
+        }
+        .setting-list1 .sign{
+            background: url("img/setting1.png") no-repeat center;
+            background-size: 0.25rem 0.22rem;
+        }
+        .setting-list2 .sign{
+            background: url("img/setting2.png") no-repeat center;
+            background-size: 0.23rem 0.22rem;
+        }
+        .setting-list3 .sign{
+            background: url("img/setting3.png") no-repeat center;
+            background-size: 0.2rem 0.2rem;
+        }
+        .setting-list4 .sign{
+            background: url("img/setting4.png") no-repeat center;
+            background-size: 0.19rem 0.22rem;
+        }
+        .setting-list5 .sign{
+            background: url("img/setting5.png") no-repeat center;
+            background-size: 0.21rem 0.23rem;
+        }
+        .setting-list6 .sign{
+            background: url("img/setting6.png") no-repeat center;
+            background-size: 0.23rem 0.23rem;
+        }
+        .setting-list .lists{
+            margin-left:0.35rem;
+            float:left;
+        }
+        .setting-list .lists a{
+        	color:#666;
+        }
+        .setting-list div.lists{
+        	width: 5rem;
+        }
+        .setting-list .right{
+            float: right;
+        }
+        .setting-list .right-click{
+            font-size:0.22rem;
+            margin-left:0.05rem;
+        }
+        .signOut{
+          width: 5.9rem;
+          height: 0.6rem;
+          margin: 0 auto;
+          background: #ccc;
+          font-size: 0.24rem;
+          color: #fff;
+          text-align: center;
+          line-height: 0.6rem;
+          margin-top: 1.1rem;
+        }
+    </style>
+    <header class="header-settiing">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>应用设置</span>
+    </header>
+  <ion-content class="">
+  <!--写内容-->
+      <div class="setting-list setting-list1" ng-click='clearCache()'>
+          <span class="sign"></span>
+          <span class="lists">清除缓存</span>
+          <span class="right right-click ion-chevron-right"></span>
+      </div>
+      <div class="setting-list setting-list2" ng-click='callphone()'>
+          <span class="sign"></span>
+          <div class="lists"> <a href="tel:4000351924">联系客服</a></div>
+          <span class="right right-click ion-chevron-right"></span>
+      </div>
+      <div class="setting-list setting-list3" ng-click='goUpdataApp()'>   
+          <span class="sign"></span>
+          <span class="lists">版本信息</span>
+          <span class="right right-click ion-chevron-right"></span>
+          <span class="right" style="margin-right:0.1rem">V{{version}}</span>
+      </div>
+      <div class="setting-list setting-list4" ng-click='goScan()'>
+          <span class="sign"></span>
+          <span class="lists" >扫一扫</span>
+          <span class="right right-click ion-chevron-right"></span>
+      </div>
+       <!---->
+      <div class="setting-list setting-list5" ng-click="aboutUs()" ng-if='aboutusDis'>
+          <span class="sign"></span>
+          <span class="lists">关于我们</span>
+          <span class="right right-click ion-chevron-right"></span>
+      </div>
+   	  <div class="setting-list setting-list5" ng-click="aboutUs2()" ng-if='!aboutusDis'>
+          <span class="sign"></span>
+          <span class="lists">关于我们</span>
+          <span class="right right-click ion-chevron-right"></span>
+      </div>
+      <div class="setting-list setting-list6" ng-click='encourage()'>
+          <span class="sign"></span>
+          <span class="lists" >鼓励一下</span>
+          <span class="right ion-chevron-right"></span>
+          <span style="float: right;margin-right: 0.1rem;">求好评</span>
+      </div>
+    <div class="signOut" ng-click="SignOut()" ng-if='exitDisplay'>退出账户</div>
+      
+   
+  </ion-content>
+</ion-view>

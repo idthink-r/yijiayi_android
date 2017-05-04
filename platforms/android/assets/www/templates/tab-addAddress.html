@@ -1,0 +1,120 @@
+<ion-view view-title="设置收货地址" hide-nav-bar="true" hide-tabs="true">
+    <style>
+        .header-information{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #fff;
+            position: relative;
+            background: #3996D3;
+            z-index: 999;
+        }
+        .header-information .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .header-information .edit{
+            width: 1rem;
+            height:0.6rem;
+            border-radius: 0.05rem;
+            border:1px solid #98CEF2;
+            text-align: center;
+            line-height:0.6rem;
+            font-size: 0.22rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin: auto;
+            right: 0.1rem;
+        }
+        .fill{
+            font-size: 0.3rem;
+            color: #0F0F0F;
+            line-height: 0.7rem;
+            margin-left: 0.2rem;
+            margin-top: 0.88rem;
+        }
+        .addFill{
+            width: 6.1rem;
+            height: 0.65rem;
+            margin:0 auto;
+            margin-bottom: 0.2rem;
+        }
+        .addFill span{
+            display: block;
+            width: 1.5rem;
+            height: 100%;
+            text-align: right;
+            line-height: 0.65rem;
+            font-size: 0.26rem;
+            color: #0F0F0F;
+            float: left;
+        }
+        .addFill input{
+            width: 4.6rem;
+            height: 100%;
+            border:1px solid #CBCBCB;
+            padding-left: 0.1rem;
+            font-size: 0.24rem;
+        }
+        .default-address>div{
+            width:0.33rem;
+            height:0.33rem;
+            background: #266AB3;
+            border-radius: 0.08rem;
+            float: left;
+            margin-left: 3rem;
+        }
+        .default-address span{
+            line-height: 0.33rem;
+            font-size: 0.26rem;
+            color: #266AB3;
+        }
+
+    </style>
+    <header class="header-information">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>收货信息</span>
+        <span class="edit">保存地址</span>
+    </header>
+    <ion-content class="" style="background:#E3E3E3">
+        <!--写内容-->
+        <div class="fill">请填写收货地址</div>
+        <div class="addFill">
+            <span>姓名：</span>
+            <input type="text" placeholder="请输入姓名">
+        </div>
+        <div class="addFill">
+            <span>电话号码：</span>
+            <input type="tel" placeholder="请输入电话号码">
+        </div>
+        <div class="addFill">
+            <span>省市：</span>
+            <input type="text" placeholder="请输入省市名称">
+        </div>
+        <div class="addFill">
+            <span>详细地址：</span>
+            <input type="text" placeholder="请输入详细地址">
+        </div>
+        <div class="addFill">
+            <span>邮编：</span>
+            <input type="text" placeholder="请输入邮编">
+        </div>
+        <div class="default-address">
+            <div></div>
+            <span>设置成默认地址</span>
+        </div>
+
+
+    </ion-content>
+</ion-view>

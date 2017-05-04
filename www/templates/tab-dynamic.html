@@ -1,0 +1,106 @@
+<ion-view view-title="动态" hide-nav-bar="true" when-Scrolled>
+    <ion-content overflow-scroll="false" when-Scrolled> 
+        <!--动态页-->
+        <style>
+            .slide-out {
+                width: 100%;
+                height:100%;
+                margin-bottom: 0.8rem;
+            }
+            .slide{
+                width:100%;
+                height: 2.5rem;
+                position: relative;
+            }
+            .slidedynamic{
+            	background: url("img/dynamic1.png") no-repeat center;
+            	background-size: 100% 100%;
+            }
+            .slide .title{
+                padding-top:0.3rem;
+                text-align: center;
+                font-size:0.34rem;
+                color: #fff;
+                line-height: 0.8rem;
+            }
+            .slide .moneys{
+                text-align: center;
+                font-size:0.34rem;
+                color: #fa7306;
+                line-height: 0.8rem;
+            }
+            .slide .completed{
+                text-align: center;
+                font-size:0.22rem;
+                color: #fff;
+            }
+            .slide .inform{
+                width: 100%;
+                height: 0.5rem;
+                position: absolute;
+                bottom:0;
+                background: #36393a;
+                opacity:0.5;
+                padding:0 0.25rem;
+            }
+            .slide>img{
+            	width: 100%;
+            	height: 100%;
+            	position: absolute;
+            }
+            .slide .inform .notice{
+                width:4.5rem;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis ;   /*  clip */
+                font-size:0.22rem;
+                color: #fff;
+                height: .5rem;
+                line-height: 0.5rem;
+                float: left;
+            }
+            /*.slide .inform .date{
+                font-size:0.22rem;
+                color: #fff;
+                line-height: 0.5rem;
+                float: right;
+            }*/
+           .scroll{
+            height:11.36rem;
+        }
+        .errorShow{
+            	width: 100%;
+			    text-align: center;
+			    margin-top: -0.7rem;
+            }
+        </style>
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="do_refresher()"></ion-refresher>
+        <ion-list>
+        <div class="slide-out" id="loadmore" when-Scrolled>
+            <div class="slide slidedynamic">
+                <div class="title">动态</div>
+                <div class="moneys">{{dymoneys}}元</div>
+                <div class="completed">已完成投资金额</div>
+            </div>
+            <div class="slide slidemain" ng-repeat=" list in lists" ng-click="goDynaDetail({{list.id}})">
+                <img ng-src='{{URLAdmin+list.icon}}'/>
+                <div class="inform">
+                    <span class="notice" ng-bind="list.title"></span>
+                </div>
+            </div>
+            
+        </div>
+        </ion-list>
+        <div class="errorShow" ng-show="errorShow">亲，您的数据连接已断开</div>
+        <!--<ion-infinite-scroll on-infinite="loadMore()" distance="1%"  ng-if="!moredata" loader loadMore="loadMore()" >
+        </ion-infinite-scroll>-->
+        <ion-infinite-scroll on-infinite="loadMore()" distance="1%"  ng-if="hasmore" >
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>
+<!--Y = date.getFullYear() + '-';
+M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+D = date.getDate() + ' ';
+h = date.getHours() + ':';
+m = date.getMinutes() + ':';
+s = date.getSeconds(); -->

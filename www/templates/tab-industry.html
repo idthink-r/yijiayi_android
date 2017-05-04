@@ -1,0 +1,88 @@
+<ion-view view-title="行业动态" hide-nav-bar="true"  hide-tabs="true">
+    <style>
+        .header-industry{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-industry .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .industry{
+            width:100%;
+            height:1.1rem;
+            border-bottom:1px solid #ccc;
+            position: relative;
+            padding:0 0.2rem;
+        }
+        .industry:first-child{
+            margin-top: 0.88rem;
+        }
+        .industry .image{
+            width:1.3rem;
+            height:0.8rem;
+            position: absolute;
+            top:0.2rem;
+        }
+        .industry .image>img{
+        	width: 100%;
+		    border: 0;
+		    display: block;
+		    height: 100%;
+        }
+        .industry .title{
+            width:4.7rem;
+            height:100%;
+            font-size: 0.28rem;
+            color: #666;
+            line-height: 1.1rem;
+            margin-left:1.3rem;
+            white-space:nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 0.1rem;
+        }
+        .industry .date{
+            width:1.6rem;
+            height:0.3rem;
+            font-size: 0.2rem;
+            color: #B2B2B2;
+            position: absolute;
+            bottom:0.05rem;
+            right: 0.25rem;
+            text-align: right;
+        }
+
+    </style>
+    <header class="header-industry">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>{{program_title}}</span>
+    </header>
+    <ion-content class="" style='padding-top: .9rem!important;'>
+        <!--写内容-->
+        <ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
+        <div class="industry" ng-repeat=" x in industryList" ng-click="goIndustry({{x.id}})">
+            <div class="image">
+                <img ng-src="{{URLAdmin+x.icon}}" alt="{{x.title}}">
+            </div>
+            <div class="title">{{x.title}}</div>
+            <div class="date">{{x.update_time*1000 | date:'yyyy-MM-dd' }}</div>
+        </div>
+        <ion-infinite-scroll ng-if="!noMorePage"   on-infinite="loadMore()" distance="1%" ></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

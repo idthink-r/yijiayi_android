@@ -1,0 +1,147 @@
+/* Empty. Add your own CSS if you like */
+body,ul,li,ol,h1,h2,h3,h4,h5,h6,input,p,form,a{
+    margin: 0;padding:0;
+    list-style: none;
+}
+img{
+    border: 0;display: block;
+}
+a{
+    text-decoration: none;
+    display: block;
+}
+/*底部选项卡*/
+.tabs{
+    height: 1rem;
+}
+.tab-item{
+    width: 33.33333%;
+    margin: auto;
+    opacity: 1;
+    text-align: center;
+}
+.tab-item .icon {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    /*width: 0.3rem;*/
+    height: 0.24rem;
+    font-size: 0.34rem;
+}
+.tab-title{
+    font-size: 0.26rem;
+}
+
+/*iconfont 字体图标*/
+@font-face {font-family: 'iconfont';
+    src: url('../font/iconfont.eot'); /* IE9*/
+    src: url('../font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../font/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('../font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+/*!!! 这个类名必须是icon*/
+.iconfont {
+    font-family:"iconfont" !important;
+    font-size:0.22rem;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-sigekuang:before { content: "\e683"; }
+
+.icon-sigekuang1:before { content: "\e616"; }
+
+.icon-xunhuanxian:before { content: "\e756"; }
+
+.icon-four-squares:before { content: "\e63f"; }
+
+.icon-icons64x6423:before { content: "\e657"; }
+
+.icon-xunhuan:before { content: "\e64a"; }
+
+.icon-zhanghu:before { content: "\e640"; }
+
+.icon-zhanghu1:before { content: "\e661"; }
+
+
+        .xmodal-backdrop{
+            width: 100%;
+            height: 11.36rem;
+            background-color:rgba(0,0,0,0.2);
+        }
+        .xmodelMain{
+            width: 5.5rem;
+            min-height: 2.5rem;
+            position: absolute;
+            top: 30%;
+            left: 0;
+            right: 0;
+            margin: auto;
+            background: #fff;
+            border-radius: 0.1rem;
+            overflow: hidden;
+            padding-bottom: 0.2rem;
+        }
+        .xmodelMain .announcement{
+            font-size: 0.3rem;
+            color: #333;
+            line-height: 0.7rem;
+            background: #ff8a00;
+            padding-left: 0.5rem;
+            color: #fff;
+        }
+        .xmodelMain .content{
+            margin: 0.3rem;
+            padding: 0.2rem 0;
+            min-height: 1rem;
+            max-height: 8.3rem;
+            overflow: scroll;
+            /*text-indent: 2em;*/
+            font-size: 0.22rem;
+            line-height: 0.3rem;
+            text-align: center;
+        }
+        .xmodelMain .close{
+            width: 90%;
+            margin: 0 auto;
+            line-height: 0.6rem;
+            margin: 0 auto;
+            font-size: 0.24rem;
+            color: #fff;
+            text-align: center;
+        }
+        .xmodelMain .close .left, .xmodelMain .close .right{
+            width: 35%;
+            /*margin: 0 7.5%;*/
+            margin: 0 auto;
+            /*float: left;*/
+            background: #ff8a00;
+            border-radius: 0.1rem;
+        }
+
+.popup-container .popup {
+    width: 5rem;
+    border-radius: 0.2rem !important;
+}
+.button.ng-binding.button-positive{
+	border-radius: 0.1rem!important;
+	background: #ff8e27;
+}
+.button.ng-binding.button-positive  a{
+	color: #fff !important;
+}
+.popup-title {
+    font-size: 24px;
+}
+.popup-body span{
+	display: block;
+	margin: 0 auto;
+	text-indent: 2em;
+	padding: 0 0.3rem;
+	color: #333;
+	line-height: 0.4rem;
+}
+.popup-buttons .button:nth-child(2) {
+    background: #ccc;
+    border-radius: 0.1rem!important;
+}
