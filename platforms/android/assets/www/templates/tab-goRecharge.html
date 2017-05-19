@@ -1,0 +1,218 @@
+<ion-view view-title="充值" hide-nav-bar="true">
+	<style>
+		.header-recharge{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-recharge .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .escrowAccount{
+			width: 6rem;
+			line-height: 0.6rem;
+			margin: 0 auto;
+			background: #ffa03b;
+			color: #fff;
+			font-size: 0.24rem;
+			text-align: center;
+			margin-top: 1.08rem;
+        	border-radius: 0.1rem;
+        }
+        .prompt{
+        	height: 1.5rem;
+        	margin-top: 0.3rem;
+        	padding: 0.1rem 0.3rem 0.2rem;
+        	overflow: hidden;
+        }
+        .prompt p{
+        	line-height: 0.5rem;
+        	font-size: 0.22rem;
+        	color: #333;
+        }
+        .showAll{
+        	padding-left: 0.3rem;
+        	line-height: 0.5rem;
+        	font-size: 0.22rem;
+        	color: #333;
+        }
+        .promptBack{
+        	height: 1rem;
+        	margin-top: 0.2rem;
+        }
+        .promptBack span{
+        	display: block;
+        	width: 33.3333%;
+        	float: left;
+        	padding-left: 0.1rem;
+        	line-height: 0.5rem;
+        }
+        .textarea{
+        	width: 6rem;
+        	height: 1rem;
+        	margin: 0 auto;
+        	border: 1px solid #ccc;
+        	color: #333;
+        	margin-top: 0.2rem;
+        	border-radius: 0.1rem;
+        }
+        .textarea>div{
+        	width: 100%;
+        	height: 50%;
+        	overflow: hidden;
+        	padding-left: 0.2rem;
+        }
+        .textarea span{
+        	float: left;
+        	line-height: 0.5rem;
+        	font-size: 0.2rem;
+        	color: #C9C9C9;
+        }
+        .textarea input{
+        	float: left;
+        	height: 0.5rem;
+        	line-height: 0.5rem;
+        	width: 3.5rem;
+        }
+        .addCard{
+        	width: 6rem;
+        	margin:  0 auto;
+        	padding-left: 0.2rem;
+        	line-height: 0.7rem;
+        	font-size: 0.24rem;
+        	color: #333;
+        	border: 1px solid #ccc;
+        	margin-top: 0.2rem;
+        	border-radius: 0.1rem;
+        }
+        .addCard span{
+        	padding-left: 0.1rem;
+        }
+        .inputAmount{
+        	width: 6rem;
+        	margin: 0 auto;
+        	border: 1px solid #ccc;
+        	border-radius: 0.1rem;
+        	margin-top: 0.2rem;
+        	overflow: hidden;
+        	line-height: 0.7rem;
+        	padding-left: 0.2rem;
+			font-size: 0.24rem;
+        }
+        .inputAmount span{
+			float: left;
+			color: #333;
+        }
+        .inputAmount input{
+        	float: left;
+        	height: 0.7rem;
+        	line-height: 0.7rem;
+        	padding-left: 0.2rem;
+			font-size: 0.24rem;
+        }
+        .payment{
+        	width: 6rem;
+        	height: 2rem;
+        	margin: 0 auto;
+        	border: 1px solid #ccc;
+        	border-radius: 0.1rem;
+        	margin-top: 0.2rem;
+        	padding: 0.2rem;
+        	position: relative;
+        }
+        .payment img{
+        	width: 1.9rem;
+        	height: 0.6rem;
+        }
+		.payment .circle{
+			width: 0.5rem;
+			height: 0.5rem;			
+        	border: 1px solid #aaa;
+        	border-radius: 100%;
+        	position: absolute;
+        	right: 0.2rem;
+        	top: 0.4rem;
+        	text-align: center;
+        	line-height: 0.5rem;
+        	font-size: 0.4rem;
+			color: #fff;
+		}
+		.payment span{
+			line-height: 1rem;
+			font-size: 0.3rem;
+			padding-left: 0.3rem;
+		}
+        .confirm{
+        	margin-top: 0.3rem;
+        }
+	</style>
+	<header class="header-recharge">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>充值</span>
+    </header>
+	<ion-content class="">
+		<div class="escrowAccount">托管账户</div>
+		<div class="slidePrompt">
+			<div class="prompt">
+				<p>*及时充值所产生的转账费用，由第三方平台收取，充值费用视平台而定。</p>
+				<p>*如果充值金额没有及时到账，请和客服联系。</p>
+				<p>*银行预留手机号包括柜台手机、网上银行手机、手机银行手机、短信手机，如果绑卡失败</p>
+				<p>*请您到银行柜台核实以上银行预留手机号是否<span style="color:red">保持统一</span></p>
+				<p>*为了安全起见，只能绑定一张银行卡。</p>
+				<p>*用户更换绑定银行卡，需联系客服提交相关证明，包括：签字证明的扫描件或者照片！</p>
+			</div>
+			<span class="showAll" ng-click="showAll()">······显示全部</span>
+		</div>		
+		<div class="textarea">
+			<div>
+				<span>银行预留手机号：</span>
+				<input type="text" placeholder="123456787901">
+			</div>
+			<div>
+				<span>银行卡号：</span>
+				<input type="text" placeholder="123456789123456789">
+			</div>
+		</div>
+		<div class="addCard">添加银行卡<span class="icon ion-chevron-right"></span></div>
+		<div class="inputAmount">
+			<span>输入金额</span>
+			<input type="text" placeholder="输入金额">
+		</div>
+
+		<div class="payment">
+			<img src="img/payment.png" alt="">
+			<div class="circle" ng-click="selectPay()"></div>
+			<span>宝付资金托管(认证充值)</span>
+		</div>
+
+		<div class="slidePrompt1">
+			<div class="prompt promptBack">
+				<p>*支持的银行共计13家，如下所示：</p>
+				<span>中国工商银行</span><span>中国农业银行</span>
+				<span>中国建设银行</span><span>中国银行</span>
+				<span>中国交通银行</span><span>兴业银行</span>
+				<span>中信银行</span><span>中国光大银行</span>
+				<span>平安银行</span><span>中国邮政储蓄银行</span>
+				<span>上海银行</span><span>浦东发展银行</span>
+				<span>民生银行</span>
+			</div>
+			<span class="showAll" ng-click="stopAll()">······显示全部</span>
+		</div>
+		<div class="escrowAccount confirm">确认</div>
+	</ion-content>
+</ion-view>

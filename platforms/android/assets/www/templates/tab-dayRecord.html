@@ -1,0 +1,470 @@
+<ion-view view-title="日志页" hide-nav-bar="true"  hide-tabs="true">
+    <style>
+        .header-record{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-record .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }
+        .tab{
+            width: 100%;
+            height:auto;
+            /*margin-top:0.88rem;*/
+            overflow: scroll;
+        }
+        .tab .tab-title{
+            width: 100%;
+            margin: 0 auto;
+            height:0.8rem;
+            line-height: 0.8rem;
+        }
+        .tab .tab-title span{
+            display: block;
+            float: left;
+            width: 20%;
+            height: 100%;
+            font-size: 0.24rem;
+            font-size: 0.22rem;
+            color: #333;
+            text-align: center;
+            box-sizing:border-box;
+        }
+        .tab .tab-title .czrz{
+            width: 15%;
+        }
+        .tab .tab-title .flgmtx{
+            width: 25%;
+        }
+        .tab .tab-title .active{
+            color: #ffa03b;
+            border-bottom: 1px solid #ffa03b;
+        }
+        .tab-body{
+            width: 6rem;
+            margin: 0 auto;
+            margin-top: 0.2rem;
+        }
+        .t-body table{
+            width: 6rem;
+        }
+        .t-body table th{
+            width:3rem;
+            background: #ffa03b;
+            border: 1px solid #fff;
+            line-height: 0.7rem;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #fff;
+        }
+        .t-body3 table td:nth-child(3){
+            color: #ffa03b;
+        }
+        .t-body4 table th:nth-child(3), .t-body4 table th:nth-child(4){
+            width: 17%;
+        }
+        .t-body4 table td:nth-child(3), .t-body4 table td:nth-child(4){
+            width: 17%;
+        }
+        .t-body table td{
+            width:3rem;
+            border: 1px solid #fff;
+            line-height: 0.5rem;
+            text-align: center;
+            font-size: 0.2rem;
+            color: #333;
+        }
+        .t-body2 table th, .t-body2 table td{
+            width: 25%;
+            display: block;
+            float: left;
+        }
+        .t-body3 table th, .t-body3 table td{
+            width: 25%;
+            display: block;
+            float: left;
+        }
+        .t-body4 table th, .t-body4 table td{
+            width: 22%;
+            display: block;
+            float: left;
+        }
+        .t-body table tr:nth-child(2n+1){
+            background: #f8f8f8;
+        }
+        .page{
+            width: 3.6rem;
+            height: 0.5rem;
+            margin: 0 auto;
+            margin-top: 0.4rem;
+        }
+        .page li{
+            width: 0.5rem;
+            height: 0.5rem;
+            margin: 0 0.05rem;
+            float: left;
+            border-radius: 0.1rem;
+            border: 1px solid #bdbdbd;
+            background: #f7f7f7;
+            font-size: 0.2rem;
+            color: #bdbdbd;
+            text-align: center;
+            line-height: 0.5rem;
+        }
+        .page .active{
+            border: 1px solid #ffa03b;
+            color: #ffa03b;
+        }
+        .rechange{
+             width: 5rem;
+            height: 0.6rem;
+            margin: 0 auto;
+            background: #ffa03b;
+            text-align: center;
+            line-height: 0.6rem;
+            font-size: 0.24rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+            border-radius: 0.1rem;
+
+        }
+        .log{
+            width: 6rem;
+            height: 0.8rem;
+            margin: 0 auto;
+            top: 1.8rem;
+            left: 0;
+            right: 0;
+            margin:auto;
+            position: fixed;
+        }
+        .log div{
+            width: 50%;
+            height: 100%;
+            float: left;
+            font-size: 0.26rem;
+            color: #333;
+            background: #f8f8f8;
+            text-align: center;
+            line-height: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+        .log .active{
+            background: #ffa03b;
+            color: #fff;
+        }
+        td{
+            line-height: 0.7rem !important;
+        }
+        .myfltx{
+            border: 1px solid #ccc;
+		    font-size: 0.25rem;
+		    color: #333;
+		    border-radius: 5px;
+		    margin-bottom: 0.1rem;
+		    padding: .1rem;
+        }
+        .myfltx>div{
+            height: 0.5rem;
+        }
+        .fltxone{
+            height: 0.5rem;
+        }
+        .fltxone1,.fltxone2{
+            width: 50%;
+            line-height: 0.5rem;
+            float: left;
+        }
+        .fltxtre{
+            line-height: 0.8rem;
+            padding-left:0.1rem ;
+            border-top:1px dashed #ccc ;
+            height:0.8rem !important;
+        }
+        .fltxbutton{
+            margin-right: 0.05rem;
+            margin-top: 0.15rem;
+            width: 1.5rem;
+           
+            line-height: 0.5rem;
+            float: right;
+            display: inline-block;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .dclbtnstyle{
+             border: 2px solid #a6bfe9;
+             color:#a6bfe9 !important ;
+        }
+        .ycxbtnstyle{
+            border: 2px solid #ffa03b;
+            color:#ffa03b !important ;
+        }
+        .dkcgbtnstyle{
+            border: 2px solid #aad421;
+        }
+        .fltxtwo{
+            color: #fd0533 !important;
+        }
+        .dclstyle{
+            color: #a6bfe9 !important;
+        }
+        .ycxstyle{
+            color: #ffa03b !important;
+        }
+        .dkcgstyle{
+            color: #aad421 !important;
+        }
+        ::-webkit-scrollbar  
+        {  
+            width: 0px;  
+            height: 0px;  
+            background-color: #fff;  
+        }  
+          
+        /*定义滚动条轨道 内阴影+圆角*/  
+        ::-webkit-scrollbar-track  
+        {  
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,1);  
+            border-radius: 10px;  
+            background-color: #fff;  
+        }  
+          
+        /*定义滑块 内阴影+圆角*/  
+        ::-webkit-scrollbar-thumb  
+        {  
+            border-radius: 10px;  
+            -webkit-box-shadow: inset 0 0 0 rgba(0,0,0,1);  
+            background-color: #fff;  
+        }  
+        .rechangeBox{
+            width: 100%;
+            background: #fff;
+            position: fixed;
+            bottom:0rem;
+            left: 0;
+            right: 0;
+            margin: auto;
+   
+        }
+          .pageNull{
+        	display: none;
+        	position: absolute;
+		    left: 0;
+		    right: 0;
+		    top: 0;
+		    bottom: 0;
+		    margin: auto;
+		    text-align: center;
+		    line-height:2rem;
+		    width:5rem;
+		    height: 2rem;
+		    color: #ffa03b;
+        }
+    </style>
+    
+    
+    <script id="templates/modal.html" type="text/ng-template">
+    	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content">接口升级中</p>
+                <div class="close">
+                    <!--<div class="left" ng-click="modal.hide()" style="background:#B9B9B9">取消</div>-->
+                    <div class="right" ng-click="modal.hide()">确定</div>
+                </div>
+            </div>          
+        </div>
+    </script>
+    <header class="header-record">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>日志</span>
+    </header>
+    <!-- <ion-content class="" style="overflow: hidden;"> -->
+        <!--写内容-->
+        <div class="tab">
+            <div class="tab-title">
+                <span class="czrz" ng-click="czrz()" ng-style="czrzs">充值日志</span>
+                <span class="txrz" ng-click="txrz()" ng-style="txrzs">提现日志</span>
+                <span class="zhrz" ng-click="zhrz()" ng-style="zhrzs">账户日志</span>
+                <span class="vgmrz" ng-click="vgmrz()" ng-style="vgmrzs">VIP购买日志</span>
+                <span class="flgmtx" ng-click="flgmtx()" ng-style="flgmtxs">福利提现日志</span>
+            </div>
+            <div class="tab-body" >
+                <div class="t-body t-body1 czBodyCon"  ng-show="sczrz"  style='height:8.5rem;overflow: scroll;'>
+                    <div style="min-height: 9.5rem;position: static;padding-bottom:2rem;">
+                        <table>
+                            <thead style='position: fixed;left: 0;right: 0;margin: auto;width: 6rem;'>
+                                 <tr>
+                                    <th>编号</th>
+                                    <th>充值日志</th>
+                                    <th>充值金额</th>
+                                </tr>
+                            </thead>
+                           <tbody style='padding-top: .7rem;    display: block;'>
+                                <tr ng-repeat="x in CZRecordlists">
+                                    <td style="width: 2rem;">{{x.pMerBillNo}}</td>
+                                    <td style="width: 2rem;">{{x.pTrdDate}}</td>
+                                    <td style="width: 2rem;">{{x.pTrdAmt}}</td>
+                                </tr>
+                           </tbody>
+                        </table>
+                    </div>
+                    <div class="rechangeBox">
+                         <div class="rechange" ng-click="modal.show()" >充值</div>
+                    </div>
+					<div class='pageNull'>您当前没有充值日志记录</div>
+                </div>
+                <div class="t-body t-body2 txBodyCon" style='height: 8.5rem;overflow: scroll;'  ng-show="stxrz">
+                    <div style="position: static;min-height: 9.5rem;padding-bottom:2rem;">
+                    <table>
+                        <tr style='position: fixed;left: 0;right: 0;margin: 0 auto;width: 6rem;'>
+                            <th>编号</th>
+                            <th>提现日期</th>
+                            <th>交易金额</th>
+                            <th>手续费</th>
+                        </tr>
+                        <tbody  class='txBodyConBody' style='padding-top: .7rem;    display: block;'>
+                        	<tr ng-repeat="x in TXRecordlists">
+	                            <td style="width: 1.5rem;">{{x.pIpsBillNo }}</td>
+	                            <td style="width: 1.5rem;"> {{x.pDwDate}}</td>
+	                            <td style="width:1.5rem;">{{x.pTrdAmt}}</td>
+	                            <td style="width: 1.4rem;">{{x.pMerFee}}</td>
+	                        </tr>
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+                    </div><div class='pageNull'>您当前没有提现日志记录</div>
+                    <div class="rechangeBox">
+                        <div class="rechange"  ng-click="modal.show()"  >提现</div>
+                    </div>
+                </div>
+                <div class="t-body t-body3 "  style='padding-bottom:2rem;' ng-show="szhrz">                 
+                    <div class="log">
+                        <div ng-click="Flshow()" ng-class="{active:FLshow}">福利日志</div>
+                        <div ng-click="AAJFshow()" ng-class="{active:JFshow}">积分日志</div>
+                    </div>
+                    <div class='flBodyCon' style="height:8.5rem; overflow: scroll;margin-top:1rem" ng-show="FLshow" >
+                        <div style="min-height:9.5rem;padding-top: 0.7rem;">
+                            <table>
+                                <thead>
+                                    <tr style='position: fixed;top:2.6rem;left: 0;right: 0;margin: 0 auto;width: 6rem;padding-top:0.1rem'>
+                                        <th>时间</th>
+                                        <th>操作类型</th>
+                                        <th>操作金额</th>
+                                        <th>结余</th>
+                                    </tr>
+                                </thead>                              
+                                <tbody >
+                                     <tr ng-repeat="x in FLRecordlists">
+                                        <td>{{x.create_time*1000|date:'yyyy-MM-dd'}}</td>
+                                        <td>{{x.title}}</td>
+                                        <td>{{x.money}}</td>
+                                        <td>{{x.account_money}}</td>
+                                       
+                                    </tr>
+                                </tbody>                               
+                            </table>                            
+                        </div>                        
+                        <div class='pageNull'>您当前没有账户福利日志记录</div>                        
+                    </div>
+                     <div class='jfBodyCon' style="height:8.5rem; overflow: scroll;margin-top:1rem" ng-show="JFshow">
+                        <div  style="min-height:9.5rem;padding-top: 0.7rem;">
+                        <table >
+                            <tr  style='position: fixed;top:2.6rem;left: 0;right: 0;margin: 0 auto;width: 6rem;padding-top:0.1rem'>
+                                <th>时间</th>
+                                <th>操作类型</th>
+                                <th>操作积分</th>
+                                <th>结余</th>
+                            </tr>
+                            <tr ng-repeat="x in JFRecordlists">
+                                <td>{{x.create_time*1000|date:'yyyy-MM-dd'}}</td>
+                                <td>{{x.title}}</td>
+                                <td>{{x.score}}</td>
+                                <td>{{x.account_score}}</td>
+                                
+                            </tr>
+                        </table>
+                        </div>
+                    <div class='pageNull'>您当前没有账户积分日志记录</div>
+                    </div>
+                </div>
+                <div class="t-body t-body4 vipBodyCon" style='height: 8.5rem;overflow: scroll;'  ng-show="svgmrz">
+                   <div style="position: static;  min-height:9.5rem;padding-bottom: 2rem;">
+                   <table>
+                        <tr  style='position: fixed;left: 0;right: 0;margin: 0 auto;width:6rem'>
+                            <th>购买等级</th>
+                            <th>购买时间</th>
+                            <th>期限</th>
+                            <th>价格</th>
+                            <th>到期时间</th>
+                        </tr>
+                        <tbody  style='padding-top: .7rem;    display: block;'>
+	                        <tr ng-repeat="x in VIPRecordlists">
+	                            <td  style="width:1.3rem;">{{x.vip_grade}}</td>
+	                            <td  style="width: 1.34rem;">{{x.vip_buytime*1000 | date:'yyyy-MM-dd'}}</td>
+	                            <td  style="width: 1rem;">{{x.buy_limit}}</td>
+	                            <td  style="width: 1.05rem;">{{x.buy_fee}}</td>
+	                            <td  style="width: 1.3rem;">{{x.vip_end_time*1000 | date:'yyyy-MM-dd'}}</td>
+	                        </tr>  
+                        </tbody>
+                    </table>
+                   
+                    
+                    </div>
+                     <div class="rechangeBox">
+                        <div class="rechange" ng-click="goVIPBuy()">VIP购买</div>
+                    </div>
+                    <div class='pageNull'>您当前没有VIP购买日志记录</div>
+                </div>
+                <div class="t-body lflBodyCon" style='height:8.5rem;overflow: scroll;padding-bottom: 1rem;' ng-show="sflgmtx">
+                    <div style="      position: static;  min-height: 9.5rem;padding-bottom: 2rem;">
+                    <div class="myfltx" ng-repeat="x in FLlastlists">
+                        <div class="fltxone">
+                            <div class="fltxone1"><span>提现金额</span><span>&nbsp;{{x.money}}</span></div>
+                            <div class="fltxone2"><span>手续费</span><span>&nbsp;{{x.fee}}</span></div>
+                        </div>
+                        <div class="txyh"><span>提现银行</span><span>&nbsp;{{x.bank_name}}</span></div>
+                        <div class="fltxtwo"><span>银行资料</span><span>&nbsp;卡号：***{{x.bankcard | limitTo:-5}}</span> <span>&nbsp;&nbsp;账户：1***{{x.real_name | limitTo:-2}}</span></div>
+                        <div class="fltxtre">
+                            <span>处理结果</span>
+                            <span ng-if='x.status_format=="待处理"' class="dclstyle">&nbsp;{{x.status_format}}</span>
+                            <span ng-if='x.status_format=="已撤销"' class="ycxstyle">&nbsp;{{x.status_format}}</span>
+                            <span ng-if='x.status_format=="提现成功"' class="dkcgstyle">&nbsp;{{x.status_format}}</span>
+                            <span ng-if='x.status_format=="提现失败"'>&nbsp;{{x.status_format}}</span>
+                            <span ng-if='x.status_format=="待付款"'>&nbsp;{{x.status_format}}</span>
+                            <span class="fltxbutton dclbtnstyle" ng-if='x.status_format=="待处理"' ng-click="Revoke(x.status,x.id)">撤销申请</span>
+                            <span class="fltxbutton ycxbtnstyle" ng-if='x.status_format=="已撤销"' ng-click="Revoke(x.status,x.id)">申请提现</span>
+                            <span class="fltxbutton dkcgbtnstyle" ng-if='x.status_format=="提现成功"'>提现成功</span>
+                        </div>  
+                    </div>
+                  
+                    
+                    </div>
+                      <div class="rechangeBox">
+                        <div class="rechange" ng-click="goBenefitMoney()">福利提现</div>
+                    </div>
+                    <div class='pageNull'>您当前没有福利提现日志记录</div>
+                </div>
+            </div>
+        </div>
+    <!-- </ion-content> -->
+</ion-view>

@@ -1,0 +1,345 @@
+<script id="templates/modal.html" type="text/ng-template">
+	<div>                                                           
+        <div class="modal-backdrop">
+        	<div class="modelMain">
+        		<div class="availablemoney" style="border-right:1px  solid #F8F8F8;box-sizing: border-box;border-bottom:1px solid #F8F8F8;">
+        			<span>{{pBalance}}</span>
+        			<span>可用余额[绑]</span>
+        		</div>
+        		<div class="availablemoney" style="border-bottom:1px solid #F8F8F8;box-sizing: border-box;">
+        			<span>{{totalent}}</span>
+        			<span>账户总额[绑]</span>
+        		</div>
+        		<div class="availablemoney" style="border-right:1px solid #F8F8F8;box-sizing: border-box;">
+        			<span>{{total_money_format}}</span>
+        			<span>现金奖励[绑]</span>
+        		</div>
+        		<div class="availablemoney">
+        			<span>{{score}}</span>
+        			<span>我的积分[绑]</span>
+        		</div>
+        	</div>
+	        <div class="zjmx">资金明细</div>
+        	<div class="closezjmx"　 ng-click="modal.hide()"></div>
+        </div>                                                      
+    </div>     
+</script>
+<script id="templates/czmodal.html" type="text/ng-template">
+    	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content">接口升级中</p>
+                <div class="close">
+                    <!--<div class="left" ng-click="modal.hide()" style="background:#B9B9B9">取消</div>-->
+                    <div class="right" ng-click="czmodal.hide()">确定</div>
+                </div>
+            </div>          
+        </div>
+    </script>       
+<ion-view view-title="账户" hide-nav-bar="true" hide-tabs='false'>
+	
+	<style>
+		   ::-webkit-scrollbar  
+        {  
+            width: 0px;  
+            height: 0px;  
+            background-color: #fff;  
+        }  
+          
+        /*定义滚动条轨道 内阴影+圆角*/  
+        ::-webkit-scrollbar-track  
+        {  
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,1);  
+            border-radius: 10px;  
+            background-color: #fff;  
+        }  
+          
+        /*定义滑块 内阴影+圆角*/  
+        ::-webkit-scrollbar-thumb  
+        {  
+            border-radius: 10px;  
+            -webkit-box-shadow: inset 0 0 0 rgba(0,0,0,1);  
+            background-color: #fff;  
+        }  
+		.modal-backdrop{
+        	background-color:rgba(0,0,0,0.2)
+        }
+        .modelMain{
+    	    border-radius: 5px;
+    	    width: 5.9rem;
+		    margin: 0 auto;
+		    height: 3rem;
+		    background: #fff;
+		    margin-top: 3.3rem;
+        }
+        .availablemoney{
+        	float: left;
+        	width: 50%;
+   			height: 1.4rem;
+   			padding: 0.4rem 0;
+        }
+         .availablemoney span{
+        	display: block;
+        	text-align: center;
+        	line-height: 0.3rem;
+            font-size: 0.2rem;
+        }
+        .zjmx{
+    	    border-radius: 5px;
+            display: block;
+        	line-height: 0.8rem;
+            font-size: 0.2rem;
+		    background: #ffba00;
+		    width: 2.8rem;
+		    text-align: center;
+		    position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top:5.9rem;
+		    color: #fff;
+        }
+        .closezjmx{
+            height: 1.5rem;
+            width: 0.48rem;
+        	background: url("img/accmore.png") no-repeat center;
+        	background-size: 100%;
+		    margin: 0 auto;
+            margin-top: 0.2rem;
+        }
+		.top_bg{
+			position: relative;
+			width: 100%;
+			height: 4.93rem;
+			background: url(img/bg_img_01.png) no-repeat center;
+			background-size:100% 100% ;
+			color: #fff;
+            text-align: center;
+		}
+        .vip{
+            width:100%;
+            height:1.5rem;
+            padding-top: 0.3rem;
+            position: relative;
+        }
+        .vip .setting{
+            display: block;
+            width:0.88rem;
+            height:0.88rem;
+            background: url("img/setting.png") no-repeat top center;
+            background-size: 0.44rem 0.44rem;
+            float: right;
+        }
+		#vipimg {
+			top: 0.4rem;
+		    margin-left: -0.9rem;
+		    left: 50%;
+		    width: 1.8rem;
+		    height: 1.3rem;
+		    background-image: url("img/uc_bjvip.png");
+		    background-repeat:  no-repeat ;
+		    background-position: center;
+		    background-size: 100% 100%;
+		    position: absolute;
+		    line-height: 2.3rem;
+		    font-size: 0.12rem;
+		}
+
+        .top_bg .login-name{
+            font-size: 0.24rem;
+		    text-align: center;
+		    color: #fff;
+		    line-height: 1.18rem;
+		    height: 1rem;
+        }
+        .btnmy{
+            width: 2.2rem;
+            height: 0.3rem;
+            margin:0 auto;
+        }
+        .btnmy .btn1{
+        	color: #fff!important;
+        }
+        .btnmy .btn1,.btnmy .btn2{
+            width: 1rem;
+            line-height: 0.3rem;
+            background:#30343e;
+            float: left;
+            text-align: center;
+            font-size: 0.2rem;
+            
+        }
+        .btnmy .btn2{
+            float: right;
+        }
+        .money{
+            width: 5.9rem;
+            height: 1.25rem;
+            margin:0 auto;
+            margin-top:0.15rem;
+            border-top:1px solid #82848C;
+            border-bottom:1px solid #82848C;
+            box-sizing:border-box;
+            padding:0.15rem 0;
+        }
+        .money  .money-list{
+            width: 33.333%;
+            height: 100%;
+            float: left;
+            border-right:1px solid #82848C;
+            box-sizing:border-box;
+        }
+        .money  .money-lists{
+            border-right:0rem;
+        }
+        .money  .money-list span{
+            font-size:0.18rem;
+            line-height: 0.25rem;
+        }
+        .more{
+            width: 0.37rem;
+            height: 0.37rem;
+            margin: 0 auto;
+            margin-top:-0.13rem;
+            background: url("img/more.png") no-repeat center;
+            background-size: 100% 100%;
+        }
+        /*充值提现*/
+        .charge{
+            width:5.9rem;
+            height:0.7rem;
+            margin:0 auto;
+        }
+        .charge .lists{
+            width: 50%;
+            height: 100%;
+            float: left;
+            line-height:0.7rem;
+            text-align: center;
+            position: relative;
+            font-size: 0.24rem;
+        }
+        .charge .lists .sign{
+            display: block;
+            width:0.36rem;
+            height:0.36rem;
+            background: url("img/recharge.png") no-repeat center;
+            background-size: 100% 100%;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left:1rem;
+        }
+        .charge .right .sign{
+            background: url("img/tixian.png") no-repeat center;
+            background-size: 100% 100%;
+            left:1rem;
+        }
+        .line{
+            width:100%;
+            height:0.2rem;
+            background: #F8F8F8;
+        }
+        .middle{
+            width:100%;
+            height: 3.8rem;
+            margin-bottom:1rem;
+        }
+        .middle .lists{
+            width:50%;
+            height:2rem;
+            float: left;
+            text-align: center;
+        }
+        .middle .lists .sign{
+            display: block;
+            width:0.7rem;
+            height:0.7rem;
+            background: url("img/account1.png") no-repeat center;
+            background-size: 100% 100%;
+            margin:0 auto;
+            margin-top:0.5rem;
+        }
+        .middle .lists .sign2{
+             background: url("img/account2.png") no-repeat center;
+             background-size: 100% 100%;
+         }
+        .middle .lists .sign3{
+            background: url("img/account3.png") no-repeat center;
+            background-size: 100% 100%;
+        }
+        .middle .lists .sign4{
+            background: url("img/account4.png") no-repeat center;
+            background-size: 100% 100%;
+        }
+        .middle .lists .middle-name{
+            font-size:0.24rem;
+            color: #666;
+            line-height: 0.6rem;
+        }
+	</style>
+ <ion-scroll direction="y">
+  	
+ 
+      <ion-refresher pulling-text="下拉刷新..." on-refresh="do_refresher()"></ion-refresher>                                                         
+      <div class="top_bg">
+            <div class="vip" >
+                <div id="vipimg">{{nowVIP}}</div>
+                <span class="setting"  ng-click="goSetting()"></span>
+            </div>
+            <div class="login-name">{{login_username}}</div>
+            <div class="btnmy">
+                <div class="btn1"  ng-click="goAttention() ">我的关注</div>
+                <div class="btn2" ng-click="goSign()" ng-bind='t_sign_data'>立即签到</div>
+            </div>
+            <div class="money">
+                <div class="money-list">
+                    <span>{{pBalance}}</span><br>
+                    <span>可用余额[绑]</span>
+                </div>
+                <div class="money-list">
+                    <span>{{totalent}}</span><br>
+                    <span>账户总额[绑]</span>
+                </div>
+                <div class="money-list money-lists">
+                    <span>{{totalent}}</span><br>
+                    <span>投资中[绑]</span>
+                </div>
+            </div>
+            <div class="more" ng-click="modal.show()"></div>
+        </div>
+      <!--  充值提现部分-->
+      <div class="charge">
+          <div class="lists left"  ng-click="czmodal.show()" style="border-right: 1px #F8F8F8 solid;box-sizing: border-box;">
+              <span class="sign"></span>
+              <span style="margin-left: 0.6rem;">充值</span>
+          </div>
+          <div class="lists right"  ng-click="czmodal.show()">
+              <span class="sign"></span>
+              <span style="margin-left: 0.7rem;">提现</span>
+          </div>
+      </div>
+      <div class="line"></div>
+      <!--四大模块-->
+      <div class="middle">
+          <div class="lists" ng-click="goDayRecord()" style="border-right:1px solid #F8F8F8;box-sizing: border-box;border-bottom:1px solid #F8F8F8;">
+              <span class="sign"></span>
+              <span class="middle-name">日志</span>
+          </div>
+          <div class="lists" ng-click="goInvest()" style="border-bottom:1px solid #F8F8F8;box-sizing: border-box;">
+              <span class="sign sign2"></span>
+              <span class="middle-name">投资记录</span>
+          </div>
+          <div class="lists" ng-click="goRecommend()" style="border-right:1px solid #F8F8F8;box-sizing: border-box;">
+              <span class="sign sign3"></span>
+              <span class="middle-name">我要推荐</span>
+          </div>
+          <div class="lists" ng-click="goaccountDetails()">
+              <span class="sign sign4"></span>
+              <span class="middle-name">账户详情</span>
+          </div>
+      </div>
+ 
+	 </ion-scroll>
+</ion-view>

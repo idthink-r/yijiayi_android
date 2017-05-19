@@ -1,0 +1,317 @@
+<ion-view view-title="还款" hide-nav-bar="true"  hide-tabs="true">
+<style>
+    .popupPass{
+        width: 100%;
+        height: 100%;
+        position: absolute;       
+        background-color:rgba(0,0,0,0.2); 
+    }
+     .truePassword{
+       width: 6rem;
+       height: 3.5rem;
+       background:#fff;
+       position: absolute;
+       left: 0;
+       top: 0;
+       bottom: 0;
+       right: 0;
+       margin: auto;
+       color: #333;
+   } 
+   .truePassword .close{
+        width: 0.5rem;
+        height: 0.5rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-align: center;
+        line-height: 0.5rem;
+        font-size: 0.4rem;
+   }
+   .truePassword h4{
+        text-align: center;
+        line-height: 0.6rem;
+        font-size: 0.3rem;
+        border-bottom:1px solid #CDCDCD;
+   }
+    .truePassword input{
+        width: 5.3rem;
+        height: 0.8rem;
+        margin: 0 auto;
+        margin-top: 0.3rem;
+        border:1px solid #CDCDCD;
+        border-radius: 0.1rem;
+        padding-left: 0.2rem;
+    }
+    .truePassword p{
+        line-height: 0.8rem;
+        font-size: 0.22rem;
+        color: #333;
+        text-align: right;
+        padding: 0 0.2rem;
+    }
+    .truePassword p span{
+        color: #509ACD;
+    }
+    .truePassword .btnTrue, .truePassword .btnCancel{
+        width: 2.6rem;
+        line-height: 0.7rem;
+        font-size: 0.24rem;
+        color: #fff;
+        background: #CBCBCB;
+        text-align: center;
+        float: left;
+        border-radius: 0.5rem;
+        margin: 0.2rem;
+    }
+    .truePassword .active{
+        background: #FF9000;
+    }
+
+</style>
+<!-- 输入密码的模态框 -->
+<script id="templates/confirmPass.html" type="text/ng-template">
+    <div class="popupPass">
+        <div class="truePassword">
+            <span class="close icon ion-close" ng-click="confirmPass.hide()"></span>
+            <h4>请输入密码</h4>
+            <input type="password" placeholder="" ng-model="paypassword">
+            <p>还未设置？<span>点这里</span></p>
+            <div class="btnTrue active" ng-click=" confirmPay(x.l_key_index,RepaymentID,paypassword,data.email,logindata.user_pwd);confirmPass.hide()" ng-repeat="x in RepaymentLIST" ng-if="x.has_repay==0&&x.flag==1">确认支付</div>
+            <div class="btnCancel"  ng-click="confirmPass.hide()">取消支付</div>
+        </div>
+    </div>
+</script>
+
+    <style>
+        .header-repayment{
+            width:100%;
+            height:0.88rem;
+            text-align: center;
+            line-height:0.88rem;
+            font-size:0.32rem;
+            color: #ffa03b;
+            position: relative;
+            background: #f8f8f8;
+            z-index: 999;
+        }
+        .header-repayment .back{
+            width:0.88rem;
+            height:0.88rem;
+            text-align: center;
+            line-height: 0.88rem;
+            position: absolute;
+            top:0;
+            bottom:0;
+            margin:auto;
+            left: 0rem;
+            font-size: 0.4rem;
+        }        
+        .loanTest{
+            width: 2rem;
+            margin-left: 0.25rem;
+            margin-top: 1rem;
+            font-size: 0.24rem;
+            color: #fff;
+            background: #FFBC75;
+            text-align: center;
+            line-height: 0.5rem;
+            border: 2px solid #FEA13A;
+            border-radius: 0.1rem;
+        }
+        .loanMoney{
+            text-align: center;
+            font-size: 0.3rem;
+            color: #F8B468;
+            line-height: 0.5rem;
+            margin-top: 0.2rem;
+        }
+        .stayMoney{
+            text-align: center;
+            font-size: 0.24rem;
+            color: #333;
+            line-height: 0.5rem;
+        }
+        .borrowMoney{
+            padding: 0 0.25rem;
+            font-size: 0.24rem;
+            color: #333;
+            line-height: 0.6rem;
+            margin-top: 0.2rem;
+            border-bottom:1px solid #aaa;
+        }
+        .paymentReocrd{
+            padding: 0 0.2rem;
+            line-height: 0.6rem;
+            font-size: 0.24rem;
+            color: #333;
+            background: #E7E7E7;
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+        }
+        .itemList p{
+            line-height: 0.3rem;
+            font-size: 0.2rem;
+            color: #333;
+            padding: 0 0.25rem;
+        }
+        .phase{
+            width: 6rem;
+            height: 3rem;
+            border: 1px solid #CECECE;
+            border-radius: 0.1rem;
+            margin: 0 auto;
+            margin-top: 0.3rem;
+        }
+        .phase .top{
+            padding: 0.1rem 0.2rem;
+            overflow: hidden;
+            border-bottom: 1px solid #CECECE;
+        }
+        .phase .top span{
+            display: block;
+            height: 0.6rem;
+            font-size: 0.24rem;
+            color: #333;
+            line-height: 0.6rem;
+            float: left;
+        }
+        .phase .top span:first-child{
+            width: 0.8rem;
+            text-align: center;
+            border-right:1px solid #CECECE;
+        }
+        .phase .bottom{
+            padding: 0.2rem;
+        }
+        .phase .bottom>div{
+            float: left;
+        }
+        .phase .bottom .select{
+            width: 0.8rem;
+            height: 1.8rem;
+            text-align: center;
+            line-height: 1.8rem;
+            border-right:1px solid #CECECE;
+            position: relative;
+        }
+        .phase .bottom .select .checkbox{
+            width: 0.4rem;
+            height: 0.4rem;       
+            border-radius: 100%;
+            background: #ff9000;
+            color: #fff;
+            font-size: 0.3rem;  
+            text-align: center;
+            line-height: 0.2rem;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            /*display: none;*/
+        }
+        .phase .bottom .phaseList{
+            width: 4.7rem;
+            font-size: 0.2rem;
+            color: #333;
+            line-height: 0.6rem;
+            padding-left: 0.2rem;
+        }
+        .phase .bottom .phaseList p{
+            display: block;
+            width: 50%;
+            float: left;
+        }
+        .phase .bottom .phaseList .status{
+            padding-left: 0.2rem;
+        }
+        .phase .bottom .phaseList .waitFor{
+            color: #89C600;
+        }
+        .final{
+            width: 6rem;
+            height: 0.6rem;
+            margin: 0 auto;
+            margin-top: 0.5rem;
+                margin-bottom: 1.8rem;
+        }
+        .final .totalMoney{
+            float: left;
+            width: 40%;
+            line-height: 0.3rem;
+            color: #333;
+        }
+        .final .totalMoney p:first-child{
+            font-size: 0.3rem;
+        }
+        .final .totalMoney p:last-child{
+            font-size: 0.24rem;
+        }
+        .final .true{
+            float: right;
+            width: 1.5rem;
+            height: 100%;
+            background: #FF9000;
+            color: #fff;
+            font-size: 0.24rem;
+            line-height: 0.6rem;
+            text-align: center;
+            border-radius: 0.3rem;
+            margin-left: 0.1rem;
+        }
+    </style>
+    <header class="header-repayment">
+        <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
+        <span>还款</span>
+    </header>
+    <ion-content class="">
+        <!--写内容-->
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="do_refresher()"></ion-refresher>
+
+        <div class="loanTest">{{RepaymentBDMC}}</div>
+        <p class="loanMoney">￥{{RepaymentDHJE}}</p>
+        <p class="stayMoney">待还金额</p>
+        <div class="borrowMoney"> 
+            <span>借款金额</span>
+            <span style="float:right">{{RepaymentJKJE}}</span>
+        </div>
+        <p class="paymentReocrd">还款记录(温馨提示：还款应遵循先借先还的准则)</p>
+        <div class="itemList">
+            <p>借款项目：{{RepaymentBDMC}}</p>
+            <p>借款期限：{{RepaymentJKQX}}</p>
+            <p>年化收益：{{RepaymentMSHY}}</p>
+            <p>已还本息：￥{{RepaymentYHBX}}</p>
+        </div>
+        <div class="phase" ng-repeat=" x in RepaymentLIST ">
+            <div class="top">
+                <span>第{{x.l_key_index}}期</span>
+                <span style="float:right">{{x.repay_day_format}}</span>
+            </div>
+            <div class="bottom">
+                <div class="select">
+                    <div class="checkbox" ng-if="x.has_repay==0&&x.flag==1">√</div>
+                </div>
+                <div class="phaseList">
+                    <p>已还金额{{x.month_has_repay_money_all_format}}</p>
+                    <p>待还总额{{x.month_need_all_repay_money_format}}</p>
+                    <p>待还本息{{x.month_repay_money_format}}</p>
+                    <p>管理费{{x.month_manage_money_format}}</p>
+                    <p>逾期/违约金：{{x.impose_all_money_format}}</p>
+                    <p>状态<span class="status">{{x.status_format}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="final">
+            <div class="totalMoney">
+                <p  ng-repeat=" x in RepaymentLIST " ng-if="x.has_repay==0&&x.flag==1">{{x.month_need_all_repay_money_format}}</p>
+                <p>合计还款</p>
+            </div>
+            <div class="true" ng-click="confirmPass.show()">确认还款</div>
+            <div class="true">充值</div>
+        </div>
+        
+       
+    </ion-content>
+</ion-view>
