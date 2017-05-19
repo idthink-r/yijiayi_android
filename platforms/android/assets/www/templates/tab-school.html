@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -25,7 +25,7 @@
         }
         .industrysch{
             width:100%;
-            height:1.1rem;
+            height:.9rem;
             border-bottom:1px solid #ccc;
             position: relative;
             padding:0 0.2rem;
@@ -38,7 +38,7 @@
             height:100%;
             font-size: 0.28rem;
             color: #666;
-            line-height: 1.1rem;
+            line-height: .9rem;
             white-space:nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -72,6 +72,6 @@
         	
         </div>
         
-        <ion-infinite-scroll ng-if="!noMorePage"   on-infinite="loadMore()" distance="1%" ></ion-infinite-scroll>
+        <ion-infinite-scroll ng-if="!noMorePage"  immediate-check='false'    on-infinite="loadMore()"  distance="1%" ></ion-infinite-scroll>
     </ion-content>
 </ion-view>

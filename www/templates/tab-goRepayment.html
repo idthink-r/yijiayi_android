@@ -1,4 +1,15 @@
 <ion-view view-title="还款" hide-nav-bar="true"  hide-tabs="true">
+	<script id="templates/czmodal.html" type="text/ng-template">
+<div class="xmodal-backdrop">
+    <div class="xmodelMain">
+        <h4 class="announcement">温馨提示</h4>
+        <p class="content">接口升级中</p>
+        <div class="close">
+            <div class="right" ng-click="czmodal.hide()">确定</div>
+        </div>
+    </div>          
+</div>
+</script> 
 <style>
     .popupPass{
         width: 100%;
@@ -65,7 +76,7 @@
         margin: 0.2rem;
     }
     .truePassword .active{
-        background: #FF9000;
+        background: #00AAEE;
     }
 
 </style>
@@ -76,8 +87,8 @@
             <span class="close icon ion-close" ng-click="confirmPass.hide()"></span>
             <h4>请输入密码</h4>
             <input type="password" placeholder="" ng-model="paypassword">
-            <p>还未设置？<span>点这里</span></p>
-            <div class="btnTrue active" ng-click=" confirmPay(x.l_key_index,RepaymentID,paypassword,data.email,logindata.user_pwd);confirmPass.hide()" ng-repeat="x in RepaymentLIST" ng-if="x.has_repay==0&&x.flag==1">确认支付</div>
+            <p>还未设置？<span ng-click="gosetpaypassnow()">点这里</span></p>
+            <div class="btnTrue active" ng-click=" confirmPay(x.l_key,RepaymentID,paypassword,data.email,logindata.user_pwd);confirmPass.hide();" ng-repeat="x in RepaymentLIST" ng-if="x.has_repay==0&&x.flag==1">确认支付</div>
             <div class="btnCancel"  ng-click="confirmPass.hide()">取消支付</div>
         </div>
     </div>
@@ -90,7 +101,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -109,20 +120,20 @@
         }        
         .loanTest{
             width: 2rem;
-            margin-left: 0.25rem;
-            margin-top: 1rem;
-            font-size: 0.24rem;
-            color: #fff;
-            background: #FFBC75;
-            text-align: center;
-            line-height: 0.5rem;
-            border: 2px solid #FEA13A;
-            border-radius: 0.1rem;
+		    margin-left: 0.25rem;
+		    margin-top: 1rem;
+		    font-size: 0.24rem;
+		    color: #fff;
+		    background: #0AE;
+		    text-align: center;
+		    line-height: 0.5rem;
+		    border: 2px solid #0AE;
+		    border-radius: 0.1rem;
         }
         .loanMoney{
             text-align: center;
             font-size: 0.3rem;
-            color: #F8B468;
+            color: #0AE;
             line-height: 0.5rem;
             margin-top: 0.2rem;
         }
@@ -199,7 +210,7 @@
             width: 0.4rem;
             height: 0.4rem;       
             border-radius: 100%;
-            background: #ff9000;
+            background: #0AE;
             color: #fff;
             font-size: 0.3rem;  
             text-align: center;
@@ -253,7 +264,7 @@
             float: right;
             width: 1.5rem;
             height: 100%;
-            background: #FF9000;
+            background: #0AE;
             color: #fff;
             font-size: 0.24rem;
             line-height: 0.6rem;
@@ -309,7 +320,7 @@
                 <p>合计还款</p>
             </div>
             <div class="true" ng-click="confirmPass.show()">确认还款</div>
-            <div class="true">充值</div>
+            <div class="true" ng-click="czmodal.show()">充值</div>
         </div>
         
        

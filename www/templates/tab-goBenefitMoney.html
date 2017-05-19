@@ -1,4 +1,16 @@
 <ion-view view-title="福利提现" hide-nav-bar="true" hide-tabs="true">
+	<script id="templates/czmodal.html" type="text/ng-template">
+    	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content">接口升级中</p>
+                <div class="close">
+                    <!--<div class="left" ng-click="modal.hide()" style="background:#B9B9B9">取消</div>-->
+                    <div class="right" ng-click="czmodal.hide()">确定</div>
+                </div>
+            </div>          
+        </div>
+    </script> 
 	<style>
 		.header-toBenefit{
             width:100%;
@@ -6,7 +18,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -26,19 +38,28 @@
         .toBenefit{
             margin-top: 0.9rem;
         }
-        .toBenefit table{
+        .toBenefit .table{
             width: 6rem;
             margin: 0 auto;
         }
-        .toBenefit table tr{
+         .toBenefit .table dl{
+         	overflow: hidden;
+         }
+        .toBenefit .table dl>dt{
+        	float: left;
+        	font-weight:normal ;
             line-height: 0.7rem;
+        }
+        .toBenefit .table dl{
             font-size: 0.24rem;
+            height: 0.7rem;
             color: #333;
             background: #fff;
         }
-        .toBenefit table tr td:first-child{
+        .toBenefit .table dl dt:first-child{
            width: 45%;
             text-align: left;
+            padding-left: 0.5rem;
         }
         .cashTime{
             text-align: right;
@@ -51,7 +72,7 @@
             width: 5rem;
             line-height: 0.6rem;
             margin: 0 auto;
-            background: #ffa03b;
+            background: #0AE;
             color: #fff;
             font-size: 0.24rem;
             text-align: center;
@@ -60,8 +81,24 @@
         }  
         .bankImg{
         	
-        }      
+        }    
+        .addbankId{
+    	    width: 5rem;
+		    line-height: 0.6rem;
+		    margin: 0 auto;
+		    background: #0AE;
+		    color: #fff;
+		    font-size: 0.24rem;
+		    text-align: center;
+		    margin-top: 1.1rem;
+		    margin-bottom: 0.2rem;
+		    border-radius: 0.1rem;
+        }  
+        dl {
+		     margin-bottom: 0!important; 
+		}
 	</style>
+	
 	<header class="header-toBenefit">
         <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
         <span>福利提现</span>
@@ -69,47 +106,54 @@
 	<ion-content class="" ng-controller="goBenefitMoneyCtrl">
 		<form name="FLTXform">
         <div class="toBenefit">
-            <table>
-            	<tr>
-                    <td>卡号</td>
-                    <td>{{bankcard}}</td>
-                </tr>
-                <tr>
-                    <td>银行</td>
-                    <td class="bankImg"><img src="{{uimg}}"/></td>
-                </tr>
-                <tr>
-                    <td>姓名</td>
-                    <td>{{real_name}}</td>
-                </tr>
-                <tr>
-                    <td>可用金额</td>
-                    <td>￥{{KYmoney | number:2}}元</td>
-                </tr>
-                <tr>
-                    <td>手续费</td>
-                    <td>2.00元</td>
-                </tr>
-                <tr>
-                    <td>实付金额</td>
-                    <td>{{add()}}元</td>
-                </tr>
-                <tr>
-                    <td>提取金额</td>
-                    <td>
-                    	<input type="text" placeholder="请输入金额" ng-model="amounts" name="amounts" >
-                    </td>
-                </tr>
-                <tr>
-                    <td ng-if="amounts<100&&FLTXform.amounts.$touched">提现金额最低是100元</td>
-                </tr>
-                <tr>
-                    <td>支付密码</td>
-                    <td>
-                    	<input type="password" placeholder="请输入密码" ng-model="paypasswords">
-                    </td>
-                </tr>
-            </table>
+        	<div class="addbankId" ng-if="!bankcard" ng-click="czmodal.show()"><b>+立即添加银行卡</b></div>
+            <div class="table">
+            	<dl ng-if="bankcard">
+                    <dt>卡号</dt>
+                    <dt>{{bankcard}}</dt>
+                </dl>
+                <dl ng-if="bankcard">
+                    <dt>
+                    <span style="float: left;">银行</span>	
+                    </dt>
+                    <dt class="bankImg"><img src="{{uimg}}" style='height: 0.7rem;'/></dt>
+                </dl>
+                <dl ng-if="real_name">
+                    <dt>姓名</dt>
+                    <dt>{{real_name}}</dt>
+                </dl>
+                <dl>
+                    <dt>可用金额</dt>
+                    <dt ng-if='KYmoney==null'>￥0</dt>
+                    <dt ng-if='KYmoney!=null'>￥{{KYmoney | number:2}}</dt>
+                </dl>
+                <dl>
+                    <dt>手续费</dt>
+                    <dt>￥2.00</dt>
+                </dl>
+                <dl>
+                    <dt>实付金额</dt>
+                    <dt>￥{{add()}}</dt>
+                </dl>
+                <dl >
+                    <dt> 提取金额</dt>
+                    <dt>
+                    	<input style='width: 2.4rem;font-size: .24rem;height: 0.7rem;' type="text" placeholder="请输入金额" ng-model="amounts" name="amounts" >
+                    	
+                    </dt>
+                </dl>
+                <dl ng-if="amounts<100&&FLTXform.amounts.$touched" >
+                    <dt>
+                    	<span style="white-space: nowrap;color: red;">提现金额最低100元</span>
+                    </dt>
+                </dl>
+                <dl>
+                    <dt>支付密码</dt>
+                    <dt>
+                    	<input type="password"  placeholder="请输入密码" ng-model="paypasswords" style="height: 0.7rem;width: 2.4rem;">
+                    </dt>
+                </dl>
+            </div>
             <p class="cashTime">提现时间约为3个工作日</p>
         </div>
         <div class="vipBuy" ng-click="FLtxOk()">确认</div>		

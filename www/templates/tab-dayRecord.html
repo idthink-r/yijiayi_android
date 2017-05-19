@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -24,13 +24,14 @@
             font-size: 0.4rem;
         }
         .tab{
-            width: 100%;
+            width: 6rem;
+            margin: 0 auto;
             height:auto;
             /*margin-top:0.88rem;*/
             overflow: scroll;
         }
         .tab .tab-title{
-            width: 100%;
+            width: 115%;
             margin: 0 auto;
             height:0.8rem;
             line-height: 0.8rem;
@@ -53,8 +54,8 @@
             width: 25%;
         }
         .tab .tab-title .active{
-            color: #ffa03b;
-            border-bottom: 1px solid #ffa03b;
+            color: #0AE;
+            border-bottom: 1px solid #0AE;
         }
         .tab-body{
             width: 6rem;
@@ -66,15 +67,17 @@
         }
         .t-body table th{
             width:3rem;
-            background: #ffa03b;
+            background: #0AE;
             border: 1px solid #fff;
             line-height: 0.7rem;
             text-align: center;
             font-size: 0.24rem;
             color: #fff;
         }
+       
+
         .t-body3 table td:nth-child(3){
-            color: #ffa03b;
+            color: #0AE;
         }
         .t-body4 table th:nth-child(3), .t-body4 table th:nth-child(4){
             width: 17%;
@@ -96,9 +99,18 @@
             float: left;
         }
         .t-body3 table th, .t-body3 table td{
-            width: 25%;
+            width: 20%;
             display: block;
             float: left;
+        }
+        .t-body3 table th:nth-child(1), .t-body3 table td:nth-child(1){
+        	width: 40%;
+        }
+        .t-body3 table th:nth-child(2), .t-body3 table td:nth-child(2){
+        	width: 22%;
+        }
+        .t-body3 table th:nth-child(3), .t-body3 table td:nth-child(3){
+        	width: 18%;
         }
         .t-body4 table th, .t-body4 table td{
             width: 22%;
@@ -128,14 +140,14 @@
             line-height: 0.5rem;
         }
         .page .active{
-            border: 1px solid #ffa03b;
-            color: #ffa03b;
+            border: 1px solid #0AE;
+            color: #0AE;
         }
         .rechange{
              width: 5rem;
             height: 0.6rem;
             margin: 0 auto;
-            background: #ffa03b;
+            background: #0AE;
             text-align: center;
             line-height: 0.6rem;
             font-size: 0.24rem;
@@ -166,13 +178,15 @@
             margin-bottom: 0.3rem;
         }
         .log .active{
-            background: #ffa03b;
+            background: #0AE;
             color: #fff;
         }
         td{
             line-height: 0.7rem !important;
         }
         .myfltx{
+        	width: 6rem;
+        	margin: 0 auto;
             border: 1px solid #ccc;
 		    font-size: 0.25rem;
 		    color: #333;
@@ -213,8 +227,8 @@
              color:#a6bfe9 !important ;
         }
         .ycxbtnstyle{
-            border: 2px solid #ffa03b;
-            color:#ffa03b !important ;
+            border: 2px solid #0AE;
+            color:#0AE !important ;
         }
         .dkcgbtnstyle{
             border: 2px solid #aad421;
@@ -226,7 +240,7 @@
             color: #a6bfe9 !important;
         }
         .ycxstyle{
-            color: #ffa03b !important;
+            color: #0AE !important;
         }
         .dkcgstyle{
             color: #aad421 !important;
@@ -275,7 +289,7 @@
 		    line-height:2rem;
 		    width:5rem;
 		    height: 2rem;
-		    color: #ffa03b;
+		    color: #0AE;
         }
     </style>
     
@@ -299,13 +313,15 @@
     <!-- <ion-content class="" style="overflow: hidden;"> -->
         <!--写内容-->
         <div class="tab">
-            <div class="tab-title">
-                <span class="czrz" ng-click="czrz()" ng-style="czrzs">充值日志</span>
-                <span class="txrz" ng-click="txrz()" ng-style="txrzs">提现日志</span>
-                <span class="zhrz" ng-click="zhrz()" ng-style="zhrzs">账户日志</span>
-                <span class="vgmrz" ng-click="vgmrz()" ng-style="vgmrzs">VIP购买日志</span>
-                <span class="flgmtx" ng-click="flgmtx()" ng-style="flgmtxs">福利提现日志</span>
-            </div>
+        	<ion-scroll direction="x" width="6rem">
+            	<div class="tab-title">            	
+            		<span class="czrz" ng-click="czrz()" ng-style="czrzs">充值日志</span>
+	                <span class="txrz" ng-click="txrz()" ng-style="txrzs">提现日志</span>
+	                <span class="zhrz" ng-click="zhrz()" ng-style="zhrzs">账户日志</span>
+	                <span class="vgmrz" ng-click="vgmrz()" ng-style="vgmrzs">VIP购买日志</span>
+	                <span class="flgmtx" ng-click="flgmtx()" ng-style="flgmtxs">福利提现日志</span>
+           	 	</div>
+            </ion-scroll>
             <div class="tab-body" >
                 <div class="t-body t-body1 czBodyCon"  ng-show="sczrz"  style='height:8.5rem;overflow: scroll;'>
                     <div style="min-height: 9.5rem;position: static;padding-bottom:2rem;">
@@ -363,11 +379,11 @@
                         <div ng-click="AAJFshow()" ng-class="{active:JFshow}">积分日志</div>
                     </div>
                     <div class='flBodyCon' style="height:8.5rem; overflow: scroll;margin-top:1rem" ng-show="FLshow" >
-                        <div style="min-height:9.5rem;padding-top: 0.7rem;">
+                        <div style="min-height:9.5rem;padding-top: 0.7rem;padding-bottom: 0.9rem;">
                             <table>
                                 <thead>
                                     <tr style='position: fixed;top:2.6rem;left: 0;right: 0;margin: 0 auto;width: 6rem;padding-top:0.1rem'>
-                                        <th>时间</th>
+                                        <th >时间</th>
                                         <th>操作类型</th>
                                         <th>操作金额</th>
                                         <th>结余</th>
@@ -375,9 +391,12 @@
                                 </thead>                              
                                 <tbody >
                                      <tr ng-repeat="x in FLRecordlists">
-                                        <td>{{x.create_time*1000|date:'yyyy-MM-dd'}}</td>
+                                        <td>{{x.create_time*1000+28800000|date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                         <td>{{x.title}}</td>
-                                        <td>{{x.money}}</td>
+                                        <td ng-if='Number(x.money)>0' style='color:#aad421'> {{x.money}}</td>
+                                        <td ng-if='Number(x.money)<0' style='color:#ff4a4a'> {{x.money}}</td>
+                                        <td ng-if='Number(x.money)==0' style='color:#878787'> {{x.money}}</td>
+                          
                                         <td>{{x.account_money}}</td>
                                        
                                     </tr>
@@ -386,8 +405,8 @@
                         </div>                        
                         <div class='pageNull'>您当前没有账户福利日志记录</div>                        
                     </div>
-                     <div class='jfBodyCon' style="height:8.5rem; overflow: scroll;margin-top:1rem" ng-show="JFshow">
-                        <div  style="min-height:9.5rem;padding-top: 0.7rem;">
+                    <div class='jfBodyCon' style="height:8.5rem; overflow: scroll;margin-top:1rem" ng-show="JFshow">
+                        <div  style="min-height:9.5rem;padding-top: 0.7rem;padding-bottom: 0.9rem;">
                         <table >
                             <tr  style='position: fixed;top:2.6rem;left: 0;right: 0;margin: 0 auto;width: 6rem;padding-top:0.1rem'>
                                 <th>时间</th>
@@ -396,9 +415,12 @@
                                 <th>结余</th>
                             </tr>
                             <tr ng-repeat="x in JFRecordlists">
-                                <td>{{x.create_time*1000|date:'yyyy-MM-dd'}}</td>
+                                <td>{{x.create_time*1000+28800000|date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                 <td>{{x.title}}</td>
-                                <td>{{x.score}}</td>
+                                 <td ng-if='Number(x.score)>0' style='color:#aad421'> {{x.score}}</td>
+                                 <td ng-if='Number(x.score)<0' style='color:#ff4a4a'> {{x.score}}</td>
+                                 <td ng-if='Number(x.score)==0' style='color:#878787'> {{x.score}}</td>
+                  
                                 <td>{{x.account_score}}</td>
                                 
                             </tr>
@@ -411,19 +433,19 @@
                    <div style="position: static;  min-height:9.5rem;padding-bottom: 2rem;">
                    <table>
                         <tr  style='position: fixed;left: 0;right: 0;margin: 0 auto;width:6rem'>
-                            <th>购买等级</th>
-                            <th>购买时间</th>
-                            <th>期限</th>
-                            <th>价格</th>
-                            <th>到期时间</th>
+                            <th style="width:1.4rem;">购买等级</th>
+                            <th style="width: 1.34rem;">购买时间</th>
+                            <th style="width: 0.85rem;">期限</th>
+                            <th style="width: 1.05rem;">价格</th>
+                            <th style="width: 1.35rem;">到期时间</th>
                         </tr>
                         <tbody  style='padding-top: .7rem;    display: block;'>
 	                        <tr ng-repeat="x in VIPRecordlists">
-	                            <td  style="width:1.3rem;">{{x.vip_grade}}</td>
+	                            <td  style="width:1.4rem;">{{x.vip_grade}}</td>
 	                            <td  style="width: 1.34rem;">{{x.vip_buytime*1000 | date:'yyyy-MM-dd'}}</td>
-	                            <td  style="width: 1rem;">{{x.buy_limit}}</td>
-	                            <td  style="width: 1.05rem;">{{x.buy_fee}}</td>
-	                            <td  style="width: 1.3rem;">{{x.vip_end_time*1000 | date:'yyyy-MM-dd'}}</td>
+	                            <td  style="width: 0.85rem;"><div>{{x.buy_limit}}年</div></td>
+	                            <td  style="width: 1.05rem;">{{x.buy_fee}}元</td>
+	                            <td  style="width: 1.35rem;">{{x.vip_end_time*1000 | date:'yyyy-MM-dd'}}</td>
 	                        </tr>  
                         </tbody>
                     </table>
@@ -435,12 +457,12 @@
                     </div>
                     <div class='pageNull'>您当前没有VIP购买日志记录</div>
                 </div>
-                <div class="t-body lflBodyCon" style='height:8.5rem;overflow: scroll;padding-bottom: 1rem;' ng-show="sflgmtx">
-                    <div style="      position: static;  min-height: 9.5rem;padding-bottom: 2rem;">
+                <div class="t-body lflBodyCon" style='height:8.5rem;overflow: scroll;' ng-show="sflgmtx">
+                    <div style="      position: static;  min-height: 9.5rem;padding-bottom: 1rem;">
                     <div class="myfltx" ng-repeat="x in FLlastlists">
                         <div class="fltxone">
-                            <div class="fltxone1"><span>提现金额</span><span>&nbsp;{{x.money}}</span></div>
-                            <div class="fltxone2"><span>手续费</span><span>&nbsp;{{x.fee}}</span></div>
+                            <div class="fltxone1"><span>提现金额</span><span>&nbsp;￥{{x.money}}</span></div>
+                            <div class="fltxone2"><span>手续费</span><span>&nbsp;￥{{x.fee}}</span></div>
                         </div>
                         <div class="txyh"><span>提现银行</span><span>&nbsp;{{x.bank_name}}</span></div>
                         <div class="fltxtwo"><span>银行资料</span><span>&nbsp;卡号：***{{x.bankcard | limitTo:-5}}</span> <span>&nbsp;&nbsp;账户：1***{{x.real_name | limitTo:-2}}</span></div>

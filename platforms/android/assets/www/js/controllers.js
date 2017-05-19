@@ -1,5 +1,7 @@
 var urltext = 'http://test.yijiayi360.com';
+//var urltext = 'https://www.yijiayi360.com';
 var domainUrl='https://www.yijiayi360.com';
+//var domainUrl='http://test.yijiayi360.com';
 //var version = "0.9";
 var index = 0;
 var data = {
@@ -7,11 +9,14 @@ var data = {
 };
 var timer = "";
 var Adindex=0;
-var $$ = jQuery.noConflict(); //$$替换jq的$
+var $$ = jQuery.noConflict(); //angular.element替换jq的$
+var FLlastloadRecord,VIPloadRecord,webapp_deal_detailsFun;
+var fortimerHandler;
+var regtimerHandler;
 //投资页100
 //动态页312
 //账户页38
-angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function ($cordovaAppVersion,$cordovaInAppBrowser,$ionicPlatform,$ionicHistory,$ionicSlideBoxDelegate,$http,$cordovaSplashscreen, $rootScope, $location,$ionicPopup, $timeout, $cordovaToast,$state) {
+angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function ($cordovaNetwork,$cordovaDevice,$cordovaStatusbar,$cordovaAppVersion,$cordovaInAppBrowser,$ionicPlatform,$ionicHistory,$ionicSlideBoxDelegate,$http,$cordovaSplashscreen, $rootScope, $location,$ionicPopup, $timeout, $cordovaToast,$state) {
         $rootScope.t_sign_data='立即签到'
         $rootScope.flagInit=true;
         $rootScope.RecommendIs=true;
@@ -19,48 +24,165 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 			pwd:'',
 			email:''
 		}
-		document.addEventListener('deviceready', function onDeviceReady(){
-			
-			$cordovaAppVersion.getVersionNumber().then(function (version) {
-		    	$rootScope.version= version;
-		    	if($rootScope.version < $rootScope.appVersion) {
-					$rootScope.showPopup()
-				}
-		    });
-		})
-		
+		$rootScope.mydeltimer=''
+		$rootScope.doInvestRefresh=false;
+	 	$rootScope.Number=Number;
 		$rootScope.exitDisplay=true;
+		$rootScope.modalFlag=true;
+//		$rootScope.investHref=false;
 		$rootScope.callphone=function(){
-			phonedialer.dial("4000351924", function(err) {
+			if($cordovaDevice.getPlatform()!='Android'){
+				phonedialer.dial("4000351924", function(err) {
 	            if (err == "feature")
-//	                alert();
-					$cordovaToast.showLongBottom("您已取消拨打电话.")
-	            if (err == "empty")
-//	                alert();
-					$cordovaToast.showLongBottom("不能识别的电话号码")
-			});
+						$cordovaToast.showShortBottom("您已取消拨打电话.")
+		            if (err == "empty")
+	//	                alert();
+						$cordovaToast.showShortBottom("不能识别的电话号码")
+				});
+			}
+			
 		}
+		$rootScope.invaildTel=function(e){
+			if(!angular.element(e.currentTarget).val())
+			{
+				angular.element(e.currentTarget).siblings('.telInvaild').html('手机号不能为空!').css('display','block')
+			}else if(!(/^1[34578]\d{9}$/.test(angular.element(e.currentTarget).val()))){
+				angular.element(e.currentTarget).siblings('.telInvaild').html('手机号输入有误!').css('display','block')
+			}else{
+				angular.element(e.currentTarget).siblings('.telInvaild').css('display','none')
+			}
+
+		}
+		$rootScope.invaildUser=function(e){
+			if(!angular.element(e.currentTarget).val())
+			{
+				angular.element(e.currentTarget).siblings('span.usererr').html('请输入用户名!').css('display','block')
+			}else if(angular.element(e.currentTarget).val().length<3 ){
+				angular.element(e.currentTarget).siblings('span.usererr').html('长度不得少于3').css('display','block')
+			}else if(angular.element(e.currentTarget).val().length>15){
+				angular.element(e.currentTarget).siblings('span.usererr').html('长度不得超过15').css('display','block')
+			}else{
+				angular.element(e.currentTarget).siblings('span.usererr').css('display','none')
+			}
+
+		}
+		$rootScope.invaildNull=function(e){
+			if(angular.element(e.currentTarget).val())
+			{
+				angular.element(e.currentTarget).siblings('span.usererr').css('display','none')
+			}else{
+				angular.element(e.currentTarget).siblings('span.usererr').css('display','block')
+			}
+		}
+		$rootScope.invaildAgainPass=function(e){
+			if(angular.element(e.currentTarget).val())
+			{
+				if(angular.element('._pass').val()!=angular.element(e.currentTarget).val())
+				{
+					angular.element(e.currentTarget).siblings('span.usererr').html('两次密码不一致!').css('display','block')
+				}else{
+					angular.element(e.currentTarget).siblings('span.usererr').css('display','none')
+				}
+				
+			}else{
+				angular.element(e.currentTarget).siblings('span.usererr').html('请再次输入密码!').css('display','block')
+			}
+		}
+		$rootScope.invaildRefer=function(e){
+			if(angular.element(e.currentTarget).val())
+			{
+				if(!(/^1[34578]\d{9}$/.test(angular.element(e.currentTarget).val())))
+				{
+					angular.element(e.currentTarget).siblings('span.usererr').css('display','block')
+				}else{
+					angular.element(e.currentTarget).siblings('span.usererr').css('display','none')
+				}
+				
+			}
+		}
+		
+		
+		$rootScope.focusFun=function(e){
+			angular.element(e.currentTarget).siblings('span.usererr').css('display','none')
+		}
+		
 		$rootScope.$on('$stateChangeStart', 
 		    function(event, toState, toParams, fromState, fromParams) {
-		    	console.log(toState.url+'1111111111111toState.url'+'fromState.url11111111'+fromState.url)
 		    	// 解决账户tab的点击 bug
+
 				if(toState.url=='/account'){
 					if($rootScope.data.pwd){
-						$$('#tabsFixed2').css('display','block')
+						angular.element('#tabsFixed2').css('display','block')
 					}
 				}
+				
+				if(toState.url=='/details' && fromState.url=='/trial'){
+			       		webapp_deal_detailsFun();
+				}
+				
+				if(fromState.url=='/ContactService'){
+					$$('textarea').blur();
+					$$('input').blur();
+					alert($$('textarea').length)
+					alert($$('input').length)
+				}
 				if(toState.url=='/forgetPass'){
-					$$('input').val("")
-//					$ionicSlideBoxDelegate.update(); //刷新页面
+					angular.element('.registerClass input').val("")
+					angular.element('.forgetPassClass input').val("")
 
 				}
+				/*if(fromState.url=='/forgetPass'){
+					if(fortimerHandler){
+						$interval.cancel(fortimerHandler);
+					}
+				}
+				
+				if(fromState.url=='/ACCSetPayPass'){
+					if($rootScope.mydeltimer){
+						$interval.cancel($rootScope.mydeltimer);
+					}
+				}*/
+				
+				
+				
 				if(toState.url=='/reg'){
-					$$('input').val("")
-
+					angular.element('.registerClass input').val("")
+					angular.element('.forgetPassClass input').val("")
+					if(fromState.url!='/addset' && fromState.url!='/accountlogin' && fromState.url!='/accset'){
+						/*if(fromState.url=='/invest' && $rootScope.investHref)
+						{
+							$rootScope.investHref=false;
+						}else{*/
+							event.preventDefault() //可以阻止模板解析
+			       			$state.go("tab.accountlogin")
+//						}
+						
+					}
 				}
+				if(fromState.url=='/reg2'){
+					if(!$rootScope.RecommendIs)
+					{
+						$rootScope.RecommendIs=true;
+						$rootScope.RecommendCode=''
+					}
+				}
+				
+				if(toState.url=='/reg2')
+				{
+					if(fromState.url!='/addset'){
+						event.preventDefault() //可以阻止模板解析 
+						$state.go("tab.invest");
+					}
+					
+				}
+				
 				if(fromState.url=='/account'){
-					$$('#tabsFixed2').css('display','none')
+					angular.element('#tabsFixed2').css('display','none')
 				}
+				/*if(fromState.url=='/accountlogin'){
+					angular.element('.showcase-form #password').val('')
+				}*/
+				
 				if(toState.url=='/aboutus2' && fromState.url=='/accset'){
 					$rootScope.accsetToAbout=true;
 				}else if(toState.url=='/aboutus' && fromState.url=='/addset'){
@@ -71,15 +193,30 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 			       		$state.go("tab.invest")
 				}
 				if(toState.url=='/accountlogin'){
-					
 					if($rootScope.data.pwd)
 					{
 						event.preventDefault() //可以阻止模板解析 
 						$state.go("tab.account");
+					}else{
+						if(angular.element('#password').val()&&angular.element('#username').val())
+						{
+							angular.element('.login-buttons').addClass('showLoginBtn')
+						}else{
+							angular.element('.login-buttons').removeClass('showLoginBtn')
+						}
+						if($rootScope.data.email!=""){
+							var reg = /^(.).+(.)$/g;
+							var str = $rootScope.data.email;
+							angular.element('#username').attr('content',str)
+							angular.element('#username').val(str.replace(reg, "$1*$2"))
+						}
+						
 					}
+
 				}
 				
 				if(toState.url=='/account'){
+			
 					if(!$rootScope.data.pwd)
 					{
 						event.preventDefault() //可以阻止模板解析 
@@ -87,18 +224,21 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 					}
 				}
 				if(toState.url=='/recommend'){
-					$$('#loading').css('display','block')
+					angular.element('#loading').css('display','block')
 					 $http.post(urltext+'/index.php?ctl=webapp_recommend',{bid:$rootScope.logindata.id})
 						.success(function(res){
-							$$('#loading').css('display','none')
+							angular.element('#loading').css('display','none')
 							$rootScope.recommendtitle=res.program_title;
-							$$('.recommend').css({'background':'url('+urltext+res.url+') no-repeat center','background-size': '100% 100%'});
+							angular.element('.recommend').css({'background':'url('+urltext+res.url+') no-repeat center','background-size': '100% 100%'});
 					   })
 				}
 				// 应用设置页面  点击账户页   跳转到   设置页的   bug问题
 				if(toState.url=='/accset'&& fromState.url!='/account'){
-					event.preventDefault() //可以阻止模板解析 
-					$state.go("tab.accountlogin")
+					if(fromState.url!='/aboutus2'){
+						event.preventDefault() //可以阻止模板解析 
+						$state.go("tab.accountlogin")
+					}
+					
 				}
 				if(toState.url=='/addset'){
 					if($rootScope.data.pwd==''){
@@ -109,6 +249,13 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 					$rootScope.aboutusDis=true;
 					
 				}
+				/*if(toState.url=='/addset'){
+					if(fromState.url!='/invest')
+					{
+						event.preventDefault() //可以阻止模板解析 
+						$state.go("tab.invest")
+					}
+				}*/
 				if(toState.url=='/accset'){
 					if($rootScope.data.pwd==''){
 						$rootScope.exitDisplay=false;
@@ -118,20 +265,14 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 					$rootScope.aboutusDis=false;
 				}
 				
-				if(fromState.url=='/addset'&&toState.url=='/reg'){
-					event.preventDefault() //可以阻止模板解析 
-					$state.go("tab.addset")
-				}
-				if(fromState.url=='/accset'&&toState.url=='/reg'){
-					event.preventDefault() //可以阻止模板解析 
-					$state.go("tab.accset")
-				}
+				
+				
+			
+
 				// 点击 投资tab  判断当前是 登录状态还是未登录状态
 				if(toState.url=='/invest'){
-//					var index= layer.open({
-//					    type: 2
-//					    ,content: '加载中'
-//					  });
+
+				
 				 $rootScope.showPopup = function() {
 						   // 一个精心制作的自定义弹窗
 						   var myPopup = $ionicPopup.show({
@@ -147,7 +288,7 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 									      clearcache: 'yes',
 									      toolbar: 'no'
 									    };
-									  $cordovaInAppBrowser.open(domainUrl+"/yjy.apk", '_system', options)
+									  $cordovaInAppBrowser.open(domainUrl+"/yjy_P2P.apk", '_system', options)
 									      .then(function(event) {
 									        //alert('success')
 									      })
@@ -157,45 +298,77 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 						        }
 						       },
 						       {
-						         text: '<b>取消</b>'
+						         text: '<a>取消</a>'
 						       }
 						     ]
 						   });
 						}
-					$$('#loading').css('display','block')
+					angular.element('#loading').css('display','block')
 					if($rootScope.data.pwd){
+						$rootScope.outshow=false;
+						$rootScope.inshow=true;
+
 						  $http.post(urltext + '/index.php?ctl=webapp_index_deal', "")
 							.success(function(res) {
-//								layer.close(index)
+
  								$rootScope.errorShow=false
-								$$('#loading').css('display','none')
+								angular.element('#loading').css('display','none')
 								$rootScope.inshowlist = res; //加载数据中
 								$ionicSlideBoxDelegate.update(); //刷新页面
 								$cordovaSplashscreen.hide();
 							}).error(function(e) {
 //								layer.close(index)
-								$$('#loading').css('display','none')
-								$rootScope.errorShow=true
+								angular.element('#loading').css('display','none')
+								if($cordovaNetwork.isOffline())
+								{
+									$rootScope.errorShow=true
+								}
+								
 							})
 					}else{
+						$rootScope.outshow=true;
+						$rootScope.inshow=false;
 							//未登录
 							$http.post(urltext + '/index.php?ctl=webapp_index',"")
 							.success(function(res) {
 //								layer.close(index)
-								$$('#loading').css('display','none')
+								angular.element('#loading').css('display','none')
 								 $rootScope.errorShow=false
 								$rootScope.outshowlist = res.list; //加载数据中
 								$rootScope.advantage = res.advantage; //加载数据中
+				
 								$rootScope.appVersion=res.android_version;
-							
+								
 								
 								$ionicSlideBoxDelegate.update(); //加载数据中
 								$cordovaSplashscreen.hide();
+								
+								document.addEventListener('deviceready', function onDeviceReady(){
+									
+									$cordovaAppVersion.getVersionNumber().then(function (version) {
+								    	$rootScope.version= version;
+								    	if($rootScope.version < $rootScope.appVersion && $rootScope.flagInit) {
+								    		$rootScope.flagInit=false;
+											$rootScope.showPopup()
+										}
+								    });	
+								    if ($cordovaDevice.getPlatform()=='Android') {
+									    StatusBar.backgroundColorByHexString("#000");  
+									}else{  
+									    $cordovaStatusbar.overlaysWebView(false);  
+									    $cordovaStatusbar.style(1);  
+									    StatusBar.styleLightContent();  
+									    $cordovaStatusbar.styleColor('black');  
+									}  
+								})
 							})
 							.error(function(e) {
 //								layer.close(index)
-								$$('#loading').css('display','none')
-								$rootScope.errorShow=true
+								angular.element('#loading').css('display','none')
+								if($cordovaNetwork.isOffline()){
+									$rootScope.errorShow=true
+								}
+								
 							});
 					}
 					
@@ -215,50 +388,134 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
                 StatusBar.styleDefault();
             }
         });
+       
         //双击退出
         $ionicPlatform.registerBackButtonAction(function (e) {
+        	 
             //判断处于哪个页面时双击退出
             if ($rootScope.backButtonPressedOnceToExit) {
                 ionic.Platform.exitApp();
             } else {
                 $rootScope.backButtonPressedOnceToExit = true;
-//              $ionicHistory.goBack();
-
+                e.preventDefault();
+                $ionicHistory.goBack();
                 $cordovaToast.showShortBottom('再按一次退出系统');
                 setTimeout(function () {
                     $rootScope.backButtonPressedOnceToExit = false;
                 }, 2000);
             }
-            e.preventDefault();
+           
             return false;
         }, 101);
     })
 //登录注册
-.controller('LoginCtrl', function($rootScope,$scope, $http,$ionicSlideBoxDelegate,$ionicTabsDelegate,$state,$timeout,$location,$cordovaToast) {
-		if(localStorage.getItem('email'))
-		{
-			 $$('#username').val(localStorage.getItem('email'))
+.controller('LoginCtrl', function($rootScope,$scope, $http,$ionicSlideBoxDelegate,$ionicTabsDelegate,$state,$timeout,$location,$cordovaToast,locals) {
+		$scope.visablePwdDis='password';
+		if(locals.get("userName")){
+			var reg = /^(.).+(.)$/g;
+			var str = locals.get("userName");
+			angular.element('#username').attr('content',str)
+			$scope.z_username=str.replace(reg, "$1*$2")
 		}
-		$rootScope.urltext = 'http://test.yijiayi360.com'
+		$scope.inputChangeFun=function(e){
+			angular.element('#username').attr('content',null)
+		}
+		$scope.inpoutKeyFun=function(e){
+			e=angular.element(e.target);
+			var jqname=angular.element('#username');
+			var jqpass=angular.element('#password');
+			var jqbutton=angular.element('.login-buttons')
+			if(e.val()){
+				if(e.attr('id')=='username'){
+					if(jqpass.val())
+					{
+						jqbutton.addClass('showLoginBtn')
+					}else{
+						jqbutton.removeClass('showLoginBtn')
+					}
+				}else if(e.attr('id')=='password'){
+					if(jqname.val())
+					{
+						jqbutton.addClass('showLoginBtn')
+					}else{
+						jqbutton.removeClass('showLoginBtn')
+					}
+				}
+			}else{
+					jqbutton.removeClass('showLoginBtn')
+				}
+		}
+
+		$scope.inpoutFocusFun=function(e){
+			angular.element(e.currentTarget).siblings('.clearInputBtn').css('display','block')
+		}
+	
+		$scope.inpoutBlurFun=function(e){
+			angular.element(e.currentTarget).siblings('.clearInputBtn').css('display','none')
+		}
+
+		$scope.clearInputBtnFun=function(e){
+//			var silinput=angular.element(e.currentTarget).siblings('input')
+//			silinput.val('')
+			$scope.z_username=''
+			angular.element(e.currentTarget).siblings('input').val('')
+			angular.element('.login-buttons').removeClass('showLoginBtn')
+		}
+		
+		$scope.visibleInputBtnFn=function(e){
+			e=angular.element(e.currentTarget)
+			if($scope.visablePwdDis=='text'){
+				e.find('span').css('background','#ddd')
+//				angular.element('#password').attr('type','password')
+				$scope.visablePwdDis='password';
+//				e.attr('visable','')
+			}else{
+//				angular.element('#password').attr('type','text')
+				$scope.visablePwdDis='text';
+				e.find('span').css('background','#0AE')
+//				e.attr('visable','true')
+			}
+		}
+	
+		$rootScope.urltext = 'https://www.yijiayi360.com'
+//		$rootScope.urltext = 'http://test.yijiayi360.com'
 		$scope.goReg = function() {
 			$state.go("tab.reg")
 		}
 		$scope.login = function() {
-			if($$('#username').val()==''||$$('#password').val()=='')
+			
+			var jqusername=angular.element('#username')
+//			var jqpwd=angular.element('#password')
+			if(!$scope.z_username && !angular.element(e.currentTarget).siblings('input').val())
 			{
-				$cordovaToast.showLongBottom('请输入有效的密码')
+				$cordovaToast.showLongBottom('请输入用户名')
+				return '';
+			}else if(!$scope.z_pwd){
+				$cordovaToast.showLongBottom('请输入密码')
 				return '';
 			}
-			$$('#loading').css('display','block')
-			var mydata = { //传输数据
-				"email": $$('#username').val(),//用户名
-				"pwd": $$('#password').val()    //密码
+			angular.element('#loading').css('display','block')
+			var val=''
+			if($scope.z_username.indexOf('*')>0){
+				if(jqusername.attr('content'))
+				{
+					val=jqusername.attr('content')
+				}else{
+					val=$scope.z_username 
+				}
+			}else{
+				val=$scope.z_username
 			}
-			console.log(mydata)
+
+			var mydata = { //传输数据
+				"email": val,//用户名
+				"pwd": $scope.z_pwd    //密码
+			}
+
 			var postdata=mydata.email//登录传输的数据
 			$http.post(urltext + '/index.php?ctl=webapp_login', mydata)
 				.success(function(response) {
-					$$('#loading').css('display','none')
+					angular.element('#loading').css('display','none')
 						//定义登录后传送数据 
 						var hasmydata = { //传输数据
 							"email": data.email,//用户名
@@ -269,9 +526,10 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 							email: mydata.email,
 							pwd: mydata.pwd
 						}
-						localStorage.setItem('email',mydata.email);
-						$rootScope.inshow=true;
-						$rootScope.outshow=false;
+
+						locals.set("userName",mydata.email)
+						/*$rootScope.inshow=true;
+						$rootScope.outshow=false;*/
 						//登录成功
 						$rootScope.logindata = { //账户密码一致保存起来
 							"user_login_status":response.user_login_status,
@@ -286,8 +544,8 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 								console.log(res);
 								$rootScope.ips_acct_no=res.ips_acct_no;//托管账户
 								$rootScope.vip_grade=res.vip_grade;//VIP等级
-								$rootScope.idcardpassed=res.user.idcardpassed//实名认证
-								$$('#loading').css('display','none')
+								$rootScope.idcardpassed=res.idcardpassed//实名认证
+								angular.element('#loading').css('display','none')
 								$rootScope.flag=true
 								$rootScope.username=res.user_name;
 								$rootScope.login_username=res.user_name;
@@ -300,12 +558,14 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 								}else{
 									$rootScope.t_sign_data='已签到'
 								}
+								$scope.z_pwd=''
+							
 								$state.go('tab.account')
 						})
 							
 					}
 					if(response.user_login_status == 0){
-						$$('#loading').css('display','none')
+						angular.element('#loading').css('display','none')
 						$cordovaToast.showShortBottom('登录失败：'+response.show_err+'!');
 					}
 				}).error(function() {
@@ -319,105 +579,115 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 		
 	})
 .controller('forgetPassCtrl', function($http,$state,$scope,$interval,$timeout,$rootScope,$cordovaToast){
-	$scope.description='获取验证码';
+
+	if(!$rootScope.forDescription){
+		$rootScope.forDescription="获取验证码";
+	}else{
+		if($rootScope.forDescription=="获取验证码"){
+			angular.element('#forgetObtain').css('background','#0AE')
+		}
+		if($rootScope.forDescription!="获取验证码"){
+			angular.element('#forgetObtain').css('background','#CCCCCC')
+		}
+	}
+	
 	$scope.codeDisable=false;
-	var count=60;
+	
+	
 	$scope.getCode=function(){
 	
 		if(!$scope.codeDisable)
 		{
-			if($$('.usererr.assertive.tel').css('display')=='block')
-			{
-				return ''
-			}
-			if($$('#forgetTel').val())
-			{
-				if($$('#forgetTel').val().length==11&&!(/^1[3|4|5|8][0-9]\d{4,8}$/.test($$('#forgetTel').val())))
-				{
-					$$('#forgetTel')[0].focus();
-//					alert('请输入有效的手机号码！');  
-					$cordovaToast.showLongBottom('请输入有效的手机号码')
-					return '';
+				if(!angular.element('#forgetTel').val()){
+					angular.element('#forgetTel').siblings('span.usererr ').html('请输入手机号！').css('display','block')
+					return ''
+				}else if(!(/^1[34578]\d{9}$/.test(angular.element('#forgetTel').val()))){
+						angular.element('#forgetTel').siblings('span.usererr ').html('手机号输入有误！').css('display','block')
+						return ''
 				}
-			}
 				
 				$scope.codeDisable=true;
-				$$('#loading').css('display','block')
-				$$('div.obtain').css('color','red');
-				$scope.description = count-- +'s';
-				$http.post(urltext + '/index.php?ctl=webapp_send_reset_pwd_code',{mobile:$$('#forgetTel').val()}) 
-					.success(function(res) {
-						$$('#loading').css('display','none')
+				angular.element('#loading').css('display','block')
 						
+
+				$http.post(urltext + '/index.php?ctl=webapp_send_reset_pwd_code',{mobile:angular.element('#forgetTel').val()}) 
+					.success(function(res) {
+						angular.element('#loading').css('display','none')
 						if(res.response_code==0)
 						{
-//							alert(res.show_err);
-							$cordovaToast.showLongBottom(res.show_err)
-							$scope.codeDisable=false;
-							$$('div.obtain').css('color','#fff');
-							$scope.description='获取验证码';
-							 $interval.cancel(timerHandler);
-							 count=60;
-						}else{
-//							alert('验证短信已经发送，请注意查收');
-							$cordovaToast.showLongBottom('验证码已经发送，请注意查收')
-							/*$$('div.gain').css('color','#fff');
-							$scope.description='请输入验证码';
-							$interval.cancel(timerHandler);
-						 	count=5;*/
+								$cordovaToast.showLongBottom(res.show_err)
+								$scope.codeDisable=false;
+								
+						}else{	
+								var count=60;
+								angular.element('#forgetObtain').css('background','#CCCCCC')
+								$rootScope.forDescription = count-- +'s';
+								$interval.cancel(fortimerHandler);
+								fortimerHandler=$interval(function() {
+									$rootScope.forDescription = count-- +'s';
+									if(count==-1)
+									{
+										
+										$scope.codeDisable=false;
+										$rootScope.forDescription='获取验证码';
+										$interval.cancel(fortimerHandler)
+										 count=60;
+										angular.element('#forgetObtain').css('background','#0AE') 
+									}
+							 	}, 1000)
+								$cordovaToast.showLongBottom('验证码已经发送，请注意查收')
 						}
 				})
-				var timerHandler=$interval(function() {
-					$$('div.obtain').css('color','#ff4800');
-					$scope.description = count-- +'s';
-					if(count==-1)
-					{
-						$scope.codeDisable=false;
-						$$('div.obtain').css('color','#fff');
-						$scope.description='获取验证码';
-						$interval.cancel(timerHandler)
-						 count=60;
-					}
-				 }, 1000)
+				
 		}
 	
 	}
 	$scope.goSumbit=function(){
-		
-		//	referer  推荐人
-		if($$('#forgetTel').val())
-		{
-			if($$('#forgetTel').val().length==11&&!(/^1[3|4|5|8][0-9]\d{4,8}$/.test($$('#forgetTel').val())))
-			{
-				$$('#forgetTel')[0].focus();
-//				alert('请输入有效的手机号码！');  
-				$cordovaToast.showLongBottom('请输入有效的手机号码')
-				return '';
+			if(!angular.element('#forgetTel').val()){
+//				$cordovaToast.showShortBottom('请输入手机号')
+				angular.element('#forgetTel').siblings('span.usererr ').html('请输入手机号！').css('display','block')
+				return ''
+			}else if(!(/^1[34578]\d{9}$/.test(angular.element('#forgetTel').val()))){
+					angular.element('#forgetTel').siblings('span.usererr ').html('手机号输入有误！').css('display','block')
+					return ''
+			}else if(!angular.element('#forgetCode').val()){
+//				$cordovaToast.showShortBottom('请输入验证码')
+				angular.element('#forgetCode').siblings('span.usererr ').html('请输入验证码！').css('display','block')
+				return ''
+			}else if(!angular.element('#forgetPass').val()){
+//				$cordovaToast.showShortBottom('请输入新密码')
+				angular.element('#forgetPass').siblings('span.usererr ').html('请输入新密码！').css('display','block')
+				return ''
+			}else if(!angular.element('#forgetPass2').val()){
+				angular.element('#forgetPass2').siblings('span.usererr ').html('请再次输入新密码！').css('display','block')
+				return ''
+			}else if(angular.element('#forgetPass').val()!=angular.element('#forgetPass2').val()){
+				angular.element('#forgetPass2').siblings('span.usererr ').html('两次密码不一致！').css('display','block')
+				return ''
 			}
-		}else{
-			return '';
-		}
-		if($$('#forgetPass').val()&&$$('#forgetPass2').val()&&$$('#forgetTel').val()&&$$('#forgetCode').val())
-		{
-			$$('#loading').css('display','block')
+		
+
+			angular.element('#loading').css('display','block')
 			var regData={
-				user_pwd:$$('#forgetPass').val(),
-				user_pwd_confirm:$$('#forgetPass2').val(),
-				mobile:$$('#forgetTel').val(),
-				mobile_code:$$('#forgetCode').val()
+				user_pwd:angular.element('#forgetPass').val(),
+				user_pwd_confirm:angular.element('#forgetPass2').val(),
+				mobile:angular.element('#forgetTel').val(),
+				mobile_code:angular.element('#forgetCode').val()
 			}
 			$http.post(urltext + '/index.php?ctl=webapp_save_reset_pwd',regData) 
 				.success(function(res) {
-					$$('#loading').css('display','none')
+					angular.element('#loading').css('display','none')
+					/*$scope.codeDisable=false;
+					$rootScope.forDescription='获取验证码';
+					$interval.cancel(fortimerHandler)
+					count=60;
+					angular.element('#forgetObtain').css('background','#0AE') */
 					if(res.response_code==0)
 					{
-//						alert()
 						$cordovaToast.showLongBottom(res.show_err)
 					}else if(res.response_code==1)
 					{
-//						alert('重置密码成功')
-//						 $state.go('tab.accountlogin')
-						  $cordovaToast.showLongBottom('重置密码成功，正在跳转登录界面').then(function(success) {
+						  $cordovaToast.showShortBottom('重置密码成功，正在跳转登录界面').then(function(success) {
 						    $state.go('tab.accountlogin')
 						  }, function (error) {
 						    // error
@@ -425,118 +695,165 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 					}
 					
 			})
-		}
+
 		
 	
 	}
 })
-.controller('RegCtrl', function($http,$state,$scope,$interval,$timeout,$rootScope,$cordovaToast) {
+.controller('RegCtrl', function($http,$state,$scope,$interval,$timeout,$rootScope,$cordovaToast,$ionicModal,$stateParams) {
+	
+
+	
+	$ionicModal.fromTemplateUrl('templates/modal.html', {
+	    scope: $scope
+	}).then(function(modal) {
+	    $scope.modal = modal;
+	});
 
 	$scope.wzfuxygo=function(){
-		$state.go("tab.wzfwxy")
+		angular.element('.regXy').removeClass('none')
 	}
-	$scope.description='获取验证码';
+	$scope.xYhide=function(){
+		angular.element('.regXy').addClass('none')
+	}
+	if(!$rootScope.description){
+		$rootScope.description="获取验证码";
+	}else{
+		if($rootScope.description=="获取验证码"){
+			angular.element('#regGain').css('background','#0AE')
+		}
+		if($rootScope.description!="获取验证码"){
+			angular.element('#regGain').css('background','#CCCCCC')
+		}
+	}
+	
+	
+	
 	$scope.codeDisable=false
 	var count=60;
+	
 //	$scope.legitimate=false;
 	$scope.getCode=function(){
+		
 		if(!$scope.codeDisable)
 		{
-			if($$('#reg_tel').val()&&!(/^1[3|4|5|8][0-9]\d{4,8}$/.test($$('#reg_tel').val())))
-			{
-				$$('#reg_tel')[0].focus();
-//				alert();  
-				$cordovaToast.showLongBottom('请输入有效的手机号码！')
-				return '';
+			if(!angular.element('#reg_tel').val()){
+				angular.element('#reg_tel').siblings('span.usererr').html('请输入手机号！').css('display','block')
+				return ''
+			}else if(angular.element('#reg_tel').val() && !(/^1[34578]\d{9}$/.test(angular.element('#reg_tel').val()))){
+					angular.element('#reg_tel').siblings('span.usererr ').html('手机号输入有误！').css('display','block')
+					return ''
 			}
-			
 			$scope.codeDisable=true;
-			$$('#loading').css('display','block')
-			$$('div.gain').css('color','#ff4800');
-			$scope.description = count-- +'s';
-			$http.post(urltext + '/index.php?ctl=webapp_getcode',{mobile:$$('#reg_tel').val()}) 
+			angular.element('#loading').css('display','block')
+			
+			$http.post(urltext + '/index.php?ctl=webapp_getcode',{mobile:angular.element('#reg_tel').val()}) 
 				.success(function(res) {
-					$$('#loading').css('display','none')
+					angular.element('#loading').css('display','none')
 					if(res.response_code==0)
 					{
-//						alert();
+						$scope.codeDisable=false
 						$cordovaToast.showLongBottom(res.show_err)
-						$$('div.gain').css('color','#fff');
-						$scope.description='获取验证码';
-						$interval.cancel(timerHandler);
-					 	count=60;
-					 	$scope.codeDisable=false;
 					}else{
-//						alert();
+						angular.element('#regGain').css('background','#CCCCCC')
+						$rootScope.description = count-- +'s';
+						$interval.cancel(regtimerHandler);
+						regtimerHandler=$interval(function() {
+							$rootScope.description = count-- +'s';
+							if(count==-1)
+							{
+								$scope.codeDisable=false
+								$rootScope.description='获取验证码';
+								angular.element('#regGain').css('background','#0AE')
+								$interval.cancel(regtimerHandler);
+								count=60;
+							}
+						 }, 1000)
 						$cordovaToast.showLongBottom('验证短信已经发送，请注意查收')
-						/*$$('div.gain').css('color','#fff');
-						$scope.description='请输入验证码';
-						$interval.cancel(timerHandler);
-					 	count=5;*/
 					}
 			})
-			var timerHandler=$interval(function() {
-				$$('div.gain').css('color','#ff4800');
-				$scope.description = count-- +'s';
-				if(count==-1)
-				{
-					$scope.codeDisable=false
-					$$('div.gain').css('color','#fff');
-					$scope.description='获取验证码';
-					$interval.cancel(timerHandler);
-					count=60;
-				}
-			 }, 1000)
+			
 		}
 
 	}
+	
+	
+	
 	$scope.goRegister=function(){
-		if($$('#reg_name').val()&&$$('#reg_pass').val()&&$$('#reg_pass2').val()&&$$('#reg_tel').val()&&$$('#reg_code').val())
-		{
+				if(!angular.element('#reg_name').val()){
+					angular.element('#reg_name').siblings('span.usererr ').html('请输入用户名！').css('display','block')
+					return ''
+				}else if(angular.element('#reg_name').val().length<3){
+					angular.element('#reg_name').siblings('span.usererr').html('长度不得少于3').css('display','block')
+					return ''
+				}else if(angular.element('#reg_name').val().length>15){
+					angular.element('#reg_name').siblings('span.usererr').html('长度不得超过15').css('display','block')
+					return ''
+				}else if(!angular.element('#reg_pass').val()){
+					angular.element('#reg_pass').siblings('span.usererr ').html('请输入密码！').css('display','block')
+					return ''
+				}else if(!angular.element('#reg_pass2').val()){
+					angular.element('#reg_pass2').siblings('span.usererr ').html('请再次输入密码！').css('display','block')
+					return ''
+				}else if(angular.element('#reg_pass2').val() && angular.element('#reg_pass').val()!=angular.element('#reg_pass2').val()){
+						angular.element('#reg_pass2').siblings('span.usererr ').html('两次密码不一致！').css('display','block')
+						return ''
+				}else if(!angular.element('#reg_tel').val()){
+					angular.element('#reg_tel').siblings('span.usererr').html('请输入手机号！').css('display','block')
+					return ''
+				}else if(angular.element('#reg_tel').val() && !(/^1[34578]\d{9}$/.test(angular.element('#reg_tel').val()))){
+						angular.element('#reg_tel').siblings('span.usererr ').html('手机号输入有误！').css('display','block')
+						return ''
+				}else if(!angular.element('#reg_code').val()){
+					angular.element('#reg_code').siblings('span.usererr ').html('请输入验证码！').css('display','block')
+					return ''
+				}
 				var refer=''
 				
 				if($rootScope.RecommendIs){
-				    refer=$$('#reg_refer').val();
-				    if(refer&&!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(refer)))
+				    refer=angular.element('#reg_refer').val();
+				    if(refer&&!(/^1[34578]\d{9}$/.test(refer)))
 					{
-						$$('#reg_tel')[0].focus();
-//						alert();  
-						$cordovaToast.showLongBottom('请输入有效的手机号码！')
+//						angular.element('#reg_tel')[0].focus();
+						angular.element('#reg_refer').siblings('span.usererr').css('display','block')
+//						$cordovaToast.showShortBottom('请输入有效的手机号码！')
 						return '';
 					}
 				}else{
 					refer=$rootScope.RecommendCode
 				}
 				//	referer  推荐人
-				$$('#loading').css('display','block')
+				angular.element('#loading').css('display','block')
 				var regData={
-					user_name:$$('#reg_name').val(),
-					user_pwd:$$('#reg_pass').val(),
-					user_pwd_confirm:$$('#reg_pass2').val(),
-					mobile:$$('#reg_tel').val(),
-					mobile_code:$$('#reg_code').val(),
+					user_name:angular.element('#reg_name').val(),
+					user_pwd:angular.element('#reg_pass').val(),
+					user_pwd_confirm:angular.element('#reg_pass2').val(),
+					mobile:angular.element('#reg_tel').val(),
+					mobile_code:angular.element('#reg_code').val(),
 					referer:refer
 				}
 				$http.post(urltext + '/index.php?ctl=webapp_register',regData) 
 					.success(function(res) {
-						$$('#loading').css('display','none')
+						angular.element('#loading').css('display','none')
+						/*$scope.codeDisable=false
+						$interval.cancel(regtimerHandler);
+						count=60;
+						$rootScope.description='获取验证码';
+						angular.element('#regGain').css('background','#0AE')*/
+						
 						if(res.user_login_status==0)
 						{
-//							alert()
 							$cordovaToast.showLongBottom(res.show_err)
+							
 						}else if(res.user_login_status==1)
 						{
-							
-//							 $state.go('tab.accountlogin')
-							  $cordovaToast.showLongBottom('注册用户成功，正在跳转登录界面').then(function(success) {
+							  $cordovaToast.showShortBottom('注册用户成功，正在跳转登录界面').then(function(success) {
 							   	$state.go('tab.accountlogin')
 							  }, function (error) {
-							    // error
 							  });
 						}
 						
 				})
-		}
 
 	}
              
@@ -544,44 +861,77 @@ angular.module('starter.controllers', ['ngCordova','ngSanitize']).run(function (
 })
 //未登录
 
-.controller('AdCtrl', function($scope, $rootScope, $http, $ionicSlideBoxDelegate, $timeout, $interval,$cordovaSplashscreen) {
+.controller('AdCtrl', function($scope,$state, $rootScope, $location,$http, $ionicSlideBoxDelegate, $timeout, $interval,$cordovaSplashscreen,$cordovaNetwork,$ionicLoading,$ionicHistory) {
 	$rootScope.flagAd = false;
 	$scope.stateUrl = 'tab.invest'
 	var countdowns = 1;
 	$scope.countdown = countdowns;
-    window.location.href = "#/tab/invest"; //跳到投资页面
 	var query = new Object();
+//	window.location.href = "#/tab/invest"; //跳到投资页面
+	
+	
+	document.addEventListener("deviceready", function () {
+	     	if($cordovaNetwork.isOffline())
+			{
+				$ionicLoading.show({ 
+				  template: '亲，您的数据连接已断开'
+			    });
+			}else{
+				window.location.href = "#/tab/invest"; //跳到投资页面
+			}
+	})
+	
+	document.addEventListener('deviceready', function onDeviceReady(){
+		 $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+//		      $state.go("Ad");
+		      $ionicLoading.show({ 
+				  template: '亲，您的数据连接已断开'
+			    });
+		 })
+		  $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+			   		$ionicLoading.hide();
+                    if($location.path()=='/Ad')
+                     {
+                        window.location.href = "#/tab/invest"; //跳到投资页面
+                     }
+
+			   })
+		 
+	},false)
+
+
+ 
 
 })
 
 //tab投资
 
 
-.controller('InvestCtrl', function($scope,$sce, $rootScope, $ionicHistory, $location, $http, $ionicSlideBoxDelegate,$ionicTabsDelegate, $state, $timeout) {
+.controller('InvestCtrl', function($scope,$sce, $rootScope, $ionicHistory, $location,$cordovaInAppBrowser, $http, $ionicSlideBoxDelegate,$ionicTabsDelegate, $state, $timeout,$stateParams) {
+
 
 
 
 
 //  登录首页数据请求
 $rootScope.errorShow=false
-$rootScope.data = { //全局变量
-		email: "",
-		pwd: ""
-	}
-console.log($rootScope.data.pwd)
-	$rootScope.outshow=true;
-	$rootScope.inshow=false;
-	
+
 	$rootScope.backLogin=function(){
 		$state.go('tab.accountlogin')
 	}
 	$rootScope.backIndex=function(){
 		$state.go('tab.invest')
 	}
+	$rootScope.backInvest=function(){
+		$state.go('tab.invest')
+	}
 //全局返回按钮
 	$rootScope.backTab = function() {
 		$ionicHistory.goBack();
 	};
+	$rootScope.goYjSchool=function(){
+		$state.go('tab.school')
+	}
 	$rootScope.backTabSettings = function() {
 		$state.go('tab.accset')
 	};
@@ -614,77 +964,81 @@ $scope.goDetails=function(email,pwd,id){
 	"email":email,
     "pwd":pwd,
     "id":id}
-	$$('#loading').css('display','block')
-	$http.post(urltext +"/index.php?ctl=webapp_deal_details",DetailData)
-	.success(function(res){
+	angular.element('#loading').css('display','block')
+	
+	webapp_deal_detailsFun=function(){
+			$http.post(urltext +"/index.php?ctl=webapp_deal_details",DetailData)
+			.success(function(res){
+				
+				angular.element('#loading').css('display','none')
+				console.log(res)
+				$rootScope.detailId=res.id;
+				$rootScope.deis_faved=res.is_faved
+				console.log($rootScope.deis_faved)
+				if($rootScope.deis_faved==0){
+					angular.element("#heart").css("background-image","url('img/heart.png')")
+					$rootScope.concern="未关注"
+				}else if($rootScope.deis_faved>0){
+					angular.element("#heart").css("background-image","url('img/follownow.png')")
+					$rootScope.concern="已关注"
+				}
+				$rootScope.derate_foramt=res.rate_foramt
+				$rootScope.dedeal_sn=res.deal_sn
+				$rootScope.dename=res.name
+				$rootScope.derepay_time=res.repay_time
+				$rootScope.derepay_time_type=res.repay_time_type//年月
+				if($rootScope.derepay_time_type==0){
+					$rootScope.Dayrepay_time="天"
+				}else{
+					$rootScope.Dayrepay_time="个月"
+				}
+				$rootScope.dedeal_status=res.deal_status//判断投资状态
+				console.log($rootScope.dedeal_status)
+				$rootScope.deremain_time=res.remain_time
+				console.log($rootScope.deremain_time)
+				
+				
+				
+				$rootScope.demin_loan_money_format=res.min_loan_money_format
+		//		$rootScope.dedescription=res.description
+				//项目描述
+				if(res.description==''){
+		//			 $scope.myHTML = $sce.trustAsHtml(...)
+					$rootScope.dedescription= $sce.trustAsHtml('<span style=" color: #0AE;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的项目描述信息</span>')
 		
-		$$('#loading').css('display','none')
-		console.log(res)
-		$rootScope.detailId=res.id;
-		$rootScope.deis_faved=res.is_faved
-		console.log($rootScope.deis_faved)
-		if($rootScope.deis_faved==0){
-			$$("#heart").css("background-image","url('img/heart.png')")
-			$rootScope.concern="未关注"
-		}else if($rootScope.deis_faved>0){
-			$$("#heart").css("background-image","url('img/follownow.png')")
-			$rootScope.concern="关注"
-		}
-		$rootScope.derate_foramt=res.rate_foramt
-		$rootScope.dedeal_sn=res.deal_sn
-		$rootScope.dename=res.name
-		$rootScope.derepay_time=res.repay_time
-		$rootScope.derepay_time_type=res.repay_time_type//年月
-		if($rootScope.derepay_time_type==0){
-			$rootScope.Dayrepay_time="天"
-		}else{
-			$rootScope.Dayrepay_time="个月"
-		}
-		$rootScope.dedeal_status=res.deal_status//判断投资状态
-		console.log($rootScope.dedeal_status)
-		$rootScope.deremain_time=res.remain_time
-		console.log($rootScope.deremain_time)
+				}else{
+		//			angular.element('#DEdescription').html($rootScope.dedescription)
+					$rootScope.dedescription=res.description
+				}
+				
+				//企业信息
+		//		$rootScope.derisk_certifications=res.risk_certifications
+				if(res.risk_certifications=='')
+				{
+					$rootScope.derisk_certifications= $sce.trustAsHtml('<span style="color: #0AE;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的企业信息</span>');
+				}else{
+		//			angular.element('#DErisk_certifications').html($rootScope.derisk_certifications)
+					$rootScope.derisk_certifications=res.risk_certifications
+				}
+				
+				//风控保障risk_certifications 企业信息
+				
 		
-		
-		
-		$rootScope.demin_loan_money_format=res.min_loan_money_format
-//		$rootScope.dedescription=res.description
-		//项目描述
-		if(res.description==''){
-//			 $scope.myHTML = $sce.trustAsHtml(...)
-			$rootScope.dedescription= $sce.trustAsHtml('<span style=" color: #ffa03b;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的项目描述信息</span>')
-
-		}else{
-//			angular.element('#DEdescription').html($rootScope.dedescription)
-			$rootScope.dedescription=res.description
-		}
-		
-		//企业信息
-//		$rootScope.derisk_certifications=res.risk_certifications
-		if(res.risk_certifications=='')
-		{
-			$rootScope.derisk_certifications= $sce.trustAsHtml('<span style="color: #ffa03b;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的企业信息</span>');
-		}else{
-//			angular.element('#DErisk_certifications').html($rootScope.derisk_certifications)
-			$rootScope.derisk_certifications=res.risk_certifications
-		}
-		
-		//风控保障risk_certifications 企业信息
-		
-
-//		$rootScope.derisk_security=res.risk_security
-		if(res.risk_security=='')
-		{
-			$rootScope.derisk_security=$sce.trustAsHtml('<span style="color: #ffa03b;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的风险保障信息</span>')
-//			angular.element('#DErisk_security').html('<span id="desPageNull">当前没有可查看的企业信息</span>')
-		}else{
-//			angular.element('#DErisk_security').html($rootScope.derisk_security)
-			$rootScope.derisk_security=res.risk_security
-		}
-//		angular.element('#DErisk_security').html($rootScope.derisk_security)
-		
-		
-	})
+		//		$rootScope.derisk_security=res.risk_security
+				if(res.risk_security=='')
+				{
+					$rootScope.derisk_security=$sce.trustAsHtml('<span style="color: #0AE;line-height: 7rem;text-align: center;margin: 0 auto;width: 100%;display: block;">当前没有可查看的风险保障信息</span>')
+		//			angular.element('#DErisk_security').html('<span id="desPageNull">当前没有可查看的企业信息</span>')
+				}else{
+		//			angular.element('#DErisk_security').html($rootScope.derisk_security)
+					$rootScope.derisk_security=res.risk_security
+				}
+		//		angular.element('#DErisk_security').html($rootScope.derisk_security)
+				
+				
+			})
+	}
+	webapp_deal_detailsFun();
 }
 
 
@@ -707,7 +1061,7 @@ $scope.goDetails=function(email,pwd,id){
 		}
 //跳转登录页******************判断
 $scope.goLogin = function() {
-			if($rootScope.data.email==""&&$rootScope.data.pwd==""){
+			if($rootScope.data.pwd==""){
 				//window.location.href = "#/tab/investlogin";
 				$state.go("tab.investlogin")
 				$ionicTabsDelegate.select(2);
@@ -721,7 +1075,7 @@ $scope.goLogin = function() {
 //锦囊
 	$scope.goSilkBag = function() {
 			$rootScope.showC = false;
-			window.location.href = "#/tab/silkBag";
+			$state.go("tab.silkBag",{aaa:'wosss'});
 		}
 //签到
 	$scope.goSigninMine = function() {
@@ -745,12 +1099,33 @@ $scope.goLogin = function() {
 		}
 //联系客服
 	$scope.goOnService = function() {
-		window.location.href = "#/tab/ContactService";
+//		window.location.href = "#/tab/ContactService";
+		$http.post(urltext + "/index.php?ctl=webapp_service","")
+		.success(function(res){
+			console.log(res)
+			var str = res; 
+            var hrefUrl = str.slice(1,res.length-1).replace(/\\/g,"");
+            console.log(hrefUrl)
+            $scope.hrefUrl=hrefUrl
+            $rootScope.paySrc = $sce.trustAsResourceUrl( $scope.hrefUrl); 
+             var options = {
+		      location: 'yes',
+		      clearcache: 'yes',
+		      toolbar: 'no'
+		    };
+	  		$cordovaInAppBrowser.open(hrefUrl, '_system', options)
+		      .then(function(event) {
+		      })
+		      .catch(function(event) {
+		      });
+	    })
 		$rootScope.showC = false;
 	}
 //应用设置
 	$scope.goSetting = function() {
-		window.location.href= "#/tab/addset";
+		
+		$state.go('tab.addset')
+//		window.location.href= "#/tab/addset";
 		$rootScope.showC = false;
 	}
 })
@@ -801,29 +1176,32 @@ $scope.goLogin = function() {
 .controller('SafetyCtrl', function($scope) {})
 //加号点开的controller
 //锦囊
-.controller('silkBagCtrl', function($scope) {})
+	
+	
+.controller('silkBagCtrl', function($scope,$stateParams,$rootScope) {})
+
+	
 //签到有礼
 .controller('signinMineCtrl', function($scope) {})
 //行业动态
 .controller('industryCtrl', function($scope,$http,$rootScope,$state,$sce) {
-	$$('#loading').css('display','block')
+	angular.element('#loading').css('display','block')
 	var index=1;
 	var data={'page':index};
 	$http.post(urltext + "/index.php?ctl=webapp_viewpoint",data)
 	.success(function(res){
-		$$('#loading').css('display','none')
+		angular.element('#loading').css('display','none')
 		console.log(res)
 		$scope.industryList=res.list
 		$scope.program_title=res.program_title
 	})	  
 		  $scope.doRefresh = function() {
-		  		 $$('#loading').css('display','block')
+
 		  		 $scope.industryList = [];
 		  		 $scope.currentPage=1;
 				 $scope.noMorePage=false;
 				 $http.post(urltext + "/index.php?ctl=webapp_viewpoint",data)
 			     .success(function(res) {
-			     	$$('#loading').css('display','none')
 			      	$scope.industryList = res.list;
 			     })
 			     .finally(function() {
@@ -835,10 +1213,8 @@ $scope.goLogin = function() {
 			$scope.noMorePage=false;
 			$scope.loadMore=function(){
 			    $scope.currentPage += 1;//每当滚动到底部，页码累计加1
-			    $$('#loading').css('display','block')
 			    $http.post(urltext + "/index.php?ctl=webapp_viewpoint",{page:$scope.currentPage})   //注意改为自己本站的地址，不然会有跨域问题
 			        .success(function(newItems) {
-			        	$$('#loading').css('display','none')  
 			        	if(newItems.list.length>0)
 			        	{
 			        		for (var i=0;i<newItems.list.length;i++){//newItems.content.length，当前json的数量
@@ -854,12 +1230,12 @@ $scope.goLogin = function() {
 				
 	
 	$scope.goIndustry=function(id){
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 //		angular.element('#dynaContent').html("")
 			$scope.MyDetailData={'id':id}
 			$http.post(urltext + "/index.php?ctl=webapp_article",$scope.MyDetailData)
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 				$rootScope.dynaDtitle=res.title
 				$rootScope.dynaProgram=res.program_title
@@ -878,22 +1254,20 @@ $scope.goLogin = function() {
 .controller('schoolCtrl', function($scope,$http,$rootScope,$sce,$state) {
 	var data={'page':1};
 	
-	$$('#loading').css('display','block')
+	angular.element('#loading').css('display','block')
 	$http.post(urltext + "/index.php?ctl=webapp_help",data)	
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			$scope.program_title=res.program_title
 			$scope.schoolList=res.list
 		})
 	
   	$scope.doRefresh = function() {
-  		 $$('#loading').css('display','block')
   		 $scope.schoolList = [];
   		 $scope.currentPage=1;
 		 $scope.noMorePage=false;
-		 $http.post(urltext + "/index.php?ctl=webapp_viewpoint",data)
+		 $http.post(urltext + "/index.php?ctl=webapp_help",data)
 	     .success(function(res) {
-	     	$$('#loading').css('display','none')
 	      	$scope.schoolList = res.list;
 	     })
 	     .finally(function() {
@@ -905,10 +1279,8 @@ $scope.goLogin = function() {
 	$scope.noMorePage=false;
 	$scope.loadMore=function(){
 	    $scope.currentPage += 1;//每当滚动到底部，页码累计加1
-	    $$('#loading').css('display','block')
-	    $http.post(urltext + "/index.php?ctl=webapp_viewpoint",{page:$scope.currentPage})   //注意改为自己本站的地址，不然会有跨域问题
+	    $http.post(urltext + "/index.php?ctl=webapp_help",{page:$scope.currentPage})   //注意改为自己本站的地址，不然会有跨域问题
 	        .success(function(newItems) {
-	        	$$('#loading').css('display','none')  
 	        	if(newItems.list.length>0)
 	        	{
 	        		for (var i=0;i<newItems.list.length;i++){//newItems.content.length，当前json的数量
@@ -924,11 +1296,11 @@ $scope.goLogin = function() {
 
 	
 	$scope.industryschDetails=function(id){
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 
 			$http.post(urltext + "/index.php?ctl=webapp_article",{'id':id})
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 				$rootScope.schooldydynaDtitle=res.title
 				$rootScope.schooldydynaProgram=res.program_title
@@ -942,22 +1314,25 @@ $scope.goLogin = function() {
 	}
 })
 //应用设置
-.controller('settingsCtrl', function($http,$cordovaToast,$sce,$scope,$rootScope,$state,$cordovaDevice,$cordovaAppVersion,$cordovaInAppBrowser,$cordovaBarcodeScanner) {
-	
+.controller('settingsCtrl', function($http,$cordovaToast,$stateParams,$sce,$scope,$rootScope,$timeout,$state,$cordovaDevice,$cordovaAppVersion,$cordovaInAppBrowser,$cordovaBarcodeScanner) {
+	$cordovaAppVersion.getVersionNumber().then(function (version) {
+    	$scope.currentVersion= version;
+    });
 	$scope.SignOut=function(){
+		$rootScope.modalFlag=true;
 		$rootScope.data.pwd='';
-		$rootScope.data.email="";
+//		$rootScope.data.email="";
 		$rootScope.inshow=false;
 		$rootScope.outshow=true;
-		$$('#password').val('')
+		angular.element('#password').val('')
 		$state.go("tab.invest")
 	}
 	$scope.aboutUs=function(){
 			$state.go("tab.aboutus")
-			$$('#loading').css('display','block')
+			angular.element('#loading').css('display','block')
 			$http.post(urltext + "/index.php?ctl=webapp_article",{'id':66})
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 //				$rootScope.aboutustitle=res.title
 				$rootScope.aboutusProgram=res.title
@@ -967,10 +1342,10 @@ $scope.goLogin = function() {
 	}
 	$scope.aboutUs2=function(){
 			$state.go("tab.aboutus2")
-			$$('#loading').css('display','block')
+			angular.element('#loading').css('display','block')
 			$http.post(urltext + "/index.php?ctl=webapp_article",{'id':66})
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 //				$rootScope.aboutustitle=res.title
 				$rootScope.aboutusProgram=res.title
@@ -984,30 +1359,26 @@ $scope.goLogin = function() {
 			document.addEventListener('deviceready', function onDeviceReady()
 			{
 			        var success = function(status) {
-//			            alert();
 						$cordovaToast.showLongBottom('清除缓存成功')
 			        }
-			
 			        var error = function(status) {
-//			            alert();
 						$cordovaToast.showLongBottom('清除缓存失败' )
 			        }
-			
 			        window.cache.clear( success, error );
-			});
+			},false);
 			
 	}
-	$scope.goUpdataApp=function(){
-		if($rootScope.version<$rootScope.appVersion){
+	$rootScope.goUpdataApp=function(){
+	
+		if($rootScope.version>=$rootScope.appVersion){
 			$cordovaToast.showLongBottom('当前已是最新版本');
 		}else{
 			var str=''
 			if($cordovaDevice.getPlatform()=='Android'){	
-//				str=domainUrl+'/yjy.apk'
 					$rootScope.showPopup()
 			}else{
 				// ios 链接地址
-				str='itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1181777000'
+				str='itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1232129295'
 				 var options = {
 				      location: 'yes',
 				      clearcache: 'yes',
@@ -1015,10 +1386,8 @@ $scope.goLogin = function() {
 				    };
 				  $cordovaInAppBrowser.open(str, '_system', options)
 				      .then(function(event) {
-				        //alert('success')
 				      })
 				      .catch(function(event) {
-				        //alert('error')
 				      });
 			}
 		   
@@ -1027,9 +1396,10 @@ $scope.goLogin = function() {
 	$scope.encourage=function(){
 		var str=''
 		if($cordovaDevice.getPlatform()=='Android'){
-			str='market://details?id=com.ionicframework.myapp7691776'
+			str='market://details?id=com.szqhyijiayi.sxyijiayi'
 		}else{
 			// ios 链接地址
+			str='itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1232129295'
 		}
 	    var options = {
 	      location: 'yes',
@@ -1044,37 +1414,51 @@ $scope.goLogin = function() {
 	        //alert('error')
 	      });
 	}
+	$scope.scanCan=true;
 	$scope.goScan=function(){
+//		$state.go("tab.reg2")
 		    document.addEventListener("deviceready", function () {
-		    $cordovaBarcodeScanner
-		      .scan()
-		      .then(function(barcodeData) {
-		      	if(!barcodeData.text||!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(barcodeData.text))){
-		       		$rootScope.RecommendCode=barcodeData.text;
-		       		$rootScope.RecommendIs=false;
-		       		$state.go("tab.reg")
-		       	}
 
-		      }, function(error) {
-		        // An error occurred
-		        alert('An error occurred')
-		      });
+		    		$cordovaBarcodeScanner
+				      .scan()
+				      .then(function(barcodeData) {
+					      	if(barcodeData.text && (/^1[34578]\d{9}$/.test(barcodeData.text))){
+					       		$rootScope.RecommendCode=barcodeData.text;
+					       		$rootScope.RecommendIs=false;
+								$state.go("tab.reg2")
+					       }   
+				      }, function(error) {
+				      	$cordovaToast.showLongBottom('请先设置允许医加医访问相机');
+				      });				    
 		  }, false);
 	}
 })
 
 //tab动态
-.controller('DynamicCtrl', function($scope, $http, $timeout,$sce, $ionicLoading, $state,$rootScope,$ionicSlideBoxDelegate) {
-	$scope.lists = [];
+.controller('DynamicCtrl', function($scope,$cordovaToast ,$http, $timeout,$sce, $ionicLoading, $state,$rootScope,$ionicSlideBoxDelegate) {
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+					if(toState.url=='/dynamic')
+					{
+						$http.post(urltext + "/index.php?ctl=webapp_dynamic", {"data":1})
+							.success(function(res) {
+								$scope.hasmore=true;
+								console.log(res)
+								$scope.lists = res.list
+								$scope.$broadcast("scroll.refreshComplete"); //请求到数据刷新页面。
+							})
+//							$scope.moredata = false
+						}
+	})
+		$scope.lists = [];
 	    $scope.hasmore = true;
-	    var loadIndex=0;
+	    var loadIndex=1;
 	    loadajax();
+
 		$scope.loadMore = function () { 
-	      $scope.dataValue++; 
+	    loadIndex++;
 	      loadajax(); 
 	    }
 		function loadajax() {
-		loadIndex++;
 		var loaddata = {
 				'page': loadIndex
 			}
@@ -1083,12 +1467,14 @@ $scope.goLogin = function() {
 	      	console.log(res.list)
 	        if (res.list.length == 0) { 
 	          $scope.hasmore = false;
-			  $ionicLoading.show({ 
+	          console.log('meiyoufengduoshuju ')
+	          $cordovaToast.showShortBottom("没有更多数据")
+			  /*$ionicLoading.show({ 
 				template: '最后一条数据'
 			  });
 			  $timeout(function() {
 				$ionicLoading.hide();
-			  }, 500)//这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
+			  }, 500)*///这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
 //	          return; 
 	        }
 	        $scope.dymoneys=res.virtual_money
@@ -1111,21 +1497,22 @@ $scope.goLogin = function() {
 				}
 				$http.post(urltext + "/index.php?ctl=webapp_dynamic", data)
 					.success(function(res) {
+						$scope.hasmore=true;
 						console.log(res)
 						$scope.lists = res.list
 						$scope.$broadcast("scroll.refreshComplete"); //请求到数据刷新页面。
 					})
-				$scope.moredata = false
+//				$scope.moredata = false
 		}
 		
 		//点击动态内容查看详情
 		$scope.goDynaDetail=function(id){
-			$$('#loading').css('display','block')
+			angular.element('#loading').css('display','block')
 //			angular.element('#dynaContent').html("")
 			$scope.MyDetailData={'id':id}
 			$http.post(urltext + "/index.php?ctl=webapp_article",$scope.MyDetailData)
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 				$rootScope.dynaDtitle=res.title
 				$rootScope.dynaProgram=res.program_title
@@ -1148,7 +1535,33 @@ $scope.goLogin = function() {
 
 
 //tab账户
-.controller('AccountCtrl', function($scope, $rootScope, $http, $state,$ionicModal) {
+.controller('AccountCtrl', function($scope, $rootScope, $http, $state,$ionicModal,$timeout) {
+	$scope.accgoRealName = function (){
+		$scope.safemodal.hide();
+		$timeout(function(){
+			window.location = "#/tab/goRealName";
+		},200)
+	}	
+	
+	
+	$ionicModal.fromTemplateUrl('templates/safemodal.html', {
+	    scope: $scope
+		}).then(function(modal) {
+		    $scope.safemodal = modal;
+		});
+	if($rootScope.modalFlag)
+	{
+		var a=$timeout(function(){
+			if($rootScope.idcardpassed==0 ){
+				$scope.safemodal.show()
+			}
+			$timeout.cancel(a);
+		},500)
+		
+		$rootScope.modalFlag=false;
+	}
+	
+	
 	$scope.myGrade=function(){
 		switch($rootScope.vip_grade){
 			case "普通VIP会员":
@@ -1182,22 +1595,29 @@ $scope.goLogin = function() {
 	$scope.myGrade();
 	
 	$scope.do_refresher=function(){
-		console.log("00")
+
 			$http.post(urltext + '/index.php?ctl=webapp_uc_index',{email:$rootScope.data.email,pwd:$rootScope.logindata.user_pwd}) 
 							.success(function(res) {
 								console.log(res);
 								$rootScope.ips_acct_no=res.ips_acct_no;//托管账户
 								$rootScope.vip_grade=res.vip_grade;//VIP等级
-								$rootScope.idcardpassed=res.user.idcardpassed//实名认证
-								$$('#loading').css('display','none')
+								$rootScope.idcardpassed=res.idcardpassed//实名认证
+								angular.element('#loading').css('display','none')
 								$rootScope.flag=true
 								$rootScope.username=res.user_name;
-//								$rootScope.login_username=res.user_name;
-								$rootScope.login_username=$$('#username').val();
-								$rootScope.pBalance=res.pBalance;
-								$rootScope.totalent=res.totalent;
-								$rootScope.investment=res.investment;
+								$rootScope.login_username=res.user_name;
+								$rootScope.pBalance=res.pBalance;//可用余额
+								$rootScope.totalent=res.totalent;//账户总额
+								$rootScope.total_money_format=res.total_money_format;//现金奖励
 								$rootScope.score=res.score;
+								if(res.t_sign_data=='0'){
+									$rootScope.t_sign_data='立即签到'
+									angular.element('.btnmy .btn2').css('color','#fff')
+								}else{
+									$rootScope.t_sign_data='已签到'
+									angular.element('.btnmy .btn2').css('color','#ffa200')
+								}
+								
 						}).finally(function() {
 							$scope.myGrade();
        // 停止广播ion-refresher
@@ -1224,9 +1644,9 @@ $ionicModal.fromTemplateUrl('templates/czmodal.html', {
 				}
 		$scope.username=$rootScope.data.email;
 		if($rootScope.t_sign_data=='已签到'){
-			$$('.btnmy .btn2').css('color','#ffa03b')
+			angular.element('.btnmy .btn2').css('color','#ffa200')
 		}else{
-			$$('.btnmy .btn2').css('color','#fff')
+			angular.element('.btnmy .btn2').css('color','#fff')
 		}
 		$scope.goSign=function(){
 				if($rootScope.t_sign_data != '已签到')
@@ -1236,7 +1656,8 @@ $ionicModal.fromTemplateUrl('templates/czmodal.html', {
 						if(res.status==1)
 						{
 							$rootScope.t_sign_data='已签到'
-							$$('.btnmy .btn2').css('color','#ffa03b')
+							angular.element('.btnmy .btn2').css('color','#ffa200')
+							$scope.do_refresher();
 						}
 						
 				    })
@@ -1279,10 +1700,30 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
         }
 	})
 //实名认证
-.controller('goRealNameCtrl',function($scope,$ionicModal,$rootScope,$http,$state){
+.controller('goRealNameCtrl',function($scope,$ionicModal,$rootScope,$http,$state,$ionicHistory,$timeout){
+	$rootScope.realNameFunOk=function(){
+		$rootScope.show_err.hide();
+		if($scope.res_status==1)
+		{
+			$timeout(function(){
+				$rootScope.backTab()
+			},200)
+		}
+	}
+	
 	
 	$scope.idnoAreal_name=function(){
-		$$('#loading').css('display','block')
+		if(!$scope.real_name)
+		{
+			angular.element('.realName .name').css('display','block')
+			return ''
+		}else if(!$scope.idno){
+			angular.element('.realName .idno').css('display','block')
+			return ''
+		}
+		
+		
+		angular.element('#loading').css('display','block')
 		var idnorealdata={
 			'email':$rootScope.data.email,
 			'pwd':$rootScope.logindata.user_pwd,
@@ -1292,12 +1733,17 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 		console.log(idnorealdata)
 		$http.post(urltext+"/index.php?ctl=webapp_register_idno",idnorealdata)
 		.success(function(res){
-			$$('#loading').css('display','none')
-			$scope.showerr=res.show_err;
+			angular.element('#loading').css('display','none')
+			$rootScope.showerr=res.show_err;
+			$rootScope.show_err.show()
+			$scope.res_status=res.status
+	
 			console.log(res)
 			if(res.status==1)
 			{
 				$rootScope.idcardpassed=1//实名认证
+				
+				
 			}
 			
 		})
@@ -1319,9 +1765,9 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	
 	//模态框
 	$ionicModal.fromTemplateUrl('templates/show_err.html', {
-	    scope: $scope
+	    scope: $rootScope
 	}).then(function(modal) {
-	    $scope.show_err = modal;
+	    $rootScope.show_err = modal;
 	});
 	
 	
@@ -1335,65 +1781,65 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	
 		//删除我关注的表
 	$scope.reloadRoute = function () {
-		console.log("00")
-    $window.location.reload();
-};
+			console.log("00")
+	    $window.location.reload();
+	};
 	//打对号
 	var muselect=[];
 	var selectFlag=true;
 	var selectDelDisplay=false;
 
-//	$$(e.currentTarget).selectFlag=false;
+//	angular.element(e.currentTarget).selectFlag=false;
 	
 	
 	$scope.delSelected=function(e){
 		if(selectDelDisplay)
 		{
 				
-				if($$(e.currentTarget).attr('selectFlag')){
+				if(angular.element(e.currentTarget).attr('selectFlag')){
 					
-					$$(e.currentTarget).attr('selectFlag','');
+					angular.element(e.currentTarget).attr('selectFlag','');
 					
-					e=$$(e.currentTarget).find('.raddioBtn')
+					e=angular.element(e.currentTarget).find('.raddioBtn')
 					var val=true;
 					for(var i=0;i<muselect.length;i++){
-						if(muselect[i]==$$(e).attr("indexnow"))
+						if(muselect[i]==angular.element(e).attr("indexnow"))
 						{
 							val=false
 						}
 					}
 					if(val)
 					{
-						muselect.push($$(e).attr("indexnow"))
+						muselect.push(angular.element(e).attr("indexnow"))
 					}
 					console.log('删掉选中的');
-					$$(e).css({
-						'background':'#ff3000',
+					angular.element(e).css({
+						'background':'#0AE',
 						border:0
 					})
-					$$(e).html('√');
+					angular.element(e).html('√');
 					
 				}else{
-					$$(e.currentTarget).attr('selectFlag',true);
-					e=$$(e.currentTarget).find('.raddioBtn')
+					angular.element(e.currentTarget).attr('selectFlag',true);
+					e=angular.element(e.currentTarget).find('.raddioBtn')
 					for(var i=0;i<muselect.length;i++){
-						if(muselect[i]==$$(e).attr("indexnow"))
+						if(muselect[i]==angular.element(e).attr("indexnow"))
 						{
 							muselect.splice(i, 1);
 						}
 					}
-					$$(e).css({
+					angular.element(e).css({
 						'background':'#fff',
 						border:'1px solid #666666'
 					})
-					$$(e).html('');
+					angular.element(e).html('');
 					
 				}
 				if(muselect.length){
-					  $$('.banneDel').css('display','block');
-//					  $$('.piece').last().css('margin-bottom','1rem')
+					  angular.element('.banneDel').css('display','block');
+//					  angular.element('.piece').last().css('margin-bottom','1rem')
 				}else{
-					  $$('.banneDel').css('display','none');
+					  angular.element('.banneDel').css('display','none');
 				}
 		}
 	}
@@ -1408,12 +1854,41 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 		console.log(MyAtten)
 		$http.post(urltext+'/index.php?ctl=webapp_uc_del_collect',MyAtten)
 		.success(function(res){
-			$scope.doRefresh()
-//			 $$('.banneDel').css('display','none');
-//			 selectFlag=true;
-//			 $$('.raddioBtn').css('display','none');
-//			console.log(res)
-//			selectDelDisplay=false;
+			  		 angular.element('#loading').css('display','block')
+			  		 $scope.currentPage=1;
+        			 $scope.noMorePage=false;
+        			 
+					 $http.post(urltext + "/index.php?ctl=webapp_follow",myAttendata)
+				     .success(function(res) {
+				     angular.element('#loading').css('display','none')
+				     angular.element("#refreshStyle").css("opacity","1")
+				     $scope.attenItems = res.list;
+				     // 刷新对删除 操作的影响
+					selectDelDisplay=false;
+					$scope.delItemFlags=true;
+				 	angular.element('.piece .scale').css({
+				 		'transform': 'scale(1)',
+					    'position': 'static',
+					    'marginTop': '0rem',
+					    'right':' 0'
+				 	})
+				 	angular.element('.edit').html('编辑')
+					angular.element('.raddioBtn').css('display','none');
+					angular.element('.banneDel').css('display','none');
+					angular.element('.piece').attr('selectFlag','true');
+					angular.element('.raddioBtn').css({
+						'background':'#fff',
+						border:'1px solid #666666'
+					})
+					angular.element('.raddioBtn').html('');
+					muselect=[]
+
+				     })
+				     .finally(function() {
+				       $scope.$broadcast('scroll.refreshComplete');
+				     });
+			  
+			
 		})
 	}
 	
@@ -1429,42 +1904,47 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 						"pwd": $rootScope.logindata.user_pwd,    //密码
 						"page" : 1
 				}
-			$$('#loading').css('display','block')
+			angular.element('#loading').css('display','block')
 			$http.post(urltext + "/index.php?ctl=webapp_follow",myAttendata)
 				.success(function(res){
 					$scope.currentPage=1;
         			$scope.noMorePage=false;
 					$scope.attenItems = res.list;
-					$$('#loading').css('display','none')
+					angular.element('#loading').css('display','none')
 					
 			    })
 
 			  $scope.attenItems = [];
 			  $scope.doRefresh = function() {
-			  		 $$('#loading').css('display','block')
+				  	if(!$scope.delItemFlags)
+				  	{
+				  		$scope.$broadcast('scroll.refreshComplete');
+				  		return '';
+				  	}
 			  		 $scope.currentPage=1;
         			 $scope.noMorePage=false;
 					 $http.post(urltext + "/index.php?ctl=webapp_follow",myAttendata)
 				     .success(function(res) {
-				     $$('#loading').css('display','none')
+
 				     $scope.attenItems = res.list;
 				     // 刷新对删除 操作的影响
 					selectDelDisplay=false;
-					delItemFlags=true;
-				 	$$('.piece .scale').css({
+					$scope.delItemFlags=true;
+				 	angular.element('.piece .scale').css({
 				 		'transform': 'scale(1)',
-					    'position': 'absolute',
+					    'position': 'static',
+					    'marginTop': '0rem',
 					    'right':' 0'
 				 	})
-				 	$$('.edit').html('编辑')
-					$$('.raddioBtn').css('display','none');
-					$$('.banneDel').css('display','none');
-					$$('.piece').attr('selectFlag','true');
-					$$('.raddioBtn').css({
+				 	angular.element('.edit').html('编辑')
+					angular.element('.raddioBtn').css('display','none');
+					angular.element('.banneDel').css('display','none');
+					angular.element('.piece').attr('selectFlag','true');
+					angular.element('.raddioBtn').css({
 						'background':'#fff',
 						border:'1px solid #666666'
 					})
-					$$('.raddioBtn').html('');
+					angular.element('.raddioBtn').html('');
 					muselect=[]
 
 				     })
@@ -1476,11 +1956,15 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 				$scope.currentPage=1;//定义下拉加载分页的初始值
 				$scope.noMorePage=false;
 				$scope.loadMore=function(){
+					if(!$scope.delItemFlags)
+				  	{
+				  		$scope.$broadcast('scroll.infiniteScrollComplete'); 
+				  		return '';
+				  	}
 				    $scope.currentPage += 1;//每当滚动到底部，页码累计加1
-				    $$('#loading').css('display','block')
+
 				    $http.post(urltext + "/index.php?ctl=webapp_follow",{email:$rootScope.data.email,pwd:$rootScope.logindata.user_pwd,page:$scope.currentPage})   //注意改为自己本站的地址，不然会有跨域问题
 				        .success(function(newItems) {
-				        	$$('#loading').css('display','none')  
 				        	if(newItems.list.length>0)
 				        	{
 				        		for (var i=0;i<newItems.list.length;i++){//newItems.content.length，当前json的数量
@@ -1493,36 +1977,40 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 				            $scope.$broadcast('scroll.infiniteScrollComplete');     
 				        })
 				};
-			var delItemFlags=true;
+			$scope.delItemFlags=true;
 			$scope.delItem=function(){
-				if(delItemFlags)
+				if($scope.delItemFlags)
 				{
+					angular.element("#refreshStyle").css("opacity","0")
 					selectDelDisplay=true;
-					delItemFlags=false
-				 	$$('.piece .scale').css({
+					$scope.delItemFlags=false
+				 	angular.element('.piece .scale').css({
 				 		'transform': 'scale(.94)',
 					    'position': 'absolute',
+					    'marginTop': '-0.2rem',
 					    'right':' 0'
 				 	})
-					$$('.raddioBtn').css('display','block');
-					$$('.edit').html('取消')
+					angular.element('.raddioBtn').css('display','block');
+					angular.element('.edit').html('取消')
 				}else{
+					angular.element("#refreshStyle").css("opacity","1")
 					selectDelDisplay=false;
-					delItemFlags=true;
-				 	$$('.piece .scale').css({
+					$scope.delItemFlags=true;
+				 	angular.element('.piece .scale').css({
 				 		'transform': 'scale(1)',
-					    'position': 'absolute',
+					    'position': 'static',
+					    'marginTop': '0rem',
 					    'right':' 0'
 				 	})
-				 	$$('.edit').html('编辑')
-					$$('.raddioBtn').css('display','none');
-					$$('.banneDel').css('display','none');
-					$$('.piece').attr('selectFlag','true');
-					$$('.raddioBtn').css({
+				 	angular.element('.edit').html('编辑')
+					angular.element('.raddioBtn').css('display','none');
+					angular.element('.banneDel').css('display','none');
+					angular.element('.piece').attr('selectFlag','true');
+					angular.element('.raddioBtn').css({
 						'background':'#fff',
 						border:'1px solid #666666'
 					})
-					$$('.raddioBtn').html('');
+					angular.element('.raddioBtn').html('');
 					muselect=[]
 				}
 
@@ -1532,6 +2020,7 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 })
 
 // 日志页
+
 .controller('dayRecordCtrl', function($scope,$rootScope,$http,$ionicModal) {
 	
 	//弹出框
@@ -1574,6 +2063,9 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
         }
 
 
+
+
+
  $scope.goVIPBuy=function(){
         	window.location.href="#/tab/goVIPBuy";
         }
@@ -1591,7 +2083,7 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	
 	//撤销提现
 	$scope.Revoke=function(status,dltid){
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 		var Cxdata={
 			"email":$rootScope.data.email,
 			"pwd":$rootScope.logindata.user_pwd,
@@ -1599,9 +2091,9 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			"dltid":dltid
 		}
 		console.log(Cxdata)
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_carry_revoke_apply',Cxdata)
+		$http.post(urltext +'/index.php?ctl=webapp_uc_carry_revoke_apply',Cxdata)
 			.success(function(res){
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				FLlastloadRecord()
 			})
 		
@@ -1662,25 +2154,25 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	//充值
 	var scrollTopMax=1;
 	function CZloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_incharge_log',CZRecorddata)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_incharge_log',CZRecorddata)
 			.success(function(res){
 				czflagScroll=true;
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				$scope.CZRecordlists=res.list;
 				if(!$scope.CZRecordlists.length){
-					$$('.czBodyCon .pageNull').css('display','block')
+					angular.element('.czBodyCon .pageNull').css('display','block')
 				}else{
-					$$('.czBodyCon .pageNull').css('display','none')
+					angular.element('.czBodyCon .pageNull').css('display','none')
 				}
 		})
 		
 		$scope.czcurrentPage=2;
-		$$('.czBodyCon').unbind('scroll')
+		angular.element('.czBodyCon').unbind('scroll')
 		var czflagScroll=true;
-		$$('.czBodyCon').scroll(function(){  
+		angular.element('.czBodyCon').scroll(function(){  
 			
-            var srollPos = $$('.czBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+            var srollPos = angular.element('.czBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
 //           totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());   
 //           $(document).height() <= totalheight
             if(srollPos>=scrollTopMax) {  
@@ -1703,15 +2195,15 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	czflagScroll=true;
 			        	if (newItems.list.length <newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-//			                removeEvents($$('.czBodyCon'),'scroll',czScroll);
-								$$('.czBodyCon').unbind('scroll')
+//			                removeEvents(angular.element('.czBodyCon'),'scroll',czScroll);
+								angular.element('.czBodyCon').unbind('scroll')
 								czflagScroll=false;
 			            } 
 						
 						if(!$scope.CZRecordlists.length){
-							$$('.czBodyCon .pageNull').css('display','block')
+							angular.element('.czBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.czBodyCon .pageNull').css('display','none')
+							angular.element('.czBodyCon .pageNull').css('display','none')
 						}     
 			        })
             }  
@@ -1722,26 +2214,26 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	}
 	//提现
 	function TXloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_carry_money_log',TXRecorddata)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_carry_money_log',TXRecorddata)
 			.success(function(res){
 				txflagScroll=true;
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				$scope.TXRecordlists=res.list;
 
 						if(!$scope.TXRecordlists.length){
-							$$('.txBodyCon .pageNull').css('display','block')
+							angular.element('.txBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.txBodyCon .pageNull').css('display','none')
+							angular.element('.txBodyCon .pageNull').css('display','none')
 						}  
 		})
 		$scope.txcurrentPage = 2
-		$$('.txBodyCon').unbind('scroll')
+		angular.element('.txBodyCon').unbind('scroll')
 		var txflagScroll=true;
-		$$('.txBodyCon').scroll(function(){
+		angular.element('.txBodyCon').scroll(function(){
 			
-          var srollPos = $$('.txBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
-//          totalheight = parseFloat($$('.txBodyCon').height()) + parseFloat($$('.txBodyCon').scrollTop());   
+          var srollPos = angular.element('.txBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+//          totalheight = parseFloat(angular.element('.txBodyCon').height()) + parseFloat(angular.element('.txBodyCon').scrollTop());   
             if(srollPos>=scrollTopMax) {  
 			   	if(txflagScroll)
 				{
@@ -1762,14 +2254,14 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	txflagScroll=true;
 			        	if (newItems.list.length < newItems.page.page_size ) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-								$$('.txBodyCon').unbind('scroll')
+								angular.element('.txBodyCon').unbind('scroll')
 								txflagScroll=false;
 			            } 
 			            
 			           if(!$scope.TXRecordlists.length){
-							$$('.txBodyCon .pageNull').css('display','block')
+							angular.element('.txBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.txBodyCon .pageNull').css('display','none')
+							angular.element('.txBodyCon .pageNull').css('display','none')
 						}  
 			        })
             }  
@@ -1777,27 +2269,27 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	}
 	//福利
 	function FLloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_account_log',FLRecorddata)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_account_log',FLRecorddata)
 			.success(function(res){
 				flflagScroll=true;
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 				$scope.FLRecordlists= res.item;
 				if(!$scope.FLRecordlists.length){
-							$$('.flBodyCon .pageNull').css('display','block')
+							angular.element('.flBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.flBodyCon .pageNull').css('display','none')
+							angular.element('.flBodyCon .pageNull').css('display','none')
 						}  
 		   })
 		
 		
 		$scope.flcurrentPage=2;
-		$$('.flBodyCon').unbind('scroll')
+		angular.element('.flBodyCon').unbind('scroll')
 		var flflagScroll=true;
-		$$('.flBodyCon').scroll(function(){  
+		angular.element('.flBodyCon').scroll(function(){  
 			
-            var srollPos = $$('.flBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+            var srollPos = angular.element('.flBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
             if(srollPos>=scrollTopMax) {  
 			    if(flflagScroll)
 				{
@@ -1818,17 +2310,17 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	flflagScroll=true;
 			        	if (newItems.item.length <newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-//			                removeEvents($$('.czBodyCon'),'scroll',czScroll);
-								$$('.flBodyCon').unbind('scroll')
+//			                removeEvents(angular.element('.czBodyCon'),'scroll',czScroll);
+								angular.element('.flBodyCon').unbind('scroll')
 								flflagScroll=false;
 								
 			            } 
 						
 			            
 			            if(!$scope.FLRecordlists.length){
-							$$('.flBodyCon .pageNull').css('display','block')
+							angular.element('.flBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.flBodyCon .pageNull').css('display','none')
+							angular.element('.flBodyCon .pageNull').css('display','none')
 						}      
 			        })
             }  
@@ -1836,25 +2328,25 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 	}
 	//积分
 	function JFloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_account_log',JFRecorddata)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_account_log',JFRecorddata)
 			.success(function(res){
 				jfflagScroll=true;
 				console.log(res)
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				$scope.JFRecordlists=  res.item;
 				if(!$scope.JFRecordlists.length){
-							$$('.jfBodyCon .pageNull').css('display','block')
+							angular.element('.jfBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.jfBodyCon .pageNull').css('display','none')
+							angular.element('.jfBodyCon .pageNull').css('display','none')
 						}  
 		   })
 		$scope.jfcurrentPage=2;
-		$$('.jfBodyCon').unbind('scroll')
+		angular.element('.jfBodyCon').unbind('scroll')
 		var jfflagScroll=true;
-		$$('.jfBodyCon').scroll(function(){  
+		angular.element('.jfBodyCon').scroll(function(){  
 			
-            var srollPos = $$('.jfBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+            var srollPos = angular.element('.jfBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
             if(srollPos>=scrollTopMax) {  
 			    if(jfflagScroll)
 				{
@@ -1875,40 +2367,40 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	jfflagScroll=true;
 			        	if (newItems.item.length <newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-//			                removeEvents($$('.czBodyCon'),'scroll',czScroll);
-								$$('.jfBodyCon').unbind('scroll')
+//			                removeEvents(angular.element('.czBodyCon'),'scroll',czScroll);
+								angular.element('.jfBodyCon').unbind('scroll')
 								jfflagScroll=false;
 			           } 
 			           if(!$scope.JFRecordlists.length){
-							$$('.jfBodyCon .pageNull').css('display','block')
+							angular.element('.jfBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.jfBodyCon .pageNull').css('display','none')
+							angular.element('.jfBodyCon .pageNull').css('display','none')
 						}  
 			        })
             }  
         })
 	}
 	//VIP
-	function VIPloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_vip_buy_log',VIPRecorddata)
+	VIPloadRecord=function(){
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_vip_buy_log',VIPRecorddata)
 			.success(function(res){
 				vipflagScroll=true;
 				console.log(res)
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				$scope.VIPRecordlists= res.vip_buy_log_list;
 				if(!$scope.VIPRecordlists.length){
-							$$('.vipBodyCon .pageNull').css('display','block')
+							angular.element('.vipBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.vipBodyCon .pageNull').css('display','none')
+							angular.element('.vipBodyCon .pageNull').css('display','none')
 						}  
 		   })
 		$scope.vipcurrentPage=2;
-		$$('.vipBodyCon').unbind('scroll')
+		angular.element('.vipBodyCon').unbind('scroll')
 		var vipflagScroll=true;
-		$$('.vipBodyCon').scroll(function(){  
+		angular.element('.vipBodyCon').scroll(function(){  
 			
-            var srollPos = $$('.vipBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+            var srollPos = angular.element('.vipBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
             if(srollPos>=scrollTopMax) {  
 			    if(vipflagScroll)
 				{
@@ -1929,14 +2421,14 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	vipflagScroll=true;
 			        	if (newItems.vip_buy_log_list.length <newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-//			                removeEvents($$('.czBodyCon'),'scroll',czScroll);
-								$$('.vipBodyCon').unbind('scroll')
+//			                removeEvents(angular.element('.czBodyCon'),'scroll',czScroll);
+								angular.element('.vipBodyCon').unbind('scroll')
 								vipflagScroll=false;
 			            } 
 			            if(!$scope.VIPRecordlists.length){
-							$$('.vipBodyCon .pageNull').css('display','block')
+							angular.element('.vipBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.vipBodyCon .pageNull').css('display','none')
+							angular.element('.vipBodyCon .pageNull').css('display','none')
 						}  
 			                
 			        })
@@ -1944,28 +2436,28 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
         })
 	}
 	//最后一个福利tab
-	function FLlastloadRecord(){
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_carry_moneyent_log',FLlastdata)
+	FLlastloadRecord=function (){
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_carry_moneyent_log',FLlastdata)
 			.success(function(res){
 				lflflagScroll=true;
 				console.log(res)
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				$scope.FLlastlists= res.item;
 				$scope.FLlastlistsss=  res.item[0];
 				$rootScope.bank_id=res.bankid//储存
 				if(!$scope.FLlastlists.length){
-							$$('.lflBodyCon .pageNull').css('display','block')
+							angular.element('.lflBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.lflBodyCon .pageNull').css('display','none')
+							angular.element('.lflBodyCon .pageNull').css('display','none')
 						}  
 		   })
 			var lflflagScroll=true;
 		$scope.lflcurrentPage=2;
-		$$('.lflBodyCon').unbind('scroll')
-		$$('.lflBodyCon').scroll(function(){  
+		angular.element('.lflBodyCon').unbind('scroll')
+		angular.element('.lflBodyCon').scroll(function(){  
 			
-            var srollPos = $$('.lflBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
+            var srollPos = angular.element('.lflBodyCon').scrollTop();    //滚动条距顶部距离(页面超出窗口的高度)  
             if(srollPos>=scrollTopMax) {  
 			   if(lflflagScroll)
 				{
@@ -1986,14 +2478,14 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
 			        	} 
 			        	lflflagScroll=true;
 			        	if (newItems.item.length < newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
-//			                removeEvents($$('.czBodyCon'),'scroll',czScroll);
-								$$('.lflBodyCon').unbind('scroll')
+//			                removeEvents(angular.element('.czBodyCon'),'scroll',czScroll);
+								angular.element('.lflBodyCon').unbind('scroll')
 								lflflagScroll=false;
 			            } 
 			            if(!$scope.FLlastlists.length){
-							$$('.lflBodyCon .pageNull').css('display','block')
+							angular.element('.lflBodyCon .pageNull').css('display','block')
 						}else{
-							$$('.lflBodyCon .pageNull').css('display','none')
+							angular.element('.lflBodyCon .pageNull').css('display','none')
 						}  
 			                
 			        })
@@ -2001,12 +2493,6 @@ $ionicModal.fromTemplateUrl('templates/modal.html', {
         })
 	}
 	CZloadRecord()//充值
-	
-	
-	
-	
-	
-	
 
 $scope.Flshow=function(){
 	FLloadRecord()//福利
@@ -2024,8 +2510,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 
 		$scope.sczrz = true;
 		$scope.czrzs = {
-			color: "#ffa03b",
-			borderBottom: "1px solid #ffa03b"
+			color: "#0AE",
+			borderBottom: "1px solid #0AE"
 		}
 		$scope.czrz = function() {
 			CZloadRecord()//充值
@@ -2036,8 +2522,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.sflgmtx = false;
 			if($scope.sczrz == true) {
 				$scope.czrzs = {
-					color: "#ffa03b",
-					borderBottom: "1px solid #ffa03b"
+					color: "#0AE",
+					borderBottom: "1px solid #0AE"
 				}
 				$scope.txrzs = {}
 				$scope.zhrzs = {}
@@ -2054,8 +2540,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.sflgmtx = false;
 			if($scope.stxrz == true) {
 				$scope.txrzs = {
-					color: "#ffa03b",
-					borderBottom: "1px solid #ffa03b"
+					color: "#0AE",
+					borderBottom: "1px solid #0AE"
 				}
 				$scope.czrzs = {}
 				$scope.zhrzs = {}
@@ -2072,8 +2558,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.sflgmtx = false;
 			if($scope.szhrz == true) {
 				$scope.zhrzs = {
-					color: "#ffa03b",
-					borderBottom: "1px solid #ffa03b"
+					color: "#0AE",
+					borderBottom: "1px solid #0AE"
 				}
 				$scope.txrzs = {}
 				$scope.czrzs = {}
@@ -2090,8 +2576,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.sflgmtx = false;
 			if($scope.svgmrz == true) {
 				$scope.vgmrzs = {
-					color: "#ffa03b",
-					borderBottom: "1px solid #ffa03b"
+					color: "#0AE",
+					borderBottom: "1px solid #0AE"
 				}
 				$scope.txrzs = {}
 				$scope.czrzs = {}
@@ -2108,8 +2594,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.sflgmtx = true;
 			if($scope.sflgmtx == true) {
 				$scope.flgmtxs = {
-					color: "#ffa03b",
-					borderBottom: "1px solid #ffa03b"
+					color: "#0AE",
+					borderBottom: "1px solid #0AE"
 				}
 				$scope.txrzs = {}
 				$scope.czrzs = {}
@@ -2123,35 +2609,35 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	var flag=true;
 	$scope.showAll=function(){
 		if(flag){
-			$$(".slidePrompt>.prompt").animate({"height":"4.5rem"},300);
-			$$(".slidePrompt>.showAll").text("收起");
+			angular.element(".slidePrompt>.prompt").animate({"height":"4.5rem"},300);
+			angular.element(".slidePrompt>.showAll").text("收起");
 			flag=false;
 		}else if(!flag){
-			$$(".slidePrompt>.prompt").animate({"height":"1.5rem"},300);
-			$$(".slidePrompt>.showAll").text("······显示全部");
+			angular.element(".slidePrompt>.prompt").animate({"height":"1.5rem"},300);
+			angular.element(".slidePrompt>.showAll").text("······显示全部");
 			flag=true;
 		}
 		
 	}
 	$scope.stopAll=function(){
 		if(flag){
-			$$(".slidePrompt1>.prompt").animate({"height":"3rem"},300);
-			$$(".slidePrompt1>.showAll").text("收起");
+			angular.element(".slidePrompt1>.prompt").animate({"height":"3rem"},300);
+			angular.element(".slidePrompt1>.showAll").text("收起");
 			flag=false;
 		}else if(!flag){
-			$$(".slidePrompt1>.prompt").animate({"height":"1rem"},300);
-			$$(".slidePrompt1>.showAll").text("······显示全部");
+			angular.element(".slidePrompt1>.prompt").animate({"height":"1rem"},300);
+			angular.element(".slidePrompt1>.showAll").text("······显示全部");
 			flag=true;
 		}		
 	}
 	$scope.selectPay=function(){
 		if(flag){
-			$$(".payment>.circle").text("√");
-			$$(".payment>.circle").css({ "background": "#ff9000","border":"none"});
+			angular.element(".payment>.circle").text("√");
+			angular.element(".payment>.circle").css({ "background": "#0AE","border":"none"});
 			flag=false;
 		}else if(!flag){
-			$$(".payment>.circle").text("");
-			$$(".payment>.circle").css({ "background": "#fff","border":"1px solid #ccc"});
+			angular.element(".payment>.circle").text("");
+			angular.element(".payment>.circle").css({ "background": "#fff","border":"1px solid #ccc"});
 			flag=true;
 		}
 	}
@@ -2163,55 +2649,92 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	var flag=true;
 	$scope.showAll=function(){
 		if(flag){
-			$$(".slidePrompt>.prompt").animate({"height":"4.5rem"},300);
-			$$(".slidePrompt>.showAll").text("收起");
+			angular.element(".slidePrompt>.prompt").animate({"height":"4.5rem"},300);
+			angular.element(".slidePrompt>.showAll").text("收起");
 			flag=false;
 		}else if(!flag){
-			$$(".slidePrompt>.prompt").animate({"height":"1.5rem"},300);
-			$$(".slidePrompt>.showAll").text("······显示全部");
+			angular.element(".slidePrompt>.prompt").animate({"height":"1.5rem"},300);
+			angular.element(".slidePrompt>.showAll").text("······显示全部");
 			flag=true;
 		}
 		
 	}
 	$scope.stopAll=function(){
 		if(flag){
-			$$(".slidePrompt1>.prompt").animate({"height":"3rem"},300);
-			$$(".slidePrompt1>.showAll").text("收起");
+			angular.element(".slidePrompt1>.prompt").animate({"height":"3rem"},300);
+			angular.element(".slidePrompt1>.showAll").text("收起");
 			flag=false;
 		}else if(!flag){
-			$$(".slidePrompt1>.prompt").animate({"height":"1rem"},300);
-			$$(".slidePrompt1>.showAll").text("······显示全部");
+			angular.element(".slidePrompt1>.prompt").animate({"height":"1rem"},300);
+			angular.element(".slidePrompt1>.showAll").text("······显示全部");
 			flag=true;
 		}		 
 	}
 	$scope.selectPay=function(){
 		if(flag){
-			$$(".payment>.circle").text("√");
-			$$(".payment>.circle").css({ "background": "#ff9000","border":"none"});
+			angular.element(".payment>.circle").text("√");
+			angular.element(".payment>.circle").css({ "background": "#0AE","border":"none"});
 			flag=false;
 		}else if(!flag){
-			$$(".payment>.circle").text("");
-			$$(".payment>.circle").css({ "background": "#fff","border":"1px solid #ccc"});
+			angular.element(".payment>.circle").text("");
+			angular.element(".payment>.circle").css({ "background": "#fff","border":"1px solid #ccc"});
 			flag=true;
 		}
 	}
 })
 //购买VIP
-.controller('goVIPBuyCtrl', function($scope,$http,$rootScope,$ionicLoading,$timeout) {
-	$$('#loading').css('display','block')
+.controller('goVIPBuyCtrl', function($scope,$http,$rootScope,$ionicLoading,$timeout,$ionicHistory) {
+angular.element('#loading').css('display','block')
 	$scope.selectedVip="5";
-	$scope.myVar="1年";
+	$scope.myVar="1";
 	$scope.yearss = ["1", "2", "3", "4", "5"];
 	$http.post(urltext + "/index.php?ctl=webapp_uc_vip_buy",{"email":$rootScope.data.email,"pwd":$rootScope.logindata.user_pwd})
 	.success(function(res){
-		$$('#loading').css('display','none')
+		angular.element('#loading').css('display','none')
 		$scope.vip_list=res.vip_list
-		$scope.original_price=res.vip_info.original_price//原价
-		$scope.ssite_pirce=res.vip_info.site_pirce//现价
+		$scope.site_pirce=$scope.vip_list[$scope.vip_list.length-1].site_pirce;//现价
+		$scope.original_price=$scope.vip_list[$scope.vip_list.length-1].original_price;//原价
+		$scope.$watch('selectedVip',function(){
+			if(!$scope.vip_list)
+			{
+				return '';
+			}
+			var MvipGrade=angular.element('#vipGrade option:selected').val()
+			var vip_listlength=$scope.vip_list.length;
+			console.log(vip_listlength)
+			switch(vip_listlength){
+				case 1:
+				$scope.site_pirce=$scope.vip_list[MvipGrade-5].site_pirce;//现价
+				$scope.original_price=$scope.vip_list[MvipGrade-5].original_price;//原价
+				break;
+				
+				case 2:
+				$scope.original_price=$scope.vip_list[MvipGrade-4].original_price;//原价
+				$scope.site_pirce=$scope.vip_list[MvipGrade-4].site_pirce;//现价
+				break;
+				
+				case 3:
+				$scope.original_price=$scope.vip_list[MvipGrade-3].original_price;//原价
+				$scope.site_pirce=$scope.vip_list[MvipGrade-3].site_pirce;//现价
+				break;
+				
+				case 4:
+				
+				$scope.original_price=$scope.vip_list[MvipGrade-2].original_price;//原价
+				$scope.site_pirce=$scope.vip_list[MvipGrade-2].site_pirce;//现价
+				break;
+				
+				case 5:
+				$scope.original_price=$scope.vip_list[MvipGrade-1].original_price;//原价
+				$scope.site_pirce=$scope.vip_list[MvipGrade-1].site_pirce;//现价
+				break;
+			}
+		})
+
 	})
 	 //现在购买Vip
 	 $scope.buyVipNow=function(selectedVip,myVar,mypaypwd){
-	 	$$('#loading').css('display','block')
+	 	angular.element('#loading').css('display','block')
 	 	$rootScope.selectedVip_id=selectedVip
 	 	var payVipdata={
 	 		"email":$rootScope.data.email,
@@ -2223,7 +2746,12 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	 	console.log(payVipdata)
 	 	$http.post(urltext + "/index.php?ctl=webapp_uc_save_vip_buy",payVipdata)
 	 	.success(function(res){
-	 		$$('#loading').css('display','none')
+	 		if(res.states==1){
+				$ionicHistory.goBack();
+				VIPloadRecord()
+				
+			}
+	 		angular.element('#loading').css('display','none')
 	 		$ionicLoading.show({ 
 			  	showBackdrop: false,
 				template: res.show_err
@@ -2245,9 +2773,14 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 //提现页
 .controller('goWithcashCtrl',function($scope){})
 //福利提现
-.controller('goBenefitMoneyCtrl',function($scope, $http ,$rootScope,$ionicLoading,$timeout){
+.controller('goBenefitMoneyCtrl',function($scope, $http ,$rootScope,$ionicLoading,$timeout,$ionicModal,$cordovaToast){
+	$ionicModal.fromTemplateUrl('templates/czmodal.html', {
+	scope: $scope
+}).then(function(modal) {
+	$scope.czmodal = modal;
+});
 		//实付金额
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 		$scope.add =function(){
 			if($scope.amounts==""){
 				return  2
@@ -2265,16 +2798,27 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$http.post(urltext + "/index.php?ctl=webapp_uc_carry_money",FLtxOkData)
 		.success(function(res){//点击福利提现按钮跳过来的数据请求
 			console.log(res)
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
+			$scope.KYmoney=res.money;
 			$scope.bankcard=res.bank_carry[0].bankcard
 			$scope.uimg =res.bank_carry[0].uimg       
 			$scope.real_name =res.bank_carry[0].real_name
-			$scope.KYmoney=res.money;
+			
 		})
 	
 		
 		$scope.FLtxOk=function(){
-			$$('#loading').css('display','block')
+			if(!$scope.amounts){
+				$cordovaToast.showShortBottom('请输入提现金额');
+				return ''
+			}else if($scope.amounts<100){
+				$cordovaToast.showShortBottom('提现金额不得小于100元');
+				return ''
+			}else if(!$scope.paypasswords){
+				$cordovaToast.showShortBottom('请输入提现密码');
+				return ''
+			}
+			angular.element('#loading').css('display','block')
 			var FLTXlastOkData={//福利提现最后的确认
 				"email":$rootScope.data.email,
 				"pwd":$rootScope.logindata.user_pwd,
@@ -2285,7 +2829,7 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			console.log(FLTXlastOkData)
 			$http.post(urltext + "/index.php?ctl=webapp_uc_save_carry ",FLTXlastOkData)
 			.success(function(res){//点击福利提现按钮跳过来的数据请求
-				$$('#loading').css('display','none')
+				angular.element('#loading').css('display','none')
 				console.log(res)
 				$ionicLoading.show({ 
 			  	showBackdrop: false,
@@ -2294,6 +2838,10 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			  $timeout(function() {
 				$ionicLoading.hide();
 			  }, 650)
+			   if(res.response_code==1){
+			  	$rootScope.backTab();
+			  	FLlastloadRecord();
+			  }
 			})
 		}
 })
@@ -2301,10 +2849,20 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 
 
 //投资记录页
+//投资记录页
 .controller('investRecordCtrl', function($scope,$rootScope,$http,$ionicHistory,$ionicModal,$ionicLoading,$timeout) {
 	//偿还借款
+	
+	$rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams) {
+		if(toState.url=='/investRecord'){
+			$scope.thklbitem=[];//还款列表
+	        $scope.tyhqjkitem=[];//已还清列表
+			$scope.loadCHLoan()
+		}
+	})
+
 	$rootScope.goRepayment = function(email,pwd,id) {
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 		var RepaymentData={
 			"email":email,
 			"pwd":pwd,
@@ -2313,62 +2871,36 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		console.log(RepaymentData)
 		$http.post(urltext + "/index.php?ctl=webapp_uc_quick_refund",RepaymentData)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			console.log(res)
 			//标的编号
 			$rootScope.RepaymentID=res.deal.id;
-//标的名称deal.name        
-			$rootScope.RepaymentBDMC=res.deal.name;
-//待还金额deal.need_remain_repay_money   
-			$rootScope.RepaymentDHJE=res.deal.need_remain_repay_money 
-//借款金额deal.load_money_format            
-			$rootScope.RepaymentJKJE=res.deal.load_money_format 
-//借款期限：deal.repay_time  {if $data.deal.repay_time_type eq 0}天{else}个月{/if}
-			$rootScope.RepaymentJKQX=res.deal.repay_time
-//年化收益：  deal.rate_foramt_w   
-			$rootScope.RepaymentMSHY=res.deal.rate_foramt_w
-//已还本息：deal.repay_money
-			$rootScope.RepaymentYHBX=res.deal.repay_money
-			$rootScope.RepaymentLIST=res.loan_list
-			window.location = "#/tab/goRepayment";
-//列表循环
-//第几期   l_key_index
-//还款时间repay_day_format
-//			
+			//标的名称deal.name        
+						$rootScope.RepaymentBDMC=res.deal.name;
+			//待还金额deal.need_remain_repay_money   
+						$rootScope.RepaymentDHJE=res.deal.need_remain_repay_money 
+			//借款金额deal.load_money_format            
+						$rootScope.RepaymentJKJE=res.deal.load_money_format 
+			//借款期限：deal.repay_time  {if $data.deal.repay_time_type eq 0}天{else}个月{/if}
+						$rootScope.RepaymentJKQX=res.deal.repay_time
+			//年化收益：  deal.rate_foramt_w   
+						$rootScope.RepaymentMSHY=res.deal.rate_foramt_w
+			//已还本息：deal.repay_money
+						$rootScope.RepaymentYHBX=res.deal.repay_money
+						$rootScope.RepaymentLIST=res.loan_list
+						window.location = "#/tab/goRepayment";
+			//列表循环
+			//第几期   l_key_index
+			//还款时间repay_day_format
+			//			
 		}).error(function(res){
 			console.log(res)
 		})
 		
 		
 	}
-	
-	$rootScope.confirmPay=function(ids,id,paypwd,email,pwd){
-		$$('#loading').css('display','block')
-		var confirmPaydata={
-			"ids":ids,
-			"id":id,
-			"paypassword":paypwd,
-			"email":email,
-			"pwd":pwd
-		}
-		console.log(confirmPaydata)
-		$http.post(urltext + "/index.php?ctl=webapp_uc_do_quick_refund",confirmPaydata)
-		.success(function(res){
-			$$('#loading').css('display','none')
-			$ionicLoading.show({ 
-			  	showBackdrop: false,
-				template: res.show_err
-			  });
-			  $timeout(function() {
-				$ionicLoading.hide();
-			  }, 650)
-			console.log(res)
-		})
-		
-		
-	}
-	$scope.tcssun=false;
 	$scope.thksun=true;
+	$scope.tcssun=false;
 	$scope.tyhqjk=function(){
 		$scope.tcssun=true;
 		$scope.thksun=false;
@@ -2389,6 +2921,9 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	$scope.tyhqjkitem=[];//已还清列表
 	var flag=true;
 	var flag2=true;
+	
+	//下拉加载
+	var twdtzScroll=true,ttzjkScroll=true,tchjkScroll=true
 	$scope.shaixuanloadAll=function(){
 		//all传的数据
 		var TZRecordData={
@@ -2396,30 +2931,30 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			"pwd":$rootScope.logindata.user_pwd,
 			"page":1,
 		}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_invest',TZRecordData)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_invest',TZRecordData)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			$scope.allData=res.item;
-			$$(".slideFrame1").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame1").animate({"width":0,"height":0},200);
 			flag=true;
 		})
 	}
 	$scope.slideBox1 =  function() {		
 		if(flag){
-			$$(".slideFrame1").animate({"width":"1.5rem","height":"3rem"},500);
+			angular.element(".slideFrame1").animate({"width":"1.5rem","height":"3rem"},500);
 			flag=false;
 		}else if(!flag){
-			$$(".slideFrame1").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame1").animate({"width":0,"height":0},200);
 			flag=true;
 		}
  	}
 	$scope.slideBox2 =  function() {		
 		if(flag2){
-			$$(".slideFrame2").animate({"width":"1.5rem","height":"3rem"},500);
+			angular.element(".slideFrame2").animate({"width":"1.5rem","height":"3rem"},500);
 			flag2=false;
 		}else if(!flag2){
-			$$(".slideFrame2").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame2").animate({"width":0,"height":0},200);
 			flag2=true;
 		}
  	}
@@ -2431,12 +2966,19 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			"pwd":$rootScope.logindata.user_pwd,
 			"page":pageall,
 		}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_invest',TZRecordData)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_invest',TZRecordData)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			if( res.item.length==0){
+				angular.element('#loading').css('display','none')
+				console.log("没有")
+				return;
+			}
+			console.log("还有")
+			twdtzScroll=true
+			angular.element('#loading').css('display','none')
 			$scope.allData=$scope.allData.concat(res.item);
-			$$(".slideFrame1").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame1").animate({"width":0,"height":0},200);
 			flag=true;
 		})
 	}
@@ -2448,13 +2990,13 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		"page":1
 	}
 		console.log(shaiRecordData)
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_invest',shaiRecordData)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_invest',shaiRecordData)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			console.log(res)
 			$scope.allData=res.item;
-			$$(".slideFrame1").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame1").animate({"width":0,"height":0},200);
 			flag=true;
 		})
 	}
@@ -2466,12 +3008,12 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		"page":1
 	}
 		console.log(shaiRecordData2)
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_borrowed',shaiRecordData2)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_borrowed',shaiRecordData2)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			$scope.loanData=res.item
-			$$(".slideFrame2").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame2").animate({"width":0,"height":0},200);
 			flag2=true;
 		})
 	}
@@ -2483,12 +3025,18 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		"pwd":$rootScope.logindata.user_pwd,
 		"page":myinvestLoan,
 	}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_borrowed',TZLoan)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_borrowed',TZLoan)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			if( res.item.length==0){
+				angular.element('#loading').css('display','none')
+				console.log("没有")
+				return;
+			}
+			ttzjkScroll=true
+			angular.element('#loading').css('display','none')
 			$scope.loanData=$scope.loanData.concat(res.item)
-			$$(".slideFrame2").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame2").animate({"width":0,"height":0},200);
 		})
 	}
 	//我的借款
@@ -2499,12 +3047,12 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		"pwd":$rootScope.logindata.user_pwd,
 		"page":1,
 	}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_borrowed',TZLoan)
+		angular.element('#loading').css('display','block')
+		$http.post(urltext +'/index.php?ctl=webapp_uc_borrowed',TZLoan)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			$scope.loanData=res.item
-			$$(".slideFrame2").animate({"width":0,"height":0},200);
+			angular.element(".slideFrame2").animate({"width":0,"height":0},200);
 		})
 	}
 	
@@ -2518,59 +3066,95 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			"status":0
 		}
 		var YHQLoan={
-		"email":$rootScope.data.email,
-		"pwd":$rootScope.logindata.user_pwd,
-		"page":YHQLoanpage,
-		"status":1
-	}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_refund',CHLoan)
-		.success(function(res){
-			$$('#loading').css('display','none')
-			console.log(res)
-			$scope.thklbitem=$scope.thklbitem.concat(res.item)
-		})
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_refund',YHQLoan)
-		.success(function(res){
-			$$('#loading').css('display','none')
-			console.log(res)
-			$scope.tyhqjkitem=$scope.tyhqjkitem.concat(res.item)
-		})
+			"email":$rootScope.data.email,
+			"pwd":$rootScope.logindata.user_pwd,
+			"page":YHQLoanpage,
+			"status":1
+		}
+		// 
+		if($scope.thksun){
+			angular.element('#loading').css('display','block')
+			$http.post(urltext +'/index.php?ctl=webapp_uc_refund',CHLoan)
+			.success(function(res){
+				angular.element('#loading').css('display','none')
+				console.log(res)
+				$scope.thklbitem=$scope.thklbitem.concat(res.item)
+			})
+			$http.post(urltext +'/index.php?ctl=webapp_uc_refund',YHQLoan)
+			.success(function(res){
+				angular.element('#loading').css('display','none')
+				console.log(res)
+				$scope.tyhqjkitem=$scope.tyhqjkitem.concat(res.item)
+			})
+		}else{
+			if($scope.tcssun){
+				angular.element('#loading').css('display','block')
+				$http.post(urltext +'/index.php?ctl=webapp_uc_refund',YHQLoan)
+				.success(function(res){
+					if(res.item.length==0){
+						angular.element('#loading').css('display','none')
+						console.log("第二个tab	")
+						tchjkScroll=true;
+						return;
+					}
+					angular.element('#loading').css('display','none')
+					console.log(res)
+					tchjkScroll=true;
+					$scope.tyhqjkitem=$scope.tyhqjkitem.concat(res.item)
+				})
+			}else if($scope.thksun){
+				angular.element('#loading').css('display','block')
+				$http.post(urltext +'/index.php?ctl=webapp_uc_refund',CHLoan)
+				.success(function(res){
+					if(res.item.length==0){
+						angular.element('#loading').css('display','none')
+						console.log("第一个tab")
+						tchjkScroll=true;
+						return;
+					}
+					tchjkScroll=true;
+					angular.element('#loading').css('display','none')
+					console.log(res)
+					$scope.thklbitem=$scope.thklbitem.concat(res.item)
+					
+				})
+			}
+		}
 	}
 	//投资统计
-	$scope.loadTZTJ=function(){
-		//投资统计
-	var TZTjdata={
-		"email":$rootScope.data.email,
-		"pwd":$rootScope.logindata.user_pwd,
+	$scope.loadTZTJ = function() {
+	//投资统计
+	var TZTjdata = {
+		"email": $rootScope.data.email,
+		"pwd": $rootScope.logindata.user_pwd,
 	}
-		$$('#loading').css('display','block')
-		$http.post('http://test.yijiayi360.com/index.php?ctl=webapp_uc_financial_statistics',TZTjdata)
-		.success(function(res){
+	angular.element('#loading').css('display', 'block')
+	$http.post(urltext + '/index.php?ctl=webapp_uc_financial_statistics', TZTjdata)
+		.success(function(res) {
 			console.log(res)
-			$$('#loading').css('display','none')
-			$scope.borrow_amount=res.user_statistics.borrow_amount;
-			$scope.success_deal_count=res.user_statistics.success_deal_count 
-			$scope.repay_amount=res.user_statistics.repay_amount  
-			$scope.need_repay_amount=res.user_statistics.need_repay_amount 
-			$scope.repay_manage_amount=res.user_statistics.repay_manage_amount
-			$scope.need_manage_amount=res.user_statistics.need_manage_amount 
-			$scope.yuqi_impose=res.user_statistics.yuqi_impose
-
+			angular.element('#loading').css('display', 'none')
+				$scope.borrow_amount = res.user_statistics.borrow_amount;
+				$scope.success_deal_count = res.user_statistics.success_deal_count
+				$scope.repay_amount = res.user_statistics.repay_amount
+				$scope.need_repay_amount = res.user_statistics.need_repay_amount
+				$scope.repay_manage_amount = res.user_statistics.repay_manage_amount
+				$scope.need_manage_amount = res.user_statistics.need_manage_amount
+				$scope.yuqi_impose = res.user_statistics.yuqi_impose
+				$scope.load_money = res.user_statistics.load_money;
+				$scope.load_count = res.user_statistics.load_count
+				$scope.load_earnings = res.user_statistics.load_earnings
+				$scope.load_wait_earnings = res.user_statistics.load_wait_earnings
+				$scope.load_repay_money = res.user_statistics.load_repay_money
+				$scope.load_wait_repay_money = res.user_statistics.load_wait_repay_money
+				$scope.load_manage_money = res.user_statistics.load_manage_money
+				$scope.incharge_count = res.incharge_count
+				$scope.carry_money = res.carry_money
+			//success_deal_count借款笔数
+			//load_count投资笔数
 			////////////////////////
-			$scope.load_money=res.user_statistics.load_money;
-			$scope.load_count=res.user_statistics.load_count  
-			$scope.load_earnings=res.user_statistics.load_earnings   
-			$scope.load_wait_earnings =res.user_statistics.load_wait_earnings 
-			$scope.load_repay_money=res.user_statistics.load_repay_money
-			$scope.load_wait_repay_money=res.user_statistics.load_wait_repay_money 
-			$scope.load_manage_money=res.user_statistics.load_manage_money
-			$scope.incharge_count=res.incharge_count
-			$scope.carry_money=res.carry_money
+
 		})
-	}
-	
-	
+}
 	$scope.loadAll()//我的投资全部
 	$scope.loadLoan()//我的借款
 	$scope.loadCHLoan()//偿还借款
@@ -2598,20 +3182,46 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	$scope.myinvestTab=true;
 	$scope.myLoadTab=false;
 	$scope.loadLoanMore=function(){
-		console.log(getTransform(investtop)[1])
-		if(getTransform(investtop)[1]<(-60)){
+//		console.log(getTransform(investtop)[1])
+		if(getTransform(investtop)[1]<0){
 			if($scope.twdtz){
+				if(twdtzScroll)
+				{
+					twdtzScroll=false;
+				}else{
+					return ;
+				} 
+				console.log(11)
 				$scope.loan1()
-			}else if($scope.ttzjk){
+			}
+			
+			else if($scope.ttzjk){
+				if(ttzjkScroll)
+				{
+					ttzjkScroll=false;
+				}else{
+					return ;
+				}
+				console.log(22)
 				$scope.loan2()
-			}else if($scope.tchjk){
+			}
+			
+			
+			else if($scope.tchjk){
+				if(tchjkScroll)
+				{
+					tchjkScroll=false;
+				}else{
+					return ;
+				}
+				console.log(33)
 				$scope.loan3()
 			}
 		}
 	}
 	
 	function getTransform(el) {
-    var results = $$(el).find('.scroll').css('transform').match(/matrix(?:(3d)\(-{0,1}\d+(?:, -{0,1}\d+)*(?:, (-{0,1}\d+))(?:, (-{0,1}\d+))(?:, (-{0,1}\d+)), -{0,1}\d+\)|\(-{0,1}\d+(?:, -{0,1}\d+)*(?:, (-{0,1}\d+))(?:, (-{0,1}\d+))\))/)
+    var results = angular.element(el).find('.scroll').css('transform').match(/matrix(?:(3d)\(-{0,1}\d+(?:, -{0,1}\d+)*(?:, (-{0,1}\d+))(?:, (-{0,1}\d+))(?:, (-{0,1}\d+)), -{0,1}\d+\)|\(-{0,1}\d+(?:, -{0,1}\d+)*(?:, (-{0,1}\d+))(?:, (-{0,1}\d+))\))/)
     if(!results) return [0, 0, 0];
     if(results[1] == '3d') return results.slice(2,5);
     results.push(0);
@@ -2624,8 +3234,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	
 	//选项卡点击切换效果
 	$scope.wdtzt = {
-		color: "#ffa03b",
-		borderBottom: "1px solid #ffa03b"
+		color: "#0AE",
+		borderBottom: "1px solid #0AE"
 	}
 	$scope.wdtz = function() {
 		$scope.myinvestTab=true;
@@ -2636,8 +3246,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.ttztj = false;
 		if($scope.twdtz == true) {
 			$scope.wdtzt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.tzjkt = {}
 			$scope.chjkt = {}
@@ -2653,8 +3263,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.ttztj = false;
 		if($scope.ttzjk == true) {
 			$scope.tzjkt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.wdtzt = {}
 			$scope.chjkt = {}
@@ -2663,15 +3273,15 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	}
 	$scope.chjk = function() {
 		$scope.myinvestTab=false;
-	$scope.myLoadTab=false;
+		$scope.myLoadTab=false;
 		$scope.twdtz = false;
 		$scope.ttzjk = false;
 		$scope.tchjk = true;
 		$scope.ttztj = false;
 		if($scope.tchjk == true) {
 			$scope.chjkt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.tzjkt = {}
 			$scope.wdtzt = {}
@@ -2687,8 +3297,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.ttztj = true;
 		if($scope.ttztj == true) {
 			$scope.tztjt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.tzjkt = {}
 			$scope.wdtzt = {}
@@ -2712,7 +3322,9 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	}
 	$scope.goMyInvita = function() {
 		window.location = "#/tab/MyInvitation";
-
+	if($rootScope.doInvestRefresh){
+		$rootScope.doInvestRefresh()
+	}
 	}
 	$scope.goSetPass = function() {
 		window.location = "#/tab/SetPassword"
@@ -2732,13 +3344,11 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 //---------------------------账户详情子页面-------------------------
 //我的邀请
 .controller('MyInvitationCtrl', function($scope,$rootScope,$http) {
-	$$('#loading').css('display','block')
+	angular.element('#loading').css('display','block')
 	var MyInvitationData={
-//		"email":$rootScope.data.email,
-//		"pwd":$rootScope.logindata.user_pwd,
-		"user_id":$rootScope.logindata.id,
-		"page":1
-	}
+				"user_id":$rootScope.logindata.id,
+				"page":1
+			}
 	console.log(MyInvitationData)
 	$http.post(urltext + "/index.php?ctl=webapp_uc_myinvite ",MyInvitationData)
 		.success(function(res){//点击福利提现按钮跳过来的数据请求
@@ -2754,31 +3364,103 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$scope.mobile=res.mobile//手机号-----
 			$scope.state=res.state//会员级别----------
 			$scope.states=res.states//状态---------
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 		})
+		
+
+	  $scope.doRefresh = function() {
+	  		MyInvitationData={
+				"user_id":$rootScope.logindata.id,
+				"page":1
+			}
+	  		 $scope.currentPage=1;
+			 $scope.noMorePage=false;
+			 $http.post(urltext + "/index.php?ctl=webapp_uc_myinvite",MyInvitationData)
+		     .success(function(res) {
+		     		$scope.tjAllPerson=res.tjAllPerson//	 推荐好友总数-------
+					$scope.moneyAll=res.moneyAll//奖励总金额----------
+					$scope.tjOnePerson=res.tjOnePerson//一级会员-----------
+					$scope.tjTwoPerson=res.tjTwoPerson//二级会员------------
+					$scope.tjThreePerson=res.tjThreePerson//三级会员---------
+					$scope.MyInvitationlist=res.list
+					$scope.id=res.id//编号--------
+					$scope.user_name=res.user_name//用户名---------
+					$scope.mobile=res.mobile//手机号-----
+					$scope.state=res.state//会员级别----------
+					$scope.states=res.states//状态---------
+		     })
+		     .finally(function() {
+		       $scope.$broadcast('scroll.refreshComplete');
+		     });
+	  };
+		$rootScope.doInvestRefresh=$scope.doRefresh
+		$scope.currentPage=1;//定义下拉加载分页的初始值
+		$scope.noMorePage=false;
+		$scope.loadMore=function(){
+			$scope.currentPage += 1;//每当滚动到底部，页码累计加1
+		    $http.post(urltext + "/index.php?ctl=webapp_uc_myinvite",{"user_id":$rootScope.logindata.id,"page":$scope.currentPage})   //注意改为自己本站的地址，不然会有跨域问题
+		        .success(function(newItems) {
+		        	angular.element('#loading').css('display','none')  
+		        	if(newItems.list.length>0)
+		        	{
+		        		for (var i=0;i<newItems.list.length;i++){//newItems.content.length，当前json的数量
+			                $scope.MyInvitationlist.push(newItems.list[i]);//一个一个取出来，推送到原来的items里
+			           }  
+		        	} 
+		        	if (newItems.list.length < newItems.page.page_size) {//当json的数量小于10（已经确定了一页为10条数据），说明页面到底了
+		                $scope.noMorePage=true;//禁止滚动触发时间
+		            } 
+		            $scope.$broadcast('scroll.infiniteScrollComplete');     
+		        })
+		};
 })
 //修改登录密码
-.controller('SetPasswordCtrl',function($scope,$rootScope,$http,$ionicHistory,$state,$ionicLoading,$timeout) {
+.controller('SetPasswordCtrl',function($scope,$rootScope,$http,$ionicHistory,$state,$ionicLoading,$timeout,$cordovaToast) {
 
 	$scope.resetpwdOk=function(){
-		$$('#loading').css('display','block')
+		
+		
+		if(!angular.element('#pwd_old').val()){
+			angular.element('#pwd_old').siblings('span.usererr ').html('请输入旧密码！').css('display','block')
+			return ''
+		}else if(!angular.element('#user_pwd').val()){
+			angular.element('#user_pwd').siblings('span.usererr ').html('请输入新密码！').css('display','block')
+			return ''
+		}else if(!angular.element('#pwd_confirm').val()){
+			angular.element('#pwd_confirm').siblings('span.usererr ').html('请再次输入密码！').css('display','block')
+			return ''
+		}else if(angular.element('#pwd_confirm').val() && angular.element('#user_pwd').val()!=angular.element('#pwd_confirm').val()){
+				angular.element('#pwd_confirm').siblings('span.usererr ').html('两次密码不一致！').css('display','block')
+				return ''
+		}
+				
+		
 		$scope.pwd_old=angular.element("#pwd_old").val();
 		$scope.user_pwd=angular.element("#user_pwd").val();
-		$scope.pwd_confirm=angular.element("#pwd_confirm").val();
+		$scope.pwd_confirm=angular.element("#pwd_confirm").val();		
+	/*	if(!$scope.pwd_old){
+			 $cordovaToast.showShortBottom('请输入旧密码');
+			 return ''
+		}else if(!$scope.user_pwd){
+			 $cordovaToast.showShortBottom('请输入新密码');
+			  return ''
+		}else if(!$scope.pwd_confirm){
+			 $cordovaToast.showShortBottom('请再次输入新密码');
+			  return ''
+		}*/
 		var XGpassword={
-		"email":$rootScope.data.email,
-		"pwd":$rootScope.logindata.user_pwd,
-		"user_pwd_old":$scope.pwd_old,
-		"user_pwd":$scope.user_pwd,
-		"user_pwd_confirm":$scope.pwd_confirm
+			"email":$rootScope.data.email,
+			"pwd":$rootScope.logindata.user_pwd,
+			"user_pwd_old":$scope.pwd_old,
+			"user_pwd":$scope.user_pwd,
+			"user_pwd_confirm":$scope.pwd_confirm
 		}
-		console.log(XGpassword)
+		angular.element('#loading').css('display','block')
+
 		$http.post(urltext + "/index.php?ctl=webapp_uc_save_pwd ",XGpassword)
 		.success(function(res){
-			$$('#loading').css('display','none')
-			$scope.pwd_old=angular.element("#pwd_old").val("");
-			$scope.user_pwd=angular.element("#user_pwd").val("");
-			$scope.pwd_confirm=angular.element("#pwd_confirm").val("");
+			angular.element('#loading').css('display','none')
+			
 			$ionicLoading.show({ 
 			  	showBackdrop: false,
 				template: res.show_err
@@ -2786,11 +3468,19 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			  $timeout(function() {
 				$ionicLoading.hide();
 			  }, 650)
-			$rootScope.data.pwd='';
-			$rootScope.inshow=false;
-			$rootScope.outshow=true;
-			$$('#password').val('')
-			$state.go("tab.accountlogin")
+			
+			if(res.response_code==1)
+			{
+				$rootScope.data.pwd='';
+				$rootScope.inshow=false;
+				$rootScope.outshow=true;
+				angular.element('#password').val('')
+				$state.go("tab.accountlogin")
+				$scope.pwd_old=angular.element("#pwd_old").val("");
+				$scope.user_pwd=angular.element("#user_pwd").val("");
+				$scope.pwd_confirm=angular.element("#pwd_confirm").val("");
+			}
+			
 		})
 			
 		
@@ -2801,13 +3491,24 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 })
 
 //设置支付密码
-.controller('SetPayPassCtrl', function($scope,$rootScope,$http,$interval,$ionicLoading,$timeout) {
+.controller('SetPayPassCtrl', function($scope,$rootScope,$http,$interval,$ionicLoading,$timeout,$cordovaToast) {
 	var SZpassword={
 	"email":$rootScope.data.email,
 	"pwd":$rootScope.logindata.user_pwd
 	}
 	//获取手机号码
-	$scope.timedel="获取验证码";
+	if(!$rootScope.timedel){
+		$rootScope.timedel="获取验证码";
+	}else{
+		if($rootScope.timedel=="获取验证码"){
+			angular.element('#payPassObtaion').css('background','#0AE')
+		}
+		if($rootScope.timedel!="获取验证码"){
+			angular.element('#payPassObtaion').css('background','#CCCCCC')
+		}
+	}
+	
+	
 	$http.post(urltext + "/index.php?ctl=webapp_reset_pay_pwd",SZpassword)
 	.success(function(res){
 		console.log(res)
@@ -2817,34 +3518,61 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 	})
 	console.log(SZpassword)
 	$scope.SZsetPaypwdOk=function(){
+		angular.element('#loading').css('display','block')
 		$http.post(urltext + "/index.php?ctl=webapp_send_reset_pay_code",SZpassword)
 		.success(function(res){
-			var timedel=60
-			$ionicLoading.show({ 
-			  	showBackdrop: false,
-				template: res.show_err
-			  });
-			  $timeout(function() {
-				$ionicLoading.hide();
-			  }, 650)
-			 $scope.mydeltimer=$interval(function(){
-				timedel--;
-				$scope.timedel=timedel
-				if(timedel==0){
-					$scope.timedel="获取验证码";
-					$interval.cancel($scope.mydeltimer);
-				}
-			},1000)
-			 $state.go('tab.accountlogin')
-//			console.log(res)
+			angular.element('#loading').css('display','none')
+			 $cordovaToast.showShortBottom(res.show_err)
+			if(res.response_code==1)
+			{
+				var timedel=60
+				$rootScope.timedel=timedel+'s'
+				angular.element('#payPassObtaion').css('background','#CCCCCC')
+				 $rootScope.mydeltimer=$interval(function(){
+					timedel--;
+					$rootScope.timedel=timedel+'s'
+					if(timedel==0){
+						timedel=60
+						$rootScope.timedel="获取验证码";
+						$interval.cancel($rootScope.mydeltimer);
+						angular.element('#payPassObtaion').css('background','#0AE')
+					}
+				},1000)
+			}
+
 		})
 	}
 	//最后确定修改支付密码
 	$scope.SubmitPayOk=function(){
-		$$('#loading').css('display','block')
+			
+		if(!angular.element('#YZMinput').val()){
+			angular.element('#YZMinput').siblings('span.usererr ').html('请输入验证码！').css('display','block')
+			return ''
+		}else if(!angular.element('#ZFMMinput').val()){
+			angular.element('#ZFMMinput').siblings('span.usererr ').html('请输入支付密码！').css('display','block')
+			return ''
+		}else if(!angular.element('#ZFMMinputA').val()){
+			angular.element('#ZFMMinputA').siblings('span.usererr ').html('请再次输入支付密码！').css('display','block')
+			return ''
+		}else if(angular.element('#ZFMMinputA').val() && angular.element('#ZFMMinput').val()!=angular.element('#ZFMMinputA').val()){
+				angular.element('#ZFMMinputA').siblings('span.usererr ').html('两次密码不一致！').css('display','block')
+				return ''
+		}
+		
 		$scope.YZMinput=angular.element("#YZMinput").val()
 		$scope.ZFMMinput=angular.element("#ZFMMinput").val()
 		$scope.ZFMMinputA=angular.element("#ZFMMinputA").val()
+		/*if(!$scope.YZMinput){
+			$cordovaToast.showShortBottom('请输入验证码')
+			return ''
+		}else if(!$scope.ZFMMinput){
+			$cordovaToast.showShortBottom('请输入支付密码')
+			return ''
+		}else if(!$scope.ZFMMinputA){
+			$cordovaToast.showShortBottom('请再次输入支付密码')
+			return ''
+		}*/
+		
 		var myPayOKdata={
 			"email": $rootScope.data.email,
 			"pwd"  :$rootScope.logindata.user_pwd,
@@ -2852,13 +3580,14 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			"pay_pwd" : $scope.ZFMMinput,
 			"pay_pwd_confirm":$scope.ZFMMinputA
 		}
-		console.log(myPayOKdata)
+		angular.element('#loading').css('display','block')
 		$http.post(urltext + "/index.php?ctl=webapp_save_pay_pwd",myPayOKdata)
 		.success(function(res){
-			$$('#loading').css('display','none')
-			$scope.YZMinput=angular.element("#YZMinput").val("")
-			$scope.ZFMMinput=angular.element("#ZFMMinput").val("")
-			$scope.ZFMMinputA=angular.element("#ZFMMinputA").val("")
+			/*timedel=60
+			$rootScope.timedel="获取验证码";
+			$interval.cancel($rootScope.mydeltimer);
+			angular.element('#payPassObtaion').css('background','#0AE')*/
+			angular.element('#loading').css('display','none')
 			$ionicLoading.show({ 
 			  	showBackdrop: false,
 				template: res.show_err
@@ -2866,6 +3595,12 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			  $timeout(function() {
 				$ionicLoading.hide();
 			  }, 650)
+			 if(res.response_code==1){
+			 	$scope.YZMinput=angular.element("#YZMinput").val("")
+				$scope.ZFMMinput=angular.element("#ZFMMinput").val("")
+				$scope.ZFMMinputA=angular.element("#ZFMMinputA").val("")
+			 	$rootScope.backTab();
+			 }
 		})
 	}
 })
@@ -2876,15 +3611,31 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 })
 
 //立即投资
-.controller("nowInvest",function($scope, $ionicHistory, $rootScope,$http,$ionicModal){
+.controller("nowInvest",function($scope, $ionicHistory, $rootScope,$http,$ionicModal,$cordovaToast){
+	
+		$scope.nowInvest=function(){
+			if(!angular.element("#tzAmmount").val())
+			{
+				$cordovaToast.showShortBottom("请输入投资金额")
+				return ''
+			}else if(parseInt(angular.element("#tzAmmount").val())<parseInt($rootScope.dsQtmoneyAmount))
+			{
+				$cordovaToast.showShortBottom("投资金额不得低于"+$rootScope.dsQtmoneyAmount+'元')
+				return ''
+			}else if(!angular.element("#tzPass").val()){
+				$cordovaToast.showShortBottom("请输入投资密码")
+				return ''
+			}
+			$rootScope.czmodal.show()
+		}
 		$ionicModal.fromTemplateUrl('templates/czmodal.html', {
-		    scope: $scope
+		    scope: $rootScope
 		  }).then(function(modal) {
-		    $scope.czmodal = modal;
+		    $rootScope.czmodal = modal;
 		  });
-	$scope.goSetPayPass = function() {
-		window.location = "#/tab/INSetPayPass"
-	}
+		$scope.goSetPayPass = function() {
+			window.location = "#/tab/INSetPayPass"
+		}
 	
 })
 
@@ -2897,15 +3648,22 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			'pwd':$rootScope.logindata.user_pwd,
 			'id':$rootScope.detailIdID
 		}
-		$$('#loading').css('display','block')
+		angular.element('#loading').css('display','block')
 		$http.post(urltext + "/index.php?ctl=webapp_deal",nowInvestdata)
 		.success(function(res){
-			$$('#loading').css('display','none')
+			angular.element('#loading').css('display','none')
 			console.log(res)
 			$rootScope.nowinvestName=res.deal.sub_name//标的名称
 			$rootScope.nowinvestmoney=res.deal.need_money//可投金额
 			$rootScope.nowuser_money=Number(res.user_money).toFixed(2);//可用余额
 			$rootScope.dsQtmoney=res.deal.min_loan_money_format//多少元起投
+			if($rootScope.dsQtmoney.indexOf('￥')>=0)
+			{
+				$rootScope.dsQtmoneyAmount=$rootScope.dsQtmoney.slice(1)
+			}else{
+				$rootScope.dsQtmoneyAmount=$rootScope.dsQtmoney
+			}
+			
 		})
 		.finally(function(){
 				window.location.href='#/tab/nowInvest';
@@ -2924,17 +3682,17 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 			$http.post(urltext + "/index.php?ctl=webapp_uc_do_collect",followmedata)
 			 .success(function(res){
 			 	console.log(res)
-			 	$rootScope.concern="关注"
-			 	$$("#heart").css("background-image","url('img/follownow.png')")
+			 	$rootScope.concern="已关注"
+			 	angular.element("#heart").css("background-image","url('img/follownow.png')")
 			 	
 			 })
-		}else if($rootScope.concern=='关注'){
-			console.log(followmedata +'关注')
+		}else if($rootScope.concern=='已关注'){
+			console.log(followmedata +'已关注')
 			$http.post(urltext + "/index.php?ctl=webapp_uc_del_collect",followmedata)
 			 .success(function(res){
 			 	$rootScope.concern="未关注"
 			 	console.log(res)
-			 	$$("#heart").css("background-image","url('img/heart.png')")
+			 	angular.element("#heart").css("background-image","url('img/heart.png')")
 			 })
 		}
 	}
@@ -2945,8 +3703,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		//选项卡点击切换效果
 	$scope.tcpxx = true;
 	$scope.cpxxt = {
-		color: "#ffa03b",
-		borderBottom: "1px solid #ffa03b"
+		color: "#0AE",
+		borderBottom: "1px solid #0AE"
 	}
 	$scope.cpxx = function() {
 		$scope.tcpxx = true;
@@ -2955,8 +3713,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.tfkbz = false;
 		if($scope.tcpxx == true) {
 			$scope.cpxxt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.xmmst = {}
 			$scope.qyxxt = {}
@@ -2970,8 +3728,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.tfkbz = false;
 		if($scope.txmms == true) {
 			$scope.xmmst = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.cpxxt = {}
 			$scope.qyxxt = {}
@@ -2985,8 +3743,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.tfkbz = false;
 		if($scope.tqyxx == true) {
 			$scope.qyxxt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.xmmst = {}
 			$scope.cpxxt = {}
@@ -3000,8 +3758,8 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 		$scope.tfkbz = true;
 		if($scope.tfkbz == true) {
 			$scope.fkbzt = {
-				color: "#ffa03b",
-				borderBottom: "1px solid #ffa03b"
+				color: "#0AE",
+				borderBottom: "1px solid #0AE"
 			}
 			$scope.xmmst = {}
 			$scope.cpxxt = {}
@@ -3011,9 +3769,48 @@ $scope.AAJFshow=function(){//必须加AA ***  JFshow会报错
 })
 
 //偿还借款
-.controller('goRepaymentCtrl',function($scope,$ionicModal,$rootScope){
-	
-	
+.controller('goRepaymentCtrl',function($scope,$ionicModal,$rootScope,$state,$timeout,$http,$ionicLoading){
+	$scope.confirmPay=function(ids,id,paypwd,email,pwd){
+		$$('#loading').css('display','block')
+		var confirmPaydata={
+			"ids":ids,
+			"id":id,
+			"paypassword":paypwd,
+			"email":email,
+			"pwd":pwd
+		}
+		console.log(confirmPaydata)
+		$http.post(urltext + "/index.php?ctl=webapp_uc_do_quick_refund",confirmPaydata)
+		.success(function(res){
+			$$('#loading').css('display','none')
+			$ionicLoading.show({ 
+			  	showBackdrop: false,
+				template: res.show_err
+			  });
+			  $timeout(function() {
+				$ionicLoading.hide();
+				if(res.response_code!=0){
+					$rootScope.backTab()
+				}
+			  }, 650)
+		})
+		.error(function(){
+			$$('#loading').css('display','none')
+		})
+	}
+//充值
+$ionicModal.fromTemplateUrl('templates/czmodal.html', {
+	scope: $scope
+}).then(function(modal) {
+	$scope.czmodal = modal;
+});
+
+$scope.gosetpaypassnow=function(){
+	$scope.confirmPass.hide() 
+	$timeout(function(){
+		$state.go("tab.ACCSetPayPass")
+	},150)
+  };
 	
 //输入密码的模态框
 	$ionicModal.fromTemplateUrl('templates/confirmPass.html', {
@@ -3076,16 +3873,8 @@ var flag=true;
 .controller('schoolDetailCtrl',function(){})
 
 //联系客服
-.controller('ContactServiceCtrl',function($scope,$state,$http, $sce){
-	$http.post(urltext + "/index.php?ctl=webapp_service","")
-		.success(function(res){
-			console.log(res)
-			var str = res; 
-            var hrefUrl = str.slice(1,res.length-1).replace(/\\/g,"");
-            console.log(hrefUrl)
-            $scope.hrefUrl=hrefUrl
-            $scope.paySrc = $sce.trustAsResourceUrl( $scope.hrefUrl); 
-	    })
+.controller('ContactServiceCtrl',function($scope,$state,$http, $sce,$rootScope){
+	
 })
 .directive('loader', function() {
 	return {

@@ -26,7 +26,7 @@
             .slide .moneys{
                 text-align: center;
                 font-size:0.34rem;
-                color: #fa7306;
+                color: #ffa200;
                 line-height: 0.8rem;
             }
             .slide .completed{
@@ -59,19 +59,27 @@
                 line-height: 0.5rem;
                 float: left;
             }
-            /*.slide .inform .date{
+            .slide .inform .date{
                 font-size:0.22rem;
                 color: #fff;
                 line-height: 0.5rem;
                 float: right;
-            }*/
-           .scroll{
+            }
+         /*  .scroll{
             height:11.36rem;
-        }
+        }*/
         .errorShow{
             	width: 100%;
+			    line-height: 10.2rem;
 			    text-align: center;
-			    margin-top: -0.7rem;
+			    position: absolute;
+			    z-index: 16;
+			    color: #0AE;
+			    font-size: .28rem;
+			    background: #fff;
+			    height: 100%;
+			    top: 0;
+			    left: 0;
             }
         </style>
         <ion-refresher pulling-text="下拉刷新..." on-refresh="do_refresher()"></ion-refresher>
@@ -86,15 +94,16 @@
                 <img ng-src='{{URLAdmin+list.icon}}'/>
                 <div class="inform">
                     <span class="notice" ng-bind="list.title"></span>
+                    <div class="date" ng-bind="list.update_time * 1000 +28800000|date:'yyyy-MM-dd'" ></div>
                 </div>
             </div>
             
         </div>
         </ion-list>
-        <div class="errorShow" ng-show="errorShow">亲，您的数据连接已断开</div>
+        <div class="errorShow"  ng-show="errorShow">亲，您的数据连接已断开</div>
         <!--<ion-infinite-scroll on-infinite="loadMore()" distance="1%"  ng-if="!moredata" loader loadMore="loadMore()" >
         </ion-infinite-scroll>-->
-        <ion-infinite-scroll on-infinite="loadMore()" distance="1%"  ng-if="hasmore" >
+        <ion-infinite-scroll on-infinite="loadMore()"  immediate-check='false'  distance="1%"  ng-if="hasmore" >
         </ion-infinite-scroll>
     </ion-content>
 </ion-view>

@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -55,60 +55,64 @@
             width: 5rem;
             line-height: 0.6rem;
             margin: 0 auto;
-            background: #ffa03b;
+            background: #0AE;
             color: #fff;
             font-size: 0.24rem;
             text-align: center;
             margin-top: 0.2rem;
             border-radius: 0.1rem;
         }
-        
+           .tdPrice{
+           	line-height: 0.7rem !important;
+    width: 65%;
+    overflow: hidden;
+    height: .7rem;
+           }
+            
 	</style>
 	<header class="header-vip">
         <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
         <span>VIP购买</span>
     </header>
-	<ion-content class="">
+	<ion-content class="" ng-controller="goVIPBuyCtrl">
         <div class="editor">
             <table>
                 <tr>
                     <td>可购买VIP等级：</td>
                     <td>
-                        <select name=""class="select" ng-model="selectedVip">
+                        <select name=""class="select" ng-model="selectedVip" id="vipGrade">
                             <option value="{{x.vip_id}}" ng-repeat=" x in vip_list">{{x.vip_grade}}</option>
-                        </select>
+                        <lect>
                     </td>
                 </tr>    
                 <tr>
                     <td>购买期限：</td>
                     <td>
-                        <select name="" class="select" ng-model="myVar">
-                           <option ng-repeat=" x in yearss">{{x}}年</option>
-                        </select>
+                        <select name="" class="select" ng-model="myVar" id="myselectYear">
+                           <option value='{{x}}' ng-repeat=" x in yearss">{{x}}年</option>
+                        <lect>
                     </td>
-                </tr>      
-                <tr ng-switch="myVar">
-                    <td>原价：</td>
-                    <td ng-switch-when="1年">{{original_price}}元</td>
-                    <td ng-switch-when="2年">{{original_price*2}}元</td>
-                    <td ng-switch-when="3年">{{original_price*3}}元</td>
-                    <td ng-switch-when="4年">{{original_price*4}}元</td>
-                    <td ng-switch-when="5年">{{original_price*5}}元</td>
-                    
+                </tr> 
+              <tr ng-switch="myVar">
+                    <td class='tdPrice'>原价：</td>
+                    <td ng-switch-when="1">{{myVar*original_price}}元</td>
+                    <td ng-switch-when="2">{{myVar*original_price}}元</td>
+                    <td ng-switch-when="3">{{myVar*original_price}}元</td>
+                    <td ng-switch-when="4">{{myVar*original_price}}元</td>
+                    <td ng-switch-when="5">{{myVar*original_price}}元</td>
                 </tr>
                 <tr ng-switch="myVar">
-                    <td>现价：</td>
-                    <td>
-                    	<span ng-switch-when="1年">{{ssite_pirce}}元</span>
-	                    <span ng-switch-when="2年">{{ssite_pirce*2}}元</span>
-	                    <span ng-switch-when="3年">{{ssite_pirce*3}}元</span>
-	                    <span ng-switch-when="4年">{{ssite_pirce*4}}元</span>
-	                    <span ng-switch-when="5年">{{ssite_pirce*5}}元</span>
-                    </td>
+                    <td  class='tdPrice'>现价：</td>
+                    <td ng-switch-when="1">{{myVar*site_pirce}}元</td>
+                    <td ng-switch-when="2">{{myVar*site_pirce}}元</td>
+                    <td ng-switch-when="3">{{myVar*site_pirce}}元</td>
+                    <td ng-switch-when="4">{{myVar*site_pirce}}元</td>
+                    <td ng-switch-when="5">{{myVar*site_pirce}}元</td>
                 </tr>
+
                 <tr>
                     <td>支付密码：</td>
-                    <td style="position: relative;"><input type="password" ng-model="mypaypwd" style="position:absolute;height: 0.5rem;top: 0.1rem;border-radius: 5px;border: 1px solid #ccc;"></td>
+                    <td style="position: relative;"><input type="password" ng-model="mypaypwd" style="    padding-left: .3rem;position:absolute;height: 0.5rem;top: 0.1rem;border-radius: 5px;border: 1px solid #ccc;"></td>
                 </tr>
             </table>
         </div>

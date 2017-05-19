@@ -14,7 +14,7 @@
             display: block;
         	line-height: 0.6rem;
             font-size: 0.2rem;
-		    background: #ffba00;
+		    background: #0ab5fa;
 		    width: 1.3rem;
 		    text-align: center;
 		    position: absolute;
@@ -30,7 +30,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -65,7 +65,7 @@
         	height: 0.8rem;
         	margin: 0 auto;
         	margin-top: 0.2rem;
-        	border: 1px solid #ffa03b;
+        	border: 1px solid #0AE;
         	border-radius: 0.4rem;
         	overflow: hidden;
         }
@@ -93,7 +93,7 @@
         .invest_list .right{
         	float: right;
         	border-right: 0;
-        	background: #ffa03b;
+        	background: #0AE;
         	color: #fff;        	
         }
         .invest-submit{
@@ -102,7 +102,7 @@
         	height: 0.6rem;
         	font: 0.24rem;
         	color: #fff;
-        	background: #ffa03b;
+        	background: #0AE;
         	text-align: center;
         	line-height: 0.6rem;
         	margin-top: 0.4rem;
@@ -151,24 +151,24 @@
   	  	<div class="invest_list">
   	  		<div class="left">余额</div>
   	  		<div class="center">
-  	  			<input type="text" value="￥{{nowuser_money}}元" ng-disabled="true" style="color:#ffa03b ;"/>
+  	  			<input type="text" value="￥{{nowuser_money}}元" ng-disabled="true" style="color:#0AE ;"/>
   	  		</div>
   	  		<div class="right" ng-click="czmodal.show()">充值</div>
   	  	</div>
   	  	<div class="invest_list">
   	  		<div class="left">投资金额</div>
   	  		<div class="center">
-  	  			<input type="text" placeholder="{{dsQtmoney}}元起投"/>
+  	  			<input type="text" id='tzAmmount' placeholder="{{dsQtmoney}}元起投"/>
   	  		</div>
   	  	</div>
   	  	<div class="invest_list">
   	  		<div class="left">支付密码</div>
   	  		<div class="center" style="width:2.8rem">
-  	  			<input type="text" placeholder="输入密码"/>
+  	  			<input type="password"  id='tzPass' placeholder="输入密码"/>
   	  		</div>
   	  		<div class="right" style="width: 1.6rem;" ng-click="goSetPayPass()">设置支付密码</div>
   	  	</div>
-  	  	<div class="invest-submit" ng-click="czmodal.show()">提交投资</div>
+  	  	<div class="invest-submit" ng-click="nowInvest()">提交投资</div>
   	  	<div class="invest-notive">
   	  		<h4>投资小贴士</h4>
   	  		<p>1.投资免手续费，100元起投。</p>

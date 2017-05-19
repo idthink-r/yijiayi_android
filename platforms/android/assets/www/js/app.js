@@ -100,11 +100,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'],f
 
   $ionicConfigProvider.platform.ios.backButton.previousTitleText('').icon('ion-ios-arrow-thin-left');
   $ionicConfigProvider.platform.android.backButton.previousTitleText('').icon('ion-android-arrow-back');
-
+  
   $ionicConfigProvider.platform.ios.views.transition('ios');
   $ionicConfigProvider.platform.android.views.transition('android');
   /*用于修改安卓tab居下 --结束*/
-
+  $ionicConfigProvider.views.swipeBackEnabled(false);  
+  
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -141,7 +142,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'],f
         views: {
           'tab-account': {
             templateUrl: 'templates/tab-login.html',
-            controller: 'LoginCtrl'
+//          controller: 'LoginCtrl'
           }
         }
       })
@@ -174,6 +175,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'],f
       .state('tab.reg', {
         url: '/reg',
         cache: false,
+        
         views: {
           'tab-account': {
             templateUrl: 'templates/tab-reg.html',
@@ -181,7 +183,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'],f
           }
         }
       })
-
+      .state('tab.reg2', {
+        url: '/reg2',
+        cache: false,
+        
+        views: {
+          'tab-invest': {
+            templateUrl: 'templates/tab-reg.html',
+            controller: 'RegCtrl'
+          }
+        }
+      })
 
  // 登录安全保障
   .state('tab.safety', {
@@ -248,6 +260,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'],f
         }
       }
     })
+
   //登录行业动态
   .state('tab.industry', {
       url: '/industry',

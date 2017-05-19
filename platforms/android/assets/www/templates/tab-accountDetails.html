@@ -1,13 +1,14 @@
 <ion-view view-title="账户详情页" hide-nav-bar="true"  hide-tabs="true">
 <script id="templates/show_err.html" type="text/ng-template">
-    <div class="showNotice">
-        <div class="noticeList">
-            <span class="close icon ion-close" ng-click="show_err.hide()"></span>
-            <p class="showerr">
-            	温馨提示：因接口升级中，暂时无法绑定托管账户，敬请期待！
-            </p>
+    <div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content">接口升级中</p>
+                <div class="close">
+                    <div class="right" ng-click="show_err.hide()">确定</div>
+                </div>
+            </div>          
         </div>
-    </div>
 </script>    
 <style>
   .showNotice{
@@ -49,10 +50,13 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
+            border-bottom: 0.02rem solid #fff;
+			box-sizing: border-box;
+
         }
         .header-settiing .back{
             width:0.88rem;
@@ -166,13 +170,13 @@
             <span class="sign"></span>
             <span class="lists">实名认证</span>
             <span class="right ion-chevron-right"></span>
-            <span class="right-click"style="background: #ffa03b;">已认证</span>
+            <span class="right-click"style="background: #0AE;">已认证</span>
         </div>
         <div class="setting-detail setting-detail2" ng-if="ips_acct_no!=null" >
             <span class="sign"></span>
             <span class="lists">托管账户</span>
             <span class="right ion-chevron-right"></span>
-            <span class="right-click" style="background: #ffa03b;">已绑定</span>
+            <span class="right-click" style="background: #0AE;">已绑定</span>
         </div>
         <div class="setting-detail setting-detail2" ng-if="ips_acct_no==null" ng-click="show_err.show()">
             <span class="sign"></span>

@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -64,8 +64,10 @@
         .t-body .follow #heart{
             width: 0.35rem;
             height:0.35rem;
-            background: url("img/heart.png") no-repeat center;
+            background-image: url("img/heart.png") ;
             background-size:100% 100%;
+            background-position: center;
+            background-repeat:no-repeat ;
             margin:auto;
         }
         .t-body .follow span{
@@ -105,7 +107,7 @@
             text-align: center;
             line-height: 0.9rem;
             font-size:0.2rem;
-            color: #ffa200;
+            color: #0AE;
         }
         .t-description{
             width: 100%;
@@ -207,7 +209,9 @@
                         </div>
                     </div>
                     <div class="t-benefit">
-                        <div class="circle">
+                        
+
+<div class="circle" ng-click="toTrial()">
                             年化收益率<br>
                             <span class="number">{{derate_foramt}}%</span>
                         </div>
@@ -231,12 +235,12 @@
                     <div class="t-description t-description4">
                         <span class="left"></span>
                         <span class="message">投资起限</span>
-                        <span class="right">单笔{{demin_loan_money_format}}元起投</span>
+                        <span class="right">单笔{{demin_loan_money_format}}起投</span>
                     </div>
                     <div class="Fundtrusteeship">新浪支付资金托管</div>
                     
                     <div class="LJinvestwrap">
-	                    <div class="LJinvest" style="background: rgb(255, 160, 59);" ng-if="(dedeal_status==1&&deremain_time>0)" ng-click="nowInvest()">立即投资</div>
+	                    <div class="LJinvest" style="background: #0ab5fa;" ng-if="(dedeal_status==1&&deremain_time>0)" ng-click="nowInvest()">立即投资</div>
 	                    <div class="LJinvest" ng-if="(dedeal_status==1&&deremain_time<0)">已过期</div>
 	                    <div class="LJinvest" ng-if="(dedeal_status==2)">满标</div>
 	                    <div class="LJinvest" ng-if="(dedeal_status==3)">流标</div>
@@ -245,11 +249,10 @@
 	                    <div class="LJinvest" ng-if="(dedeal_status==0)">等待材料</div>
                     </div>
                 </div>
-                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="txmms" id="DEdescription" ng-bind-html='dedescription'>
-                	
+                <div class="t-body" style='margin-left:0.2rem ;margin-right:0.2rem ;padding-top: 0.2rem;' ng-show="txmms" id="DEdescription" ng-bind-html='dedescription'>
                 </div>
-                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="tqyxx" id="DErisk_certifications" ng-bind-html='derisk_certifications'></div>
-                <div class="t-body" style='margin-left:.2rem ;margin-right:.2rem ;' ng-show="tfkbz" id="DErisk_security" ng-bind-html='derisk_security'></div>
+                <div class="t-body" style='margin-left:0.2rem ;margin-right:0.2rem ;padding-top: 0.2rem;' ng-show="tqyxx" id="DErisk_certifications" ng-bind-html='derisk_certifications'></div>
+                <div class="t-body" style='margin-left:0.2rem ;margin-right:0.2rem ;padding-top: 0.2rem;' ng-show="tfkbz" id="DErisk_security" ng-bind-html='derisk_security'></div>
             </div>
         </div>
     </ion-content>

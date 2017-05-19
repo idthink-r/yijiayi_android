@@ -1,22 +1,38 @@
+<script id="templates/safemodal.html" type="text/ng-template">
+        <div>                                                           
+            <div class="Trusteeship">
+                <div class="sign">
+                    <img src="img/jg.png" alt="">
+                </div>
+                <h1 class="warning">安全警告</h1>
+                <p class="prove">您还未进行实名认证/绑定托管账户操作</p>
+                <div class="proveSelect">
+                    <span ng-click="safemodal.hide()">暂不操作</span>
+                    <span class="active" ng-click="accgoRealName()">去认证</span>
+                </div>
+            </div>  
+        </div>     
+    </script>
+
 <script id="templates/modal.html" type="text/ng-template">
 	<div>                                                           
         <div class="modal-backdrop">
         	<div class="modelMain">
-        		<div class="availablemoney" style="border-right:1px  solid #F8F8F8;box-sizing: border-box;border-bottom:1px solid #F8F8F8;">
+        		<!--<div class="availablemoney" style="border-right:1px  solid #F8F8F8;box-sizing: border-box;border-bottom:1px solid #F8F8F8;">
         			<span>{{pBalance}}</span>
         			<span>可用余额[绑]</span>
-        		</div>
-        		<div class="availablemoney" style="border-bottom:1px solid #F8F8F8;box-sizing: border-box;">
+        		</div>-->
+        		<!--<div class="availablemoney" style="border-bottom:1px solid #F8F8F8;box-sizing: border-box;">
         			<span>{{totalent}}</span>
         			<span>账户总额[绑]</span>
-        		</div>
+        		</div>-->
         		<div class="availablemoney" style="border-right:1px solid #F8F8F8;box-sizing: border-box;">
         			<span>{{total_money_format}}</span>
-        			<span>现金奖励[绑]</span>
+        			<span>现金奖励</span>
         		</div>
         		<div class="availablemoney">
         			<span>{{score}}</span>
-        			<span>我的积分[绑]</span>
+        			<span>我的积分</span>
         		</div>
         	</div>
 	        <div class="zjmx">资金明细</div>
@@ -39,6 +55,62 @@
 <ion-view view-title="账户" hide-nav-bar="true" hide-tabs='false'>
 	
 	<style>
+		.Trusteeship{
+            position: absolute;
+            left: 0;right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            width: 5.9rem;
+            height: 4rem;
+            background: #fff;       
+            border-radius: 0.1rem; 
+        }
+        .Trusteeship .sign{
+            width: 1rem;
+            height: 1rem;
+            margin: 0 auto;
+            margin-top: 0.4rem;
+        }
+        .Trusteeship .sign img{
+            width: 100%;
+        }
+        .Trusteeship .warning{
+            color: #ff803b;
+            font-size: 0.3rem;
+            line-height: 0.7rem;
+            text-align: center;
+        }
+        .Trusteeship .prove{
+            text-align: center;
+            color: #333;
+            font-size: 0.2rem;
+            line-height: 0.5rem;
+        }
+        .Trusteeship .proveSelect{
+            width: 4.6rem;
+            height: 0.5rem;
+            margin: 0 auto;
+            margin-top: 0.3rem;
+        }
+        .Trusteeship .proveSelect span{
+            display: block;
+            width: 2rem;
+            height: 100%;
+            float: left;
+            margin: 0 0.15rem;
+            font-size: 0.22rem;
+            text-align: center;
+            line-height: 0.5rem;
+            color: #fff;
+            background: #b9b9b9;
+            border-radius: 0.05rem;
+        }
+        .Trusteeship .proveSelect .active{
+            background: #dd6b55;
+        }
+
+
 		   ::-webkit-scrollbar  
         {  
             width: 0px;  
@@ -65,18 +137,18 @@
         	background-color:rgba(0,0,0,0.2)
         }
         .modelMain{
-    	    border-radius: 5px;
+        	border-radius: 5px;
     	    width: 5.9rem;
 		    margin: 0 auto;
-		    height: 3rem;
+		    height: 1.3rem;
 		    background: #fff;
 		    margin-top: 3.3rem;
         }
         .availablemoney{
         	float: left;
         	width: 50%;
-   			height: 1.4rem;
-   			padding: 0.4rem 0;
+   			height: 1.2rem;
+   			padding: 0.3rem 0;
         }
          .availablemoney span{
         	display: block;
@@ -85,19 +157,19 @@
             font-size: 0.2rem;
         }
         .zjmx{
-    	    border-radius: 5px;
             display: block;
-        	line-height: 0.8rem;
-            font-size: 0.2rem;
-		    background: #ffba00;
-		    width: 2.8rem;
+		    line-height: 0.6rem;
+		    font-size: 0.2rem;
+		    background: #ffa200;
+		    width: 2.3rem;
 		    text-align: center;
 		    position: absolute;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            top:5.9rem;
+		    left: 0;
+		    right: 0;
+		    margin: 0 auto;
+		    top: 4.3rem;
 		    color: #fff;
+		    border-radius: 5px;
         }
         .closezjmx{
             height: 1.5rem;
@@ -105,12 +177,11 @@
         	background: url("img/accmore.png") no-repeat center;
         	background-size: 100%;
 		    margin: 0 auto;
-            margin-top: 0.2rem;
         }
 		.top_bg{
 			position: relative;
 			width: 100%;
-			height: 4.93rem;
+			height: 4.72rem;
 			background: url(img/bg_img_01.png) no-repeat center;
 			background-size:100% 100% ;
 			color: #fff;
@@ -143,6 +214,7 @@
 		    position: absolute;
 		    line-height: 2.3rem;
 		    font-size: 0.12rem;
+		    overflow: hidden;
 		}
 
         .top_bg .login-name{
@@ -207,7 +279,7 @@
         /*充值提现*/
         .charge{
             width:5.9rem;
-            height:0.7rem;
+            height:1.02rem;
             margin:0 auto;
         }
         .charge .lists{
@@ -243,8 +315,8 @@
         }
         .middle{
             width:100%;
-            height: 3.8rem;
-            margin-bottom:1rem;
+            height: 4.45rem;
+            /*margin-bottom:1rem;*/
         }
         .middle .lists{
             width:50%;
@@ -279,8 +351,8 @@
             line-height: 0.6rem;
         }
 	</style>
- <ion-scroll direction="y">
-  	
+ <!--<ion-scroll direction="y">-->
+  	<ion-content>
  
       <ion-refresher pulling-text="下拉刷新..." on-refresh="do_refresher()"></ion-refresher>                                                         
       <div class="top_bg">
@@ -296,15 +368,15 @@
             <div class="money">
                 <div class="money-list">
                     <span>{{pBalance}}</span><br>
-                    <span>可用余额[绑]</span>
+                    <span>可用余额</span>
                 </div>
                 <div class="money-list">
                     <span>{{totalent}}</span><br>
-                    <span>账户总额[绑]</span>
+                    <span>账户总额</span>
                 </div>
                 <div class="money-list money-lists">
                     <span>{{totalent}}</span><br>
-                    <span>投资中[绑]</span>
+                    <span>投资中</span>
                 </div>
             </div>
             <div class="more" ng-click="modal.show()"></div>
@@ -313,11 +385,11 @@
       <div class="charge">
           <div class="lists left"  ng-click="czmodal.show()" style="border-right: 1px #F8F8F8 solid;box-sizing: border-box;">
               <span class="sign"></span>
-              <span style="margin-left: 0.6rem;">充值</span>
+              <span style="margin-left: 0.6rem;padding-top: 0.15rem;display: inline-block;">充值</span>
           </div>
           <div class="lists right"  ng-click="czmodal.show()">
               <span class="sign"></span>
-              <span style="margin-left: 0.7rem;">提现</span>
+              <span style="margin-left: 0.6rem;padding-top: 0.15rem;display: inline-block;">提现</span>
           </div>
       </div>
       <div class="line"></div>
@@ -340,6 +412,6 @@
               <span class="middle-name">账户详情</span>
           </div>
       </div>
- 
-	 </ion-scroll>
+ </ion-content>
+	 <!--</ion-scroll>-->
 </ion-view>

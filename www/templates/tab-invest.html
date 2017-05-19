@@ -1,4 +1,4 @@
-<ion-view view-title="投资" hide-nav-bar="true" ng-click="hideAdd();$event.stopPropagation();">
+<ion-view view-title="投资" hide-nav-bar="true"  ng-click="hideAdd();$event.stopPropagation();">
     <style>
         #header{
             width: 100%;
@@ -7,7 +7,8 @@
         }
         .header-top{
             width: 100%;height: 0.88rem;
-            background: url("img/bg-top.png") no-repeat;
+            /*background: url("img/bg-top.png") no-repeat;*/
+           background: url("img/bg-index2.png") no-repeat;
             background-size: 100% 100%;
             text-align: center;
             line-height: 0.88rem;
@@ -29,7 +30,8 @@
         }
         .header-center{
             width: 100%;height: 4rem;
-            background: url("img/bg-index.png") no-repeat;
+            /*background: url("img/bg-index.png") no-repeat;*/
+           background: url("img/bg-top2.png") no-repeat;
             background-size: 100% 100%;
         }
         .benefit{
@@ -44,7 +46,7 @@
             background-size: 100% 100%;
             margin: 0 auto;
             font-size: 0.2rem;
-            color: #fe983a;
+            color: #0AE;
             text-align: center;
             line-height: 0.4rem;
         }
@@ -64,7 +66,7 @@
             width: 5.9rem;height: 1.15rem;
             padding: 0.2rem 0;
             margin: auto;
-            border-top:1px solid #FFC387;
+            border-top:1px solid #FFF;
             text-align: center;
             color: #fff;
             font-size: 0.14rem;
@@ -73,6 +75,9 @@
         .header-bottom .left,.header-bottom .right {
             width: 50%;
             float: left;
+        }
+        .header-bottom .left{
+        	border-right: 1px solid #FFF;
         }
         .header-bottom .b1,.header-bottom .b2{
             font-size:0.22rem;
@@ -119,7 +124,8 @@
         }
         .details{
             width: 5rem;height: 0.9rem;
-            background: #ff8e27;
+            /*background: #0AE;*/
+           background: #0AE;
             border-radius: 0.05rem;
             margin: 0 auto;
             text-align: center;
@@ -208,7 +214,19 @@
             margin-left:0.7rem;
             font-weight: normal;
         }
-        
+         .errorShow{
+            	width: 100%;
+			    line-height: 10.2rem;
+			    text-align: center;
+			    position: absolute;
+			    z-index: 16;
+			    color: #0AE;
+			    font-size: .28rem;
+			    background: #fff;
+			    height: 100%;
+			    top: 0;
+			    left: 0;
+            }
        /* #outshow .slider{
         	visibility: visible !important;
         	position:inherit !important;
@@ -233,7 +251,7 @@
         </div>
     </script>
     
-    <div style="width: 100%;line-height: 2.2rem;text-align: center;" ng-show="errorShow">亲，您的数据连接已断开</div>
+    <div class='errorShow' ng-show="errorShow">亲，您的数据连接已断开</div>
     <div class="header-top">
         <span>医加医</span>
         <span class="right" ng-click="showOhide();$event.stopPropagation();" >+</span>
@@ -261,17 +279,16 @@
             </div>
             <div class="lists lists6" ng-click="goOnService();$event.stopPropagation();">
                 <span class="sign"></span>
-                <a href="tel:4000351924"><span class="lists-name">联系客服</span></a>
+                <a><span class="lists-name">在线客服</span></a>
             </div>
             <div class="lists lists7" ng-click="goSetting();$event.stopPropagation();">
                 <span class="sign"></span>
                 <span class="lists-name">应用设置</span>
             </div>
-
         </div>
     </div>
-    <ion-content ng-show="inshow" overflow-scroll="true" style="overflow: hidden">
-    	<div>
+    <ion-content ng-show="inshow" overflow-scroll="true" scroll='true'>
+    	<div style="height: 10.36rem;">
         <ion-slide-box style="z-index: 999;" auto-play="false" ng-if='inshowlist' delegate-handle="inshowlist">
                 <ion-slide  ng-repeat="x in inshowlist" >
                     <header id="header">
@@ -284,7 +301,7 @@
                             </div>
                             <div class="company">{{x.name}}</div>
                             <div class="header-bottom">
-                                <div class="left" ng-click="goLogin();$event.stopPropagation();">
+                            	<div class="left" ng-click="goDetails(data.email,logindata.user_pwd,{{x.id}});$event.stopPropagation();">
                                     <div class="b1">
                                         <span>{{x.min_loan_money}}<small  class="b2">元起投</small ></span>
                                     </div>
@@ -292,7 +309,7 @@
                                         投资限额
                                     </div>
                                 </div>
-                                <div class="right" ng-click="goLogin();$event.stopPropagation();">
+                                <div class="right" ng-click="goDetails(data.email,logindata.user_pwd,{{x.id}});$event.stopPropagation();">
                                     <div class="b1"  ng-switch="x.repay_time_type" >
                                         <span ng-switch-when="0">{{x.repay_time}}<small  class="b2">天</small ></span>
                                         <span ng-switch-when="1">{{x.repay_time}}<small  class="b2">个月</small ></span>
@@ -310,13 +327,13 @@
 	                    <div class="icon">
 	                        <img src="./img/invest1.png" alt="">
 	                    </div>
-	                    <span>{{x.borrow_amount_format}}</span>
+	                    <span>全额{{x.borrow_amount_format}}</span>
 	                </li>
 	                <li class="two count-icon"  ng-click="goSafety();$event.stopPropagation();">
 	                    <div class="icon">
 	                        <img src="./img/invest2.png" alt="">
 	                    </div>
-	                    <span>￥{{x.need_money}}万元</span>
+	                    <span>可投{{x.need_money}}万</span>
 	                </li>
 	                <li class="three count-icon"  ng-click="goSafety();$event.stopPropagation();" >
 	                    <div class="icon">
@@ -344,8 +361,8 @@
         </ion-slide-box>
         </div>
     </ion-content>
-	<ion-content ng-show="outshow">
-        <div id="outshow">
+	<ion-content ng-show="outshow" scroll='true'>
+        <div id="outshow" style="height: 10.36rem;">
             <ion-slide-box style="z-index: 999;">
                 <ion-slide  ng-repeat="x in outshowlist">
                     <header id="header">
@@ -406,5 +423,5 @@
                 </ion-slide>
             </ion-slide-box>
         </div>
-    </ion-content>
+	</ion-content>
 </ion-view>

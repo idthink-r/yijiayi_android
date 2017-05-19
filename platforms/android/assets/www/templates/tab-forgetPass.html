@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.3rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -49,7 +49,7 @@
             box-shadow:0 0 0.05rem #ccc;
             padding-left: 0.2rem;
             font-size: 0.22rem;
-            color: #9B9B9B;
+            /*color: #9B9B9B;*/
         }
         .resetPass .verification{
             position: relative;
@@ -63,7 +63,7 @@
             position: absolute;
             right: 0;
             top:-0.2rem;
-            background: #FE8F26;
+            background: #0AE;
             font-size: 0.24rem;
             color: #fff;
             text-align: center;
@@ -73,13 +73,19 @@
         .again-submit{
             width:5.9rem;
             height:0.8rem;
-            background: #FE8F26;
+            background: #0AE;
             margin:0 auto;
             font-size: 0.24rem;
             color: #fff;
             text-align: center;
             line-height: 0.8rem;
             margin-top:0.2rem;
+        }
+        .rea  span.telInvaild {
+        	display: none;
+        }
+        .resetPass span.usererr{
+        	display: none;
         }
     </style>
     <header class="header-againPass">
@@ -88,24 +94,24 @@
     </header>
     <ion-content class="">
         <!--写内容-->
-        <form action=""  name='forgetPassForm'>
+        <form action=""  name='forgetPassForm' class='forgetPassClass'>
 	        <div class="resetPass">
 	            <div class='rea'>
-	                <input type="number" id='forgetTel' placeholder="输入手机号"  name='number' ng-minlength="11" ng-maxlength="11"  ng-blur="change1=true" ng-focus="change1=false"  ng-model='user.number' required="">
-	            	<span class="usererr assertive tel" style='position: absolute;right: 1rem;top: .2rem;' ng-show="forgetPassForm.number.$dirty && forgetPassForm.number.$invalid && change1">手机号输入有误</span>
+	                <input type="number" id='forgetTel' placeholder="输入手机号"  name='number' ng-focus='focusFun($event)'   ng-blur="invaildTel($event)"  ng-model='user.number'>
+	            	<span class="usererr assertive tel telInvaild" style='position: absolute;right: 1rem;top: .2rem;'>请输入手机号!</span>
 	            </div>
 	            <div class="verification rea">
-	                <input type="text" id='forgetCode' placeholder="输入验证码" required=""  ng-blur="change2=true" ng-focus="change2=false" name='code' ng-model='user.code'>
-	                <div class="obtain" ng-click='getCode()' ng-bind='description'>获取验证码</div>
-	                <span class="usererr assertive tel" style='position: absolute;right:2rem;top: .2rem;'  ng-show="forgetPassForm.code.$dirty && forgetPassForm.code.$invalid && change2">请输入验证码</span>
+	                <input type="text" id='forgetCode' placeholder="输入验证码" required=""   ng-blur="invaildNull($event)" ng-focus="focusFun($event)"  name='code' ng-model='user.code'>
+	                <div class="obtain" id='forgetObtain' ng-click='getCode()' ng-bind='forDescription'>获取验证码</div>
+	                <span class="usererr assertive tel" style='position: absolute;right:2rem;top: .2rem;' >请输入验证码!</span>
 	            </div>
 	            <div  class='rea'>
-	                <input type="password" id='forgetPass' placeholder="请输入新密码"   name='password' ng-model='user.password' ng-blur="change4=true" ng-focus="change4=false"  required="">
-	                <span class="usererr assertive pass" style='position: absolute; right: 1rem; top: 1.9rem;' ng-show="change4 && forgetPassForm.password.$dirty && forgetPassForm.password.$invalid">密码输入格式有误</span>
+	                <input type="password" class='_pass' id='forgetPass' placeholder="请输入新密码"   name='password' ng-model='user.password'  ng-blur="invaildNull($event)" ng-focus="focusFun($event)" >
+	                <span class="usererr assertive pass" style='position: absolute; right: 1rem; top: 1.9rem;'>请输入新密码!</span>
 	            </div>
 	            <div  class='rea'>
-	                <input type="password" id='forgetPass2' placeholder="请再次输入密码"  ng-blur="change3=true" ng-focus="change3=false" ng-model='password2' name='password2' required="">
-	                <span class="usererr assertive againPass"style='position: absolute; right: 1rem; top: 2.75rem;' ng-show="forgetPassForm.password2.$dirty && user.password!=password2 && change3">两次密码输入不一致</span>
+	                <input type="password" id='forgetPass2' placeholder="请再次输入密码"   ng-blur="invaildAgainPass($event)" ng-focus="focusFun($event)" ng-model='password2' name='password2' >
+	                <span class="usererr assertive againPass"style='position: absolute; right: 1rem; top: 2.75rem;'>两次密码输入不一致</span>
 	            </div>
 	        </div>
 	        <div class="again-submit"  ng-disabled="forgetPassForm.$invalid" ng-click="goSumbit()">提交</div>

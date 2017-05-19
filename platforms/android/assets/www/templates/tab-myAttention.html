@@ -9,7 +9,7 @@
             font-size:0.32rem;
             color: #fff;
             position: relative;
-            background: #3996D3;
+            background: #0AE;
             z-index: 999;
         }
         .header-attention .back{
@@ -28,7 +28,7 @@
             width: 0.8rem;
             height:0.5rem;
             border-radius: 0.05rem;
-            background:#2D7EB5;
+            background:#0593cc;
             text-align: center;
             line-height:0.5rem;
             font-size: 0.26rem;
@@ -43,9 +43,13 @@
             height: 2rem;
             margin: 0 auto;
             position: relative;
+            margin-top: 0.2rem;
         }
-        .piece:first-child{
+       /* .piece:first-child{
             margin-top: 1.08rem;
+        }*/
+        .piece:last-child{
+            margin-bottom:1.5rem;
         }
         .piece .top{
             position: relative;
@@ -58,14 +62,14 @@
         }
         .piece .top .profit{
             font-size: 0.2rem;
-            color: #EB5D3C;
+            color: #099dd8;
             line-height: 0.45rem;
             padding-left: 0.15rem;
         }
         .piece .top .state{
             width: 1.4rem;
 		    height: 0.4rem;
-		    background: url(http://test.yijiayi360.com/wap/tpl/fanwe/images/time.png) no-repeat;
+		    background: url(img/time.png) no-repeat;
 		    background-size: 100% 100%;
 		    position: absolute;
 		    top: 0;
@@ -73,14 +77,15 @@
 		    margin: auto;
 		    right: 0;
 		    text-align: center;
-		    line-height: 0.5rem;
+		    line-height: 0.4rem;
 		    font-size: 0.2rem;
 		    color: #fff
         }
+      
         .piece .bottom{
             width: 5.9rem;
             margin:0 auto;
-            border-top: 0.01rem dashed #3996D3;
+            border-top: 0.01rem dashed #0AE;
             height:1rem;
         }
         .piece .bottom>div{
@@ -107,7 +112,7 @@
 		    border-radius: 50%;
 		    border: 1px solid #666666;
 		    left:0.09rem;
-		    top:.95rem;
+		    top:.6rem;
 		    display: none;
 		    text-align: center;
 		    line-height: .3rem;
@@ -115,9 +120,8 @@
 		    font-size: .17rem;
         }
         .scale{
-        	border:1px solid #3996D3;
+        	border:1px solid #0AE;
             border-radius: 0.1rem;
-            margin-top: 0.2rem;
         }
         .banneDel{
         	width: 100%;
@@ -131,7 +135,7 @@
         .banneDel #del{
         	width: 1rem ;
         	height: .5rem;
-        	background: #ff3000;
+        	background: #0AE;
         	margin: 0 auto;
         	border-radius: 1.1rem;
 		    text-align: center;
@@ -139,55 +143,63 @@
 		    line-height: .5rem;
 		    margin-top: .17rem;
         }
+        /*#notranslate3d .scroll{
+        	margin-top: -1rem;
+        }*/
+      
     </style>
     <header class="header-attention">
         <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
         <span>我关注的标</span>
         <span class="edit" ng-click="delItem()">编辑</span>
     </header>
-    <ion-content class="" style='padding-top: 1rem;padding-bottom: 1rem;' overflow-scroll="false">
-    	<ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
+    <ion-content class="" style='margin-top: 1rem;padding-bottom: 1rem;' overflow-scroll="false" id="notranslate3d">
+    	<!--<ion-refresher pulling-text="下拉刷新" ng-if='delItemFlags'  on-refresh="doRefresh()"></ion-refresher>-->
+    	<ion-refresher pulling-text="下拉刷新" id='refreshStyle'  on-refresh="doRefresh()"></ion-refresher>
         <!--写内容-->
 
-        <div class="piece" ng-repeat="item in attenItems" ng-click='delSelected($event)'  selectFlag='true'>
-    		 <div class='scale'>
-	            <div class="top">
-	                <div class="title">{{item.name}}</div>
-	                <div class="profit">投资1万元每天收益{{item.rate*100/365 | number:2}}元</div>
-	                <!--0  等待材料   1进行中   2满标   3流标   4还款中   5已还款-->
-	                <div class="state">
-	                	<span ng-if='item.deal_status==0' style="color: #fff;">等待材料</span>
-	                	<span ng-if='item.deal_status==1' style="color: #fff;">进行中</span>
-	                	<span ng-if='item.deal_status==2' style="color: #fff;">满标</span>
-	                	<span ng-if='item.deal_status==3' style="color: #fff;">流标</span>
-	                	<span ng-if='item.deal_status==4' style="color: #fff;">还款中</span>
-	                	<span ng-if='item.deal_status==5' style="color: #fff;">已还款</span>
-	                	
-	                </div>
-	            </div>
-	            <div class="bottom">
-	                <div>
-	                    <span class="number" style="color: #EB5D3C;">{{item.rate}}%</span><br>
-	                    <span class="font">年利率</span>
-	                </div>
-	                <div>
-	                    <span class="number">{{item.repay_time}} <span ng-if='item.repay_time_type=="0"'>天</span><span ng-if='item.repay_time_type!=0'>月</span></span><br>
-	                    <span class="font">期限</span>
-	                </div>
-	                <div>
-	                    <span class="number">{{item.borrow_amount_format}}</span><br>
-	                    <span class="font">金额</span>
-	                </div>
-	                <div>
-	                    <span class="number">{{item.min_loan_money}}</span><br>
-	                    <span class="font">起投</span>
-	                </div>
-	            </div>
-	         </div>
-       		 <div class="raddioBtn" indexnow="{{item.id}}"></div>
-        </div>
-		<div style=' width: 100%;height: 1rem;'></div>
-        <ion-infinite-scroll ng-if="!noMorePage"   on-infinite="loadMore()" distance="1%" ></ion-infinite-scroll>
+			        <div class="piece" ng-repeat="item in attenItems" ng-click='delSelected($event)'  selectFlag='true'>
+		    		 <div class='scale'>
+			            <div class="top">
+			                <div class="title">{{item.name}}</div>
+			                <div class="profit">投资1万元每天收益{{item.rate*100/365 | number:2}}元</div>
+			                <!--0  等待材料   1进行中   2满标   3流标   4还款中   5已还款-->
+			                <div class="state">
+			                	<span ng-if='item.deal_status==0' style="color: #fff;">等待材料</span>
+			                	<span ng-if='item.deal_status==1' style="color: #fff;">进行中</span>
+			                	<span ng-if='item.deal_status==2' style="color: #fff;">满标</span>
+			                	<span ng-if='item.deal_status==3' style="color: #fff;">流标</span>
+			                	<span ng-if='item.deal_status==4' style="color: #fff;">还款中</span>
+			                	<span ng-if='item.deal_status==5' style="color: #fff;">已还款</span>
+			                	
+			                </div>
+			            </div>
+			            <div class="bottom">
+			                <div>
+			                    <span class="number" style="color: #099dd8;">{{item.rate}}%</span><br>
+			                    <span class="font">年利率</span>
+			                </div>
+			                <div>
+			                    <span class="number">{{item.repay_time}} <span ng-if='item.repay_time_type=="0"'>天</span><span ng-if='item.repay_time_type!=0'>月</span></span><br>
+			                    <span class="font">期限</span>
+			                </div>
+			                <div>
+			                    <span class="number">{{item.borrow_amount_format}}</span><br>
+			                    <span class="font">金额</span>
+			                </div>
+			                <div>
+			                    <span class="number">{{item.min_loan_money}}</span><br>
+			                    <span class="font">起投</span>
+			                </div>
+			            </div>
+			         </div>
+		       		 <div class="raddioBtn" indexnow="{{item.id}}"></div>
+		        </div>
+	
+			
+
+
+        <ion-infinite-scroll ng-if="!noMorePage"  immediate-check='false' ng-disabled='delItemFlags'  on-infinite="loadMore()" distance="1%" ></ion-infinite-scroll>
 
     </ion-content>
     <div class="banneDel" ng-click="delMyattennow()">

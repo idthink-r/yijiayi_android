@@ -46,7 +46,7 @@
             font-size:0.32rem;
             color: #fff;
             position: relative;
-            background: #ffa03b;
+            background: #0AE;
             z-index: 999;
         }
         .header-realName .back{
@@ -90,7 +90,7 @@
             width:5rem;
             height: 0.6rem;
             margin:0 auto;
-            background: #ffa03b;
+            background: #0AE;
             font-size: 0.24rem;
             color: #fff;
             text-align: center;
@@ -105,7 +105,7 @@
             text-align: center;
             line-height: 1rem;
             font-size: 0.22rem;
-            color: #ff4800;
+            color: #099dd8;
         }
         .showcase-form textarea .ng-dirty.ng-invalid,
 		.showcase-form select .ng-dirty.ng-invalid,
@@ -118,17 +118,32 @@
         .notice{
             text-align: center;
             line-height: 1rem;
-            color: red;
+            color: #0AE;
             margin-top: 0.2rem;
             font-size: 0.24rem;
         }
-		#showerr{
-			color: red !important;
-		    font-size: 0.22rem !important;
-		    line-height: 3.0rem !important;
-		    margin-top: 0 !important;
-		    text-align: center !important;
-		}
+		.login-button{
+        	display:block;
+            width:5.9rem;
+            height: 0.6rem;
+            margin:0 auto;
+            background: #0AE;
+            font-size: 0.24rem;
+            color: #fff;
+            text-align: center;
+            line-height:0.6rem;
+            margin-top:0.1rem;
+            border:none;
+        }  
+	.showcase-form span.usererr{
+		position: absolute;
+	    top: 0;
+	    left: 3.6rem;
+	    height: .7rem;
+	    line-height: .7rem;
+	    width: 3rem;
+	    display: none;
+	}
     </style>
     <header class="header-realName">
         <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
@@ -136,35 +151,56 @@
     </header>
     <ion-content ng-controller="goRealNameCtrl">
         
-        <script id="templates/showNotice.html" type="text/ng-template">
-    <div class="showNotice">
-        <div class="noticeListRN">
-            <span class="close icon ion-close" ng-click="showNotice.hide()"></span>
-            <h3>注意事项</h3>
-            <p>a.实名信息请填写真实有效信息，否则会导致注册申请失败;</p>
-            <p>b.实名信息填写和第三方资金托管账户绑定的操作不要中断，如遇意外情况导致操作中断，请至会员中心完成相关操作;</p>
+       <script id="templates/showNotice.html" type="text/ng-template">
+        	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">注意事项</h4>
+                <p class="content" style="line-height: 0.4rem;padding: 0;text-align: left;">
+                	1.实名信息请填写真实有效信息，否则会导致注册申请失败;<br />
+                	2.实名信息填写和第三方资金托管账户绑定的操作不要中断，如遇意外情况导致操作中断，请至会员中心完成相关操作;
+                </p>
+                <div class="close">
+                    <div class="right" ng-click="showNotice.hide()">确定</div>
+                </div>
+            </div>          
         </div>
-    </div>
-</script>
+        	
+		    <!--<div class="showNotice">
+		        <div class="noticeListRN">
+		            <span class="close icon ion-close" ng-click="showNotice.hide()"></span>
+		            <h3>注意事项</h3>
+		            <p>a.实名信息请填写真实有效信息，否则会导致注册申请失败;</p>
+		            <p>b.实名信息填写和第三方资金托管账户绑定的操作不要中断，如遇意外情况导致操作中断，请至会员中心完成相关操作;</p>
+		        </div>
+		    </div>-->
+		</script>
 <script id="templates/show_err.html" type="text/ng-template">
-    <div class="showNotice">
-        <div class="noticeListRN">
-            <span class="close icon ion-close" ng-click="show_err.hide();backTabRealName()"></span>
-            <p id="showerr">{{showerr}}</p>
+    	<div class="xmodal-backdrop">
+            <div class="xmodelMain">
+                <h4 class="announcement">温馨提示</h4>
+                <p class="content" id="showerr">{{showerr}}</p>
+                <div class="close">
+                    <!--<div class="left" ng-click="modal.hide()" style="background:#B9B9B9">取消</div>-->
+                    <div class="right" ng-click="realNameFunOk()">确定</div>
+
+                </div>
+            </div>          
         </div>
-    </div>
-</script>
+    </script>  
+	
         <form name="basic_form" class="showcase-form">
             <div class="realName">
-                <input type="text" placeholder="输入真实姓名" ng-model="real_name">
+                <input type="text" placeholder="输入真实姓名" ng-model="real_name" ng-blur="invaildNull($event)" ng-focus="focusFun($event)">
+                <span class="usererr assertive name">请输入姓名!</span>
             </div>
             <div class="realName">
-                <input type="text" placeholder="输入身份证号码" ng-model="idno">
+                <input type="text" placeholder="输入身份证号码" ng-model="idno"  ng-blur="invaildNull($event)" ng-focus="focusFun($event)" >
+                <span class="usererr assertive idno"  >请输入身份证号码!</span>
             </div>
             <p>(请输入正确信息以免影响资金托管账户申请等功能..)</p>
             
-           <p style="line-height: 1.1rem ;color: rebeccapurple;">温馨提示：因接口升级中，暂时无法绑定托管账户，敬请期待！</p>
-            <button ng-click="idnoAreal_name();show_err.show()" class="login-button"> 确定</button>
+           <p style="width: 5rem; margin: 0 auto;color: #333;">温馨提示：因接口升级中，暂时无法绑定托管账户，敬请期待！</p>
+            <button ng-click="idnoAreal_name();" class="login-button"> 确定</button>
         </form>
 
         <p class="notice" ng-click="showNotice.show()">注意事项</p>

@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -90,7 +90,7 @@
           width: 5.9rem;
           height: 0.6rem;
           margin: 0 auto;
-          background: #ccc;
+          background: #0AE;
           font-size: 0.24rem;
           color: #fff;
           text-align: center;
@@ -109,18 +109,18 @@
           <span class="lists">清除缓存</span>
           <span class="right right-click ion-chevron-right"></span>
       </div>
-      <div class="setting-list setting-list2" ng-click='callphone()'>
+      <a class="setting-list setting-list2" style='display: block;' href="tel:4000351924" ng-click='callphone()'>
           <span class="sign"></span>
-          <div class="lists"> <a href="tel:4000351924">联系客服</a></div>
+          <span class="lists"> 联系客服</span>
           <span class="right right-click ion-chevron-right"></span>
-      </div>
+      </a>
       <div class="setting-list setting-list3" ng-click='goUpdataApp()'>   
           <span class="sign"></span>
           <span class="lists">版本信息</span>
           <span class="right right-click ion-chevron-right"></span>
-          <span class="right" style="margin-right:0.1rem">V{{version}}</span>
+          <span class="right" style="margin-right:0.1rem">V{{currentVersion}}</span>
       </div>
-      <div class="setting-list setting-list4" ng-click='goScan()'>
+      <div class="setting-list setting-list4" ng-if='!data.pwd' ng-click='goScan()'>
           <span class="sign"></span>
           <span class="lists" >扫一扫</span>
           <span class="right right-click ion-chevron-right"></span>

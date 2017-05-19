@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.32rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -55,7 +55,7 @@
         }
         .t-body table th{
             width:67%;
-            background: #ffa03b;
+            background: #0AE;
             border:1px solid #fff;
             line-height: 0.7rem;
             text-align: center;
@@ -103,8 +103,11 @@
             color: #999;
             width: 69%;
 		    text-align: left;
-		    padding-left: 0.1rem;
-        }
+		    padding-left: 0.7rem;
+        }        
+        .t-body4 table td {
+		    width: 52%;
+		}
         .t-body table tr:nth-child(2n+1){
             background: #f8f8f8;
         }
@@ -134,8 +137,8 @@
             line-height: 0.5rem;
         }
         .page .active{
-            border: 1px solid #ffa03b;
-            color: #ffa03b;
+            border: 1px solid #0AE;
+            color: #0AE;
         }
         .statistical{
             width: 6rem;
@@ -144,13 +147,13 @@
             color: #fff;
             text-align: center;
             line-height: 0.6rem;
-            background: #ffa03b;
+            background: #0AE;
         }
         .rental{
             width: 5.5rem;
             height: 1.2rem;
             margin: 0 auto;
-            border: 1px solid #ffa03b;
+            border: 1px solid #0AE;
             border-radius: 0.1rem;
             margin-bottom:.5rem;
         }
@@ -165,7 +168,7 @@
         }
         .rental .czmoney{
             font-size: 0.26rem;
-            color: #ffa03b;
+            color: #0AE;
         }
         .thklb,.tyhqjk{
         	float: left;
@@ -197,7 +200,7 @@
 			    height: 1.15rem;
         }
         .htopBar{
-        	    background: #ffa03b;
+        	    background: #0AE;
 			    color: #fff;
 			    height: 0.6rem;
 			    line-height: 0.6rem;
@@ -215,7 +218,7 @@
     	    clear: both;
 		    margin: 0 auto;
 		    width: 98%;
-		    border: 1px #ffa03b solid;
+		    border: 1px #0AE solid;
 		    border-radius: 3px;
 		    position: relative;
 		    height: 2.9rem;
@@ -235,14 +238,14 @@
 		    left: 50%;
 		    margin-left: -0.85rem;
 		    width: 1.7rem;
-		    background: #ffa03b;
+		    background: #0AE;
 		    height: 0.8rem;
 		    line-height: 0.8rem;
 		    text-align: center;
 		    color: #fff;
         }
         .tzjlactive{
-        	background: #ffa03b;;
+        	background: #0AE;;
         }
         /**/
        .myinvestTab,.myLoadTab{
@@ -251,7 +254,7 @@
        }
        .myinvestTab span,.myLoadTab span{
        		display: inline-block;
-		    background: #ffa03b;
+		    background: #0AE;
 		    line-height: 0.7rem;
 		    text-align: center;
 		    font-size: 0.24rem;
@@ -294,7 +297,7 @@
     <div class="myLoadTab" ng-show="myLoadTab">
     	<div style="width: 100%;height: 0.2rem;position: relative;z-index: 999;background: #fff;"></div>
 	    <span class="XMMC">项目名称</span>
-	    <span class="slideBox2" ng-click="slideBox2()">状态 2<span class="slideDown"></span></span>
+	    <span class="slideBox2" ng-click="slideBox2()">状态<span class="slideDown"></span></span>
 	    <ul class="slideFrame2" style="overflow: hidden;">
 	        <li ng-click="shaixuanloadLoan()">全部</li>
 	        <li ng-click="shaixuan2(1)">进行中</li>
@@ -391,71 +394,89 @@
 						</div>
 				</div> 
 				 
-				<div class="t-body t-body4" ng-show="ttztj" style="margin-top: 1.9rem;">                    
-                    <table>
-                        <div class="statistical">借款统计</div>
-                        <tr>
-                            <td>借款总额</td>
-                            <td>￥{{borrow_amount}}</td>
-                        </tr>  
-                        <tr>
-                            <td>借款笔数</td>
-                            <td>{{success_deal_count}}笔</td>
-                        </tr> 
-                        <tr>
-                            <td>已还本息</td>
-                            <td>￥{{repay_amount}}</td>
-                        </tr>  
-                        <tr>
-                            <td>待还本息</td>
-                            <td>￥{{need_repay_amount}}</td>
-                        </tr> 
-                        <tr>
-                            <td>已付管理费用</td>
-                            <td>￥{{repay_manage_amount}}</td>
-                        </tr> 
-                        <tr>
-                            <td>待付管理费用</td>
-                            <td>￥{{need_manage_amount}}</td>
-                        </tr>      
-                        <tr>
-                            <td>逾期费用</td>
-                            <td ng-if="yuqi_impose==0">￥0</td>
-                            <td ng-if="yuqi_impose!=0">{{yuqi_impose}}</td>
-                            
-                        </tr>                 
-                    </table>
+				<div class="t-body t-body4" ng-show="ttztj" style="margin-top: 1.9rem;">      
+					<div>
+						    <table>
+								<div class="statistical">借款统计</div>
+								<tr>
+									<td>借款总额</td>
+									<td ng-if="borrow_amount">￥{{borrow_amount}}</td>
+									<td ng-if="!borrow_amount">￥0</td>
+								</tr>
+								<tr>
+									<td>借款笔数</td>
+									<td ng-if="success_deal_count">{{success_deal_count}}笔</td>
+									<td ng-if="!success_deal_count">0笔</td>
+								</tr>
+								<tr>
+									<td>已还本息</td>
+									<td ng-if="repay_amount">￥{{repay_amount}}</td>
+									<td ng-if="!repay_amount">￥0</td>
+								</tr>
+								<tr>
+									<td>待还本息</td>
+									<td ng-if="need_repay_amount">￥{{need_repay_amount}}</td>
+									<td ng-if="!need_repay_amount">￥0</td>
+								</tr>
+								<tr>
+									<td>已付管理费用</td>
+									<td ng-if="repay_manage_amount">￥{{repay_manage_amount}}</td>
+									<td ng-if="!repay_manage_amount">￥0</td>
+								</tr>
+								<tr>
+									<td>待付管理费用</td>
+									<td ng-if="need_manage_amount">￥{{need_manage_amount}}</td>
+									<td ng-if="!need_manage_amount">￥0</td>
+								</tr>
+								<tr>
+									<td>逾期费用</td>
+									<td ng-if="yuqi_impose">￥{{yuqi_impose}}</td>
+									<td ng-if="!yuqi_impose">￥0</td>
+								</tr>
+							</table>
+					</div>
+                
                     <div class="statistical">投资统计</div>
-                    <table>
-                        <tr>
-                            <td>投资总额</td>
-                            <td>￥{{load_money}}</td>
-                        </tr> 
-                        <tr>
-                            <td>投资笔数</td>
-                            <td>{{load_count}}</td>
-                        </tr>  
-                        <tr>
-                            <td>已挣利息</td>
-                            <td>￥{{load_earnings}}</td>
-                        </tr>  
-                        <tr>
-                            <td>待收利息</td>
-                            <td>￥{{load_wait_earnings}}</td>
-                        </tr>  
-                        <tr>
-                            <td>已回收本息</td>
-                            <td>￥{{load_repay_money}}</td>
-                        </tr>  
-                        <tr>
-                            <td>待回收本息</td>
-                            <td>￥{{load_wait_repay_money}}</td>
-                        </tr>  
-                        <tr>
-                            <td>已付管理费</td>
-                            <td>￥{{load_manage_money}}</td>
-                        </tr>                         
-                    </table>
+                    <div>
+                    	<table>
+		                        <tr>
+		                            <td>投资总额</td>
+		                            <td ng-if="load_money">￥{{load_money}}</td>
+		                            <td ng-if="!load_money">￥0</td>
+		                        </tr> 
+		                        <tr>
+		                            <td>投资笔数</td>
+		                            <td ng-if="load_count">{{load_count}}笔</td>
+		                            <td ng-if="!load_count">0笔</td>
+		                        </tr>  
+		                        <tr>
+		                            <td>已挣利息</td>
+		                            <td ng-if="load_earnings">￥{{load_earnings}}</td>
+		                            <td ng-if="!load_earnings">￥0</td>
+		                        </tr>  
+		                        <tr>
+		                            <td>待收利息</td>
+		                            <td ng-if="load_wait_earnings">￥{{load_wait_earnings}}</td>
+		                            <td ng-if="!load_wait_earnings">￥0</td>
+		                        </tr>  
+		                        <tr>
+		                            <td>已回收本息</td>
+		                            <td ng-if="load_repay_money">￥{{load_repay_money}}</td>
+		                            <td ng-if="!load_repay_money">￥0</td>
+		                        </tr>  
+		                        <tr>
+		                            <td>待回收本息</td>
+		                            <td ng-if="load_wait_repay_money">￥{{load_wait_repay_money}}</td>
+		                            <td ng-if="!load_wait_repay_money">￥0</td>
+		                        </tr>  
+		                        <tr>
+		                            <td>已付管理费</td>
+		                            <td ng-if="load_manage_money">￥{{load_manage_money}}</td>
+		                            <td ng-if="!load_manage_money">￥0</td>
+		                        </tr>                         
+		                    </table>
+                    </div>
+                    
                     <div class="rental">
                         <div>
                             <span class="czmoney">{{incharge_count}}</span><br>

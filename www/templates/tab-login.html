@@ -39,7 +39,10 @@
 
         }
         .user{
-            position: relative;
+        	 position: relative;
+        }
+        .login-user{           
+            margin-top: 0.3rem;
         }
         .user input{
             display: block;
@@ -69,7 +72,7 @@
             background-size: 100% 100%;
             left:0.32rem;
         }
-        .login-button{
+        /*.login-button{
         	display:block;
             width:5.9rem;
             height: 0.6rem;
@@ -77,31 +80,42 @@
             background: #ccc;
             font-size: 0.24rem;
             color: #fff;
-            text-align: center;
             line-height:0.6rem;
             margin-top:0.1rem;
             border:none;
-        }  
-        .forget-button{
+        }  */
+        .login-buttons{
         	display:block;
             width:5.9rem;
             height: 0.6rem;
+            margin:0 auto;
+            background: #ccc;
             font-size: 0.24rem;
-            color: #9B9B9B;
+            color: #fff;
+            line-height:0.6rem;
+            /*margin-top:0.1rem;*/
+            border:none;
+            margin-top:0.3rem;        	
+        }
+        .forget-button{
+            width:5.6rem;
+            height: 0.6rem;
+            margin: 0 auto;
+            font-size: 0.24rem;
             text-align: right;
             line-height:0.6rem;
-            margin-top:0.1rem;
+            margin-top:0.2rem;
             border:none;
             background: #fff;
-        }      
-        .login-footer{
-            width: 100%;
-            margin-top:1rem;
-            text-align: center;
-            line-height: 1rem;
-            font-size: 0.22rem;
-            color: #ff4800;
+        }    
+        .forget-button span:nth-child(1){
+        	float: left;
+            color: #099dd8;
         }
+        .forget-button span:nth-child(2){
+        	float: right;
+            color: #9B9B9B;
+        }  
         .showcase-form textarea .ng-dirty.ng-invalid,
 			.showcase-form select .ng-dirty.ng-invalid,
 			.showcase-form input.ng-dirty.ng-invalid {
@@ -111,10 +125,36 @@
 			    box-shadow: 0 0 6px #f8b9b7;
 			}
 		.showLoginBtn{
-			background: #ff8e27;
+			background: #0AE;
 		}
+		div.user .clearInputBtn,div.user .visibleInputBtn{
+		    position: absolute;
+		    left: 5.2rem;
+		    top: 0;
+		    bottom: 0;
+		    margin: auto;
+		    display: none;
+		    width: 1rem;
+		    line-height: .23rem;
+		}
+		div.user .clearInputBtn  span.clearInput{
+		 	width: .23rem;color: #fff;
+		 	font-size: 0.24rem;
+		    height: .23rem;
+		    background: #BDBDBD;
+		    border-radius: 50%; text-align: center;
+		    
+		 }
+		 div.user .visibleInputBtn  span.clearInput{
+		 	width: .26rem;color: #fff;
+		 	font-size: 0.24rem;
+		    height: .26rem;line-height: .3rem;
+		    background:#ddd;
+		    border-radius: 50%; text-align: center;
+		    
+		 }
     </style>
-    <ion-content>
+    <ion-content ng-controller='LoginCtrl'>
         <header id="login-header">
             <span class="add icon ion-android-close" ng-click="backIndex();$event.stopPropagation()"></span>
             <div class="e-logo">
@@ -123,18 +163,27 @@
             <span class="yijiayi">医加医</span>
         </header>
         <form name="basic_form" class="showcase-form">
-            <div class="user">
+            <div class="user login-user">
                 <span></span>
-                <input type="text" id='username' placeholder="输入用户名/邮箱/手机号" name="email" ng-model="logindata.email" required="">
+                <input type="text" id='username' placeholder="输入用户名/邮箱/手机号" name="email" ng-change='inputChangeFun()' ng-keyup='inpoutKeyFun($event)' ng-focus='inpoutFocusFun($event)' ng-blur='inpoutBlurFun($event)' ng-model="z_username">
+                <div class='clearInputBtn' ng-click='clearInputBtnFun($event)'><span class='clearInput'>×</span></div>               
             </div>
-            <div class="user">
+            <div class="user login-user">
                 <span></span>
-                <input type="password" id='password' placeholder="输入密码"  name="pwd" ng-model="logindata.pwd" required="">
+                <input type="{{visablePwdDis}}" id='password' placeholder="输入密码"   ng-keyup='inpoutKeyFun($event)' name="pwd" ng-model="z_pwd">
+               <!-- <input type="password" id='password' placeholder="输入密码" ng-if='!visablePwdDis'  ng-keyup='inpoutKeyFun($event)' name="pwd" ng-model="z_pwd">-->
+                <!--<input type="password" id='password' placeholder="输入密码"  name="pwd" ng-model="logindata.pwd" >-->
+                <!--<div class="clearInputBtn" style='left: 4.3rem;'><span class='clearInput'>×</span></div>-->
+                <div class="visibleInputBtn"  ng-click='visibleInputBtnFn($event)' style='left: 5.3rem;display: block;'><span class='clearInput ion-eye'></span></div>
             </div>
-            <button ng-click="login()" ng-disabled="basic_form.$invalid"  class="login-button showLoginBtn">登录</button>
-            <button ng-click="forgetPass()"  class="forget-button">忘记密码？</button>
+            <button ng-click="login()" ng-disabled="basic_form.$invalid"  class="login-buttons">登录</button>
+            <div  class="forget-button"> 
+            	<span ng-click="goReg();$event.stopPropagation()">没有账户？新用户注册</span>
+            	<span ng-click="forgetPass()">忘记密码？</span>
+            </div>
+            
         </form>
-        <footer class="login-footer" ng-click="goReg();$event.stopPropagation()">没有账户？新用户注册</footer>
+        <!--<footer class="login-footer" ng-click="goReg();$event.stopPropagation()">没有账户？新用户注册</footer>-->
     </ion-content>
 </ion-view>
  <!--ng-pattern="/^d{0,5}0$/" required

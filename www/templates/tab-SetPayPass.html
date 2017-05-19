@@ -1,4 +1,4 @@
-<ion-view view-title="重置支付密码" hide-nav-bar="true"  hide-tabs="true">
+<ion-view view-title="设置支付密码" hide-nav-bar="true"  hide-tabs="true">
     <style>
         .header-againPass{
             width:100%;
@@ -6,7 +6,7 @@
             text-align: center;
             line-height:0.88rem;
             font-size:0.3rem;
-            color: #ffa03b;
+            color: #0AE;
             position: relative;
             background: #f8f8f8;
             z-index: 999;
@@ -32,6 +32,7 @@
             height:0.65rem;
             margin:0 auto;
             margin-top:0.2rem;
+            position: relative;
         }
         .resetPass input{
             width:100%;
@@ -40,22 +41,22 @@
             box-shadow:0 0 0.05rem #ccc;
             padding-left: 0.2rem;
             font-size: 0.22rem;
-            color: #9B9B9B;
+            /*color: #9B9B9B;*/
         }
         .resetPass .verification{
             position: relative;
         }
         .resetPass .verification input{
-            width:4.4rem;
+            width:4.3rem;
         }
         .resetPass .verification .obtain{
     	    border: none;
-            width: 1.35rem;
+            width: 1.5rem;
 		    height: 100%;
 		    position: absolute;
 		    right: 0;
 		    top: -0.02rem;
-		    background: #FE8F26;
+		    background: #0AE;
 		    font-size: 0.2rem;
 		    color: #fff;
 		    text-align: center;
@@ -66,7 +67,7 @@
         	border: none;
             width:5.9rem;
             height:0.8rem;
-            background: #FE8F26;
+            background: #0AE;
             margin:0 auto;
             font-size: 0.24rem;
             color: #fff;
@@ -79,32 +80,47 @@
 		    margin: auto;
 		    top: 4rem;
         }
+        .resetPass span.usererr{
+        	position: absolute;
+		    right: 0.2rem;
+		    top: 0;
+		    bottom: 0;
+		    margin: auto;
+		    line-height: .65rem;
+		    width: 2.4rem;
+		    font-size: .22rem;
+		    display: none;
+        }
     </style>
     <header class="header-againPass">
         <span class="back icon ion-android-arrow-back" ng-click="backTab()"></span>
-        <span>重置支付密码</span>
+        <span>设置支付密码</span>
     </header>
     <ion-content class=""   ng-init="change=false;">
         <!--写内容-->
         <div class="resetPass">
         	
-        		<div>
-                <input type="tel" placeholder="手机号码" ng-model="mymobile" ng-disabled="true">
+        	<div>
+                <input type="tel" placeholder="手机号码" ng-model="mymobile" ng-disabled="true" ng-blur="invaildNull($event)" ng-focus="focusFun($event)">
+                 <span class="usererr assertive pass">请输入手机号!</span>
             </div>
             <div class="verification">
-                <input type="text" placeholder="输入验证码" id="YZMinput" required>
-                <button class="obtain" ng-click="SZsetPaypwdOk()" ng-disabled="timedel!='获取验证码'">{{timedel}}</button>
+                <input type="text" placeholder="输入验证码" id="YZMinput" ng-blur="invaildNull($event)" ng-focus="focusFun($event)">
+                <button id='payPassObtaion' class="obtain" ng-click="SZsetPaypwdOk()" ng-disabled="timedel!='获取验证码'">{{timedel}}</button>
+                 <span class="usererr assertive pass" style=' right: 1rem;'>请输入验证码!</span>
             </div>
             <div>
-                <input type="password" placeholder="输入支付密码" ng-model="paypass" id="ZFMMinput" name="password"  required>
+                <input type="password" placeholder="输入支付密码" ng-model="paypass" class='_pass' id="ZFMMinput" name="password"  ng-blur="invaildNull($event)" ng-focus="focusFun($event)">
+                 <span class="usererr assertive pass">请输入支付密码!</span>
             </div>
             <div>
-                <input type="password" placeholder="再次输入支付密码" ng-model="paypassagin" id="ZFMMinputA" name="passwordagain"  ng-blur="change=true" ng-focus="change=false" required>
+                <input type="password" placeholder="再次输入支付密码" ng-model="paypassagin" id="ZFMMinputA" name="passwordagain" ng-blur="invaildAgainPass($event)" ng-focus="focusFun($event)" >
+           		 <span class="usererr assertive pass">请再次输入支付密码!</span>
             </div>
         	
             
         </div>
-        <div ng-show="paypass!=paypassagin && change" style="color: red;text-align: center;">两次密码不一致</div>
+      
         <button class="again-submit" ng-click="SubmitPayOk()" ng-disabled="password.$invalid || passwordagain.$invalid ">提交</button>
     </ion-content>
 </ion-view>
